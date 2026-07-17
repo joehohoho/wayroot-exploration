@@ -1,0 +1,15 @@
+{
+  "name": "Wayroot.Tests.EditMode",
+  "rootNamespace": "Wayroot.Tests.EditMode",
+  "references": ["Wayroot.Runtime"],
+  "includePlatforms": ["Editor"],
+  "excludePlatforms": [],
+  "allowUnsafeCode": false,
+  "overrideReferences": false,
+  "precompiledReferences": [],
+  "autoReferenced": false,
+  "defineConstraints": [],
+  "versionDefines": [],
+  "noEngineReferences": false,
+  "optionalUnityReferences": ["TestAssemblies"]
+}

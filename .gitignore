@@ -1,0 +1,50 @@
+# Unity generated directories
+/[Ll]ibrary/
+/[Tt]emp/
+/[Oo]bj/
+/[Bb]uild/
+/[Bb]uilds/
+/[Ll]ogs/
+/[Uu]ser[Ss]ettings/
+/[Mm]emoryCaptures/
+/[Rr]ecordings/
+
+# Unity-generated IDE files
+.vs/
+.idea/
+*.csproj
+*.sln
+*.user
+*.userprefs
+*.pidb
+*.booproj
+*.svd
+*.pdb
+*.mdb
+*.opendb
+*.VC.db
+
+# Unity cache and local tooling
+.sys/
+.DS_Store
+Thumbs.db
+
+# Platform build output and signing material
+*.apk
+*.aab
+*.ipa
+*.xcarchive
+*.mobileprovision
+*.p12
+*.keystore
+*.jks
+*.pem
+
+# Local configuration and secrets
+.env
+.env.*
+!.env.example
+
+# Test output
+TestResults/
+coverage/
