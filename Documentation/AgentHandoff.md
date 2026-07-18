@@ -2,22 +2,22 @@
 
 Read this file before resuming after a quota reset/session loss, then update it before stopping.
 
-## 2026-07-17 status
+## 2026-07-18 status
 
-- **Current milestone:** Phase 0 only; do not start Phase 1 until owner review.
-- **Working title/repository:** `Wayroot Exploration` / `wayroot-exploration`; owner says the name may change later.
-- **Pinned project editor:** Unity 6000.0.78f1 (Unity 6.0 LTS).
-- **Local editor:** Unity 6000.5.4f1 only. Do not open/migrate this project with it.
-- **Verification:** project structure and text files need local validation; Unity compile/Test Framework remains blocked until the pinned editor is installed/licensed.
-- **Git/GitHub:** inspect `git status --short --branch`, `git log --oneline -5`, and remote state before work.
+- **Current milestone:** Phase 0 is complete and verified. Do **not** start Phase 1 until the owner reviews and approves it.
+- **Working title/repository:** `Wayroot Exploration` / `wayroot-exploration`; the owner may rename it later.
+- **Pinned editor:** Unity **6000.5.4f1** (`d550df8bd089`), owner-approved because Unity Hub did not offer the prior target patch.
+- **Resolved packages:** Input System **1.19.0**, URP **17.5.0**, Unity Test Framework **1.7.0**. Earlier Input System 1.11.2/1.13.1/1.14.2 packages fail to compile against Unity 6000.5 because Unity APIs used by those package releases are obsolete errors.
+- **Validation completed:** batch compilation exited `0`; Unity EditMode test run exited `0`; `ProjectIdentity_UsesConfiguredNamespaceRoot` passed (1 total, 1 passed, 0 failed).
+- **Validation command detail:** Test runs must omit `-quit`; the Test Runner exits itself and writes the XML result. See `AGENTS.md`.
+- **Git/GitHub:** inspect `git status --short --branch`, `git log --oneline -5`, and remote state before work. Commit/push the Phase 0 editor-validation changes once final whitespace/source checks pass.
 
 ## First actions when resuming
 
-1. Confirm Unity 6000.0.78f1 is installed/licensed.
-2. Run the exact compile/EditMode commands from `AGENTS.md`.
-3. If successful, update this handoff/Roadmap, commit/push Phase 0, and request owner review.
-4. Only after that review, execute the Phase 1 plan.
+1. Finish/verify the focused Phase 0 validation commit and push it.
+2. Request owner review of Phase 0; do not implement movement yet.
+3. After explicit approval, use `Documentation/Phase1ImplementationPlan.md` as the Phase 1 scope, inspect the repo, and report plan/risks/files before implementation.
 
 ## Resume prompt
 
-> Read AGENTS.md, AgentHandoff, Roadmap, OpenQuestions, and ADRs. Inspect Git and the actual Unity installation. Continue only the approved milestone; run pinned-editor verification before unrelated changes; update this handoff before stopping.
+> Read AGENTS.md, AgentHandoff, Roadmap, OpenQuestions, and ADRs. Inspect Git and the actual Unity installation. Continue only the owner-approved milestone. Preserve the pinned Unity/package configuration. Update this handoff before stopping.

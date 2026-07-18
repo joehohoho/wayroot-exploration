@@ -2,23 +2,32 @@
 
 ## Current milestone
 
-**Phase 0 — Repository and project foundation**: scaffold created; compilation/Test Framework verification is blocked by the missing pinned editor; owner review required before Phase 1.
+**Phase 0 — Repository and project foundation: complete and Unity-validated.**
+
+The owner approved installed Unity **6000.5.4f1** as the project pin because Unity Hub did not offer the prior intended patch. Batch compilation and the initial Unity EditMode test passed on 2026-07-18. **Owner review is still required before Phase 1 begins.**
 
 ## Phases
 
-| Phase | Scope | Exit checkpoint |
+| Phase | Scope | Status |
 |---|---|---|
-| 0 | Foundation | pinned-editor compile + EditMode tests; owner review |
-| 1 | Movement/camera | handcrafted scene, touch/desktop input, camera/obstruction fade, iPhone test |
-| 2 | Interaction/gathering | interactions, resources, inventory, regeneration, gathered-state save |
-| 3 | Basic combat | sword, targeting, enemy/loot/defeat/sanctuary |
-| 4 | Vertical-slice progression | weapons, enemies, equipment, skills, stations, recipes, merchant/NPC/quest |
-| 5 | Building/homestead | placement, refund, capacity, interior, persistence |
-| 6 | Creature slice | journal, collectable creature, habitat, limits, persistence |
-| 7 | Generated Sunmeadow | deterministic generation, deltas, Wayroot, discovery/diagnostics |
-| 8 | Mobile polish | iPhone profiling, quality/settings/audio/tutorial/save recovery/internal TestFlight |
-| 9 | Production planning | expansion only after vertical-slice approval |
+| 0 | Repository, URP project foundation, assemblies, bootstrap, docs, ADRs, editor validation | Complete; awaiting owner review |
+| 1 | Handcrafted test scene, movement, top-down camera, touch/desktop input, safe area, obstruction fading | Planned; see `Phase1ImplementationPlan.md` |
+| 2 | Interaction, woodcutting/mining/foraging, inventory, pickup, gathered-state save | Deferred |
+| 3 | Basic combat, stats, sword, target selection, one enemy, defeat/respawn | Deferred |
+| 4 | Vertical-slice progression: weapons, enemies, equipment, skills, crafting, merchant, NPC/quest | Deferred |
+| 5 | Homestead and building | Deferred |
+| 6 | Creature vertical slice | Deferred |
+| 7 | Generated Sunmeadow region | Deferred; only after Phases 1–4 are enjoyable in a controlled scene |
+| 8 | Mobile vertical-slice polish and iPhone profiling | Deferred |
+| 9 | Production planning and post-slice features | Deferred |
 
-## Next proposal
+## Phase 0 verification record
 
-Phase 1 is fully planned in `Documentation/Phase1ImplementationPlan.md`; it is not authorized until Phase 0 review succeeds.
+- Unity 6000.5.4f1 batch compile: **passed**.
+- Unity Test Framework EditMode: **1 passed, 0 failed** (`ProjectIdentity_UsesConfiguredNamespaceRoot`).
+- Input System dependency: **1.19.0**, required for compilation under the pinned editor.
+- Package-resolution-generated assets and project settings were reviewed as source-controlled Unity project configuration.
+
+## Next milestone gate
+
+Before any Phase 1 code: owner reviews Phase 0, confirms the initial project state, and approves Phase 1. Then agents must report the implementation plan, dependencies, risks, expected files, and acceptance criteria before editing.

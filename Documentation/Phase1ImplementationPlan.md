@@ -1,6 +1,6 @@
 # Phase 1 Plan — Movement and Camera Prototype
 
-**Prerequisite:** owner review of Phase 0 plus successful compile/EditMode tests with Unity 6000.0.78f1.
+**Prerequisite:** owner review of Phase 0 plus successful compile/EditMode tests with Unity 6000.5.4f1.
 
 ## Goal
 
@@ -10,7 +10,7 @@ A small handcrafted Sunmeadow-inspired scene with placeholder player movement fr
 
 | Risk | Mitigation |
 |---|---|
-| Pinned editor unavailable | Install/validate 6000.0.78f1 first; do not migrate with 6000.5.4f1. |
+| Pinned editor unavailable | Use the owner-approved 6000.5.4f1 project pin; future upgrades require a planned decision. |
 | Touch UI undecided | Run a tiny uGUI/UI Toolkit spike, write ADR, choose one. |
 | Fade allocation/performance | Non-alloc queries, cached renderers/material state, profile on device. |
 | iPhone build unavailable | Establish matching Mac/Xcode worker before mobile acceptance. |

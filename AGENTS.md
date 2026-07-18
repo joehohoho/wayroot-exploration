@@ -2,7 +2,7 @@
 
 ## Current scope
 - **Current milestone:** Phase 0, awaiting owner review. Never begin Phase 1 without approval.
-- Unity **6000.0.78f1** (Unity 6.0 LTS) is pinned for this milestone and Phase 1. Do not change `ProjectSettings/ProjectVersion.txt` without owner approval.
+- Unity **6000.5.4f1** is owner-approved and pinned for this milestone and Phase 1. Do not change `ProjectSettings/ProjectVersion.txt` without owner approval.
 - Use C#, URP, Unity Input System, TextMeshPro, and Unity Test Framework. The legacy Input Manager is prohibited.
 - iPhone/landscape/touch is primary; desktop is development-only.
 - No networking, Addressables, accounts, cloud save, analytics, purchases, backend, paid package, or Android adaptation during prototype work unless explicitly scheduled.
@@ -25,7 +25,7 @@
 
 ## Validation required after a milestone
 ```bash
-"/c/Program Files/Unity/Hub/Editor/6000.0.78f1/Editor/Unity.exe" -batchmode -nographics -quit -projectPath "$PWD" -logFile Logs/compile.log
-"/c/Program Files/Unity/Hub/Editor/6000.0.78f1/Editor/Unity.exe" -batchmode -nographics -quit -projectPath "$PWD" -runTests -testPlatform EditMode -testResults TestResults/editmode.xml -logFile Logs/editmode-tests.log
+"/c/Program Files/Unity/Hub/Editor/6000.5.4f1/Editor/Unity.exe" -batchmode -nographics -quit -projectPath "$PWD" -logFile Logs/compile.log
+"/c/Program Files/Unity/Hub/Editor/6000.5.4f1/Editor/Unity.exe" -batchmode -nographics -projectPath "$PWD" -runTests -testPlatform EditMode -testResults TestResults/editmode.xml -logFile Logs/editmode-tests.log
 ```
 Also run relevant PlayMode tests, inspect `git diff --check`, update documentation, and report actual errors/warnings. Never claim a feature works without verification. Update `Documentation/AgentHandoff.md` before every stop so a reset Codex session can resume.
