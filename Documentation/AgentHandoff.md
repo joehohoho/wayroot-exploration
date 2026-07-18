@@ -8,7 +8,7 @@ Read this file before resuming after a quota reset/session loss, then update it 
 - **Working title/repository:** `Wayroot Exploration` / `wayroot-exploration`; the owner may rename it later.
 - **Pinned editor:** Unity **6000.5.4f1** (`d550df8bd089`), owner-approved because Unity Hub did not offer the prior target patch.
 - **Resolved packages:** Input System **1.19.0**, URP **17.5.0**, Unity Test Framework **1.7.0**. Earlier Input System 1.11.2/1.13.1/1.14.2 packages fail to compile against Unity 6000.5 because Unity APIs used by those package releases are obsolete errors.
-- **Validation completed:** batch compilation exited `0`; Unity EditMode test run exited `0`; `ProjectIdentity_UsesConfiguredNamespaceRoot` passed (1 total, 1 passed, 0 failed).
+- **Validation completed:** batch compilation and EditMode test runs exit `0`; `ProjectIdentity_UsesConfiguredNamespaceRoot` passes (1 total, 1 passed, 0 failed). `activeInputHandler` is explicitly set to `1` (Input System package), preventing the Unity 6000.5 invalid-setting error.
 - **Validation command detail:** Test runs must omit `-quit`; the Test Runner exits itself and writes the XML result. See `AGENTS.md`.
 - **Git/GitHub:** inspect `git status --short --branch`, `git log --oneline -5`, and remote state before work. Commit/push the Phase 0 editor-validation changes once final whitespace/source checks pass.
 

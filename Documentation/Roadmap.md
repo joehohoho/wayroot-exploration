@@ -25,7 +25,7 @@ The owner approved installed Unity **6000.5.4f1** as the project pin because Uni
 
 - Unity 6000.5.4f1 batch compile: **passed**.
 - Unity Test Framework EditMode: **1 passed, 0 failed** (`ProjectIdentity_UsesConfiguredNamespaceRoot`).
-- Input System dependency: **1.19.0**, required for compilation under the pinned editor.
+- Input System dependency: **1.19.0** with `activeInputHandler: 1`; required and validated under the pinned editor.
 - Package-resolution-generated assets and project settings were reviewed as source-controlled Unity project configuration.
 
 ## Next milestone gate
