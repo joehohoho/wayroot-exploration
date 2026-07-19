@@ -2,22 +2,24 @@
 
 Read this file before resuming after a quota reset/session loss, then update it before stopping.
 
-## 2026-07-18 status
+## 2026-07-19 status
 
-- **Current milestone:** Phase 0 is complete and verified. Do **not** start Phase 1 until the owner reviews and approves it.
-- **Working title/repository:** `Wayroot Exploration` / `wayroot-exploration`; the owner may rename it later.
-- **Pinned editor:** Unity **6000.5.4f1** (`d550df8bd089`), owner-approved because Unity Hub did not offer the prior target patch.
-- **Resolved packages:** Input System **1.19.0**, URP **17.5.0**, Unity Test Framework **1.7.0**. Earlier Input System 1.11.2/1.13.1/1.14.2 packages fail to compile against Unity 6000.5 because Unity APIs used by those package releases are obsolete errors.
-- **Validation completed:** batch compilation and EditMode test runs exit `0`; `ProjectIdentity_UsesConfiguredNamespaceRoot` passes (1 total, 1 passed, 0 failed). `activeInputHandler` is explicitly set to `1` (Input System package), preventing the Unity 6000.5 invalid-setting error.
-- **Validation command detail:** Test runs must omit `-quit`; the Test Runner exits itself and writes the XML result. See `AGENTS.md`.
-- **Git/GitHub:** inspect `git status --short --branch`, `git log --oneline -5`, and remote state before work. Commit/push the Phase 0 editor-validation changes once final whitespace/source checks pass.
+- **Current milestone:** Phase 1 is implemented and desktop-validated. It awaits owner play review and physical-iPhone evidence. Do **not** start Phase 2 without explicit approval.
+- **Repository:** `Wayroot Exploration` / `wayroot-exploration`; public `main` must be inspected before resuming.
+- **Pinned editor:** Unity **6000.5.4f1** (`d550df8bd089`). Do not change the project pin without owner approval.
+- **Packages:** Input System **1.19.0**, URP **17.5.0**, Unity Test Framework **1.7.0**, uGUI **2.0.0**. `activeInputHandler: 1` is required.
+- **Phase 1 composition:** `GameBootstrap` runtime-builds a controlled primitive Sunmeadow test scene: player, fixed follow camera, a single explicit fadeable tree, uGUI joystick/pause/overlay, safe-area layout, and EventSystem. It is intentionally disposable prototype presentation, not final scene authoring.
+- **Input boundary:** `PrototypeInputReader` owns keyboard/arrows, gamepad stick, mouse-wheel zoom, and virtual joystick input. `PrototypePlayerController` owns movement/facing. UI callbacks never contain movement rules.
+- **Validation:** batch compile passed; EditMode **7/7** and PlayMode **1/1** passed; Windows development build produced `Builds/WayrootPhase1.exe` locally (ignored). Test command must omit `-quit` so it writes XML.
+- **Manual validation:** follow `Documentation/Phase1ManualTest.md`. Windows cannot produce a signed iPhone build; a matching Mac/Xcode worker remains required.
 
 ## First actions when resuming
 
-1. Finish/verify the focused Phase 0 validation commit and push it.
-2. Request owner review of Phase 0; do not implement movement yet.
-3. After explicit approval, use `Documentation/Phase1ImplementationPlan.md` as the Phase 1 scope, inspect the repo, and report plan/risks/files before implementation.
+1. Read `AGENTS.md`, this handoff, `Documentation/Roadmap.md`, `OpenQuestions.md`, Phase 1 plan, manual test guide, and ADR-007.
+2. Inspect `git status --short --branch`, the last five commits, and the actual Unity installation.
+3. If Phase 1 has not yet been published, finish source/diff/secret checks, commit/push, and verify remote `main` equals local `HEAD`.
+4. Wait for the owner’s Phase 1 review before proposing any Phase 2 plan.
 
 ## Resume prompt
 
-> Read AGENTS.md, AgentHandoff, Roadmap, OpenQuestions, and ADRs. Inspect Git and the actual Unity installation. Continue only the owner-approved milestone. Preserve the pinned Unity/package configuration. Update this handoff before stopping.
+> Preserve Unity 6000.5.4f1 and the Phase 1 scope. Verify all claims using Unity execution and result XML. Do not implement Phase 2 without explicit owner approval. Update this handoff before stopping.

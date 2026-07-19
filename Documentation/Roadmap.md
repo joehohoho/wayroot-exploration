@@ -2,17 +2,17 @@
 
 ## Current milestone
 
-**Phase 0 — Repository and project foundation: complete and Unity-validated.**
+**Phase 1 — Movement and camera prototype: implemented and desktop-validated; awaiting owner play review and physical-iPhone evidence.**
 
-The owner approved installed Unity **6000.5.4f1** as the project pin because Unity Hub did not offer the prior intended patch. Batch compilation and the initial Unity EditMode test passed on 2026-07-18. **Owner review is still required before Phase 1 begins.**
+The owner approved Phase 1 on 2026-07-19. The project remains pinned to Unity **6000.5.4f1**.
 
 ## Phases
 
 | Phase | Scope | Status |
 |---|---|---|
-| 0 | Repository, URP project foundation, assemblies, bootstrap, docs, ADRs, editor validation | Complete; awaiting owner review |
-| 1 | Handcrafted test scene, movement, top-down camera, touch/desktop input, safe area, obstruction fading | Planned; see `Phase1ImplementationPlan.md` |
-| 2 | Interaction, woodcutting/mining/foraging, inventory, pickup, gathered-state save | Deferred |
+| 0 | Repository, URP project foundation, assemblies, bootstrap, docs, ADRs, editor validation | Complete |
+| 1 | Handcrafted test scene, movement, top-down camera, touch/desktop input, safe area, obstruction fading | Implemented; desktop-validated; iPhone pending |
+| 2 | Interaction, woodcutting/mining/foraging, inventory, pickup, gathered-state save | Do not begin until Phase 1 review |
 | 3 | Basic combat, stats, sword, target selection, one enemy, defeat/respawn | Deferred |
 | 4 | Vertical-slice progression: weapons, enemies, equipment, skills, crafting, merchant, NPC/quest | Deferred |
 | 5 | Homestead and building | Deferred |
@@ -21,13 +21,22 @@ The owner approved installed Unity **6000.5.4f1** as the project pin because Uni
 | 8 | Mobile vertical-slice polish and iPhone profiling | Deferred |
 | 9 | Production planning and post-slice features | Deferred |
 
-## Phase 0 verification record
+## Verification record
+
+### Phase 0
 
 - Unity 6000.5.4f1 batch compile: **passed**.
-- Unity Test Framework EditMode: **1 passed, 0 failed** (`ProjectIdentity_UsesConfiguredNamespaceRoot`).
-- Input System dependency: **1.19.0** with `activeInputHandler: 1`; required and validated under the pinned editor.
-- Package-resolution-generated assets and project settings were reviewed as source-controlled Unity project configuration.
+- Unity Test Framework EditMode: **1 passed, 0 failed**.
+- Input System **1.19.0** with `activeInputHandler: 1` validated.
+
+### Phase 1
+
+- Unity batch compile: **passed**.
+- EditMode tests: **7 passed, 0 failed**.
+- PlayMode composition test: **1 passed, 0 failed**.
+- Windows desktop development build: **passed**; ignored artifact `Builds/WayrootPhase1.exe` was produced locally.
+- Phase 1 manual/iPhone instructions: `Documentation/Phase1ManualTest.md`.
 
 ## Next milestone gate
 
-Before any Phase 1 code: owner reviews Phase 0, confirms the initial project state, and approves Phase 1. Then agents must report the implementation plan, dependencies, risks, expected files, and acceptance criteria before editing.
+The owner must play/review Phase 1 and evaluate iPhone evidence when a Mac/Xcode worker is available. Do not begin Phase 2 until that review explicitly approves the movement/camera/touch loop.
