@@ -4,7 +4,7 @@ Read this file before resuming after a quota reset/session loss, then update it 
 
 ## 2026-07-19 status
 
-- **Current milestone:** Phase 1 is implemented and desktop-validated. It awaits owner play review and physical-iPhone evidence. Do **not** start Phase 2 without explicit approval.
+- **Current milestone:** Phase 2 controlled gathering loop is owner-approved to proceed after successful desktop play review of Phase 1. Physical-iPhone evidence remains pending; do **not** start Phase 3 without explicit approval.
 - **Repository:** `Wayroot Exploration` / `wayroot-exploration`; public `main` must be inspected before resuming.
 - **Pinned editor:** Unity **6000.5.4f1** (`d550df8bd089`). Do not change the project pin without owner approval.
 - **Packages:** Input System **1.19.0**, URP **17.5.0**, Unity Test Framework **1.7.0**, uGUI **2.0.0**. `activeInputHandler: 1` is required.

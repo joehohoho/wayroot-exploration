@@ -2,7 +2,7 @@
 
 A peaceful top-down 3D mobile exploration game made with Unity: restore magical Wayroots while gathering, crafting, building a homestead, discovering original creatures, and optionally engaging in light combat.
 
-> **Status:** Phase 1 movement/camera prototype is implemented and desktop-validated. It awaits owner play review and physical-iPhone evidence; Phase 2 is not approved.
+> **Status:** Phase 1 has passed desktop owner play review. Phase 2's bounded controlled gathering loop is approved to proceed; physical-iPhone evidence remains pending.
 
 ## Technology
 

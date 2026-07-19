@@ -4,8 +4,8 @@
 
 1. **Final title/repository name:** `Wayroot Exploration` / `wayroot-exploration` is a working title derived from provisional lore. Rename later before branding, bundle IDs, or public asset naming become permanent.
 2. **Placeholder character:** primitives only, or an approved/licensed placeholder asset? Phase 1 uses primitives; no unvalidated asset may enter production tracking.
-3. **iPhone worker:** identify compatible Mac/Xcode machine and signing owner before Phase 1’s physical-device checkpoint.
-4. **Phase 1 review:** confirm the keyboard/controller/touch prototype feels right after Editor and physical-iPhone testing before approving Phase 2 interaction and gathering.
+3. **iPhone worker:** identify compatible Mac/Xcode machine and signing owner before the physical-device checkpoint.
+4. **Phase 2 presentation defaults:** wildflower / young tree / stone outcrop, with Wild Petal, Timber, and Stone prototype rewards, are implementation defaults only; final naming, art, timing, economy, tools, and audio remain owner decisions.
 
 ## Resolved
 
