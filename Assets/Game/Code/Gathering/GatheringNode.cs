@@ -12,6 +12,8 @@ namespace Wayroot.Gathering
         private int _steps;
         private Renderer _renderer = null!;
         public string Id => _id;
+        public int Steps => _steps;
+        public int RequiredSteps => _requiredSteps;
         public bool IsAvailable => isActiveAndEnabled && _renderer.enabled && _steps < _requiredSteps;
         public ResourceType Resource => _resource;
         public event Action<GatheringNode>? Completed;

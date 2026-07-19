@@ -15,6 +15,7 @@ namespace Wayroot.Gathering
         private InventoryState _inventory = null!;
         private PrototypeGatheringSave _save = null!;
         private float _nextStepTime;
+        public GatheringNode? CurrentTarget { get; private set; }
         public int GetCount(ResourceType resource) => _inventory.GetCount(resource);
         public void Configure(PrototypeInputReader input, PrototypePlayerController player, InventoryState inventory, IEnumerable<GatheringNode> nodes)
         {
@@ -24,8 +25,10 @@ namespace Wayroot.Gathering
         }
         private void Update()
         {
-            if (_player.IsPaused || !_input.InteractHeld || Time.time < _nextStepTime) return;
-            GatheringNode? target = FindNearest(); if (target == null || !target.TryGather()) return; _nextStepTime = Time.time + StepInterval;
+            CurrentTarget = _player.IsPaused ? null : FindNearest();
+            if (CurrentTarget == null || !_input.InteractHeld || Time.time < _nextStepTime) return;
+            if (!CurrentTarget.TryGather()) return;
+            _nextStepTime = Time.time + StepInterval;
         }
         private GatheringNode? FindNearest()
         { GatheringNode? nearest = null; float best = Range * Range; foreach (GatheringNode node in _nodes) { if (!node.IsAvailable) continue; float d = (node.transform.position - _player.transform.position).sqrMagnitude; if (d <= best) { best = d; nearest = node; } } return nearest; }
