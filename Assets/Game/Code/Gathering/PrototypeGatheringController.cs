@@ -16,6 +16,8 @@ namespace Wayroot.Gathering
         private InventoryState _inventory = null!;
         private float _nextStepTime;
 
+        public int GetCount(ResourceType resource) => _inventory.GetCount(resource);
+
         public void Configure(PrototypeInputReader input, PrototypePlayerController player, InventoryState inventory, IEnumerable<GatheringNode> nodes)
         {
             _input = input; _player = player; _inventory = inventory; _nodes.AddRange(nodes);

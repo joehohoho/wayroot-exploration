@@ -35,10 +35,10 @@ namespace Wayroot.Core
             PrototypePlayerController player = CreatePlayer(input);
             TopDownCameraController cameraController = CreateCamera(player.transform, input, out UnityEngine.Camera sceneCamera);
             CreateObstruction(sceneCamera, player.transform);
-            CreateGathering(input, player);
+            PrototypeGatheringController gathering = CreateGathering(input, player);
             PauseController pause = new GameObject("Pause Controller").AddComponent<PauseController>();
             pause.Configure(player, cameraController);
-            CreateRuntimeUi(input, player, cameraController, pause);
+            CreateRuntimeUi(input, player, cameraController, pause, gathering);
         }
 
         private static void CreateLight()
@@ -94,13 +94,15 @@ namespace Wayroot.Core
             fader.Configure(sourceCamera, target);
         }
 
-        private static void CreateGathering(PrototypeInputReader input, PrototypePlayerController player)
+        private static PrototypeGatheringController CreateGathering(PrototypeInputReader input, PrototypePlayerController player)
         {
             InventoryState inventory = new();
             GatheringNode flower = CreateGatheringNode("Wildflower (hold E)", PrimitiveType.Sphere, new Vector3(-2f, 0.5f, 2f), new Color(0.95f, 0.35f, 0.65f), ResourceType.WildPetal, 1);
             GatheringNode tree = CreateGatheringNode("Young Tree (hold E)", PrimitiveType.Cylinder, new Vector3(3f, 1f, 2f), new Color(0.32f, 0.6f, 0.2f), ResourceType.Timber, 3);
             GatheringNode rock = CreateGatheringNode("Stone Outcrop (hold E)", PrimitiveType.Cube, new Vector3(-3f, 0.65f, -2f), new Color(0.45f, 0.48f, 0.55f), ResourceType.Stone, 3);
-            new GameObject("Prototype Gathering").AddComponent<PrototypeGatheringController>().Configure(input, player, inventory, new[] { flower, tree, rock });
+            PrototypeGatheringController controller = new GameObject("Prototype Gathering").AddComponent<PrototypeGatheringController>();
+            controller.Configure(input, player, inventory, new[] { flower, tree, rock });
+            return controller;
         }
 
         private static GatheringNode CreateGatheringNode(string name, PrimitiveType primitive, Vector3 position, Color color, ResourceType resource, int steps)
@@ -114,7 +116,7 @@ namespace Wayroot.Core
             return node;
         }
 
-        private static void CreateRuntimeUi(PrototypeInputReader input, PrototypePlayerController player, TopDownCameraController cameraController, PauseController pause)
+        private static void CreateRuntimeUi(PrototypeInputReader input, PrototypePlayerController player, TopDownCameraController cameraController, PauseController pause, PrototypeGatheringController gathering)
         {
             Canvas canvas = new GameObject("Prototype HUD").AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -149,6 +151,13 @@ namespace Wayroot.Core
             developmentText.sizeDelta = new Vector2(-48f, 80f);
             DevelopmentOverlay overlay = developmentText.gameObject.AddComponent<DevelopmentOverlay>();
             overlay.Configure(developmentText.GetComponent<Text>(), player, cameraController, pause);
+
+            Text inventoryText = CreateText("Gathering Inventory", safeArea, string.Empty, 24, TextAnchor.UpperRight);
+            inventoryText.rectTransform.anchorMin = inventoryText.rectTransform.anchorMax = new Vector2(1f, 1f);
+            inventoryText.rectTransform.pivot = new Vector2(1f, 1f);
+            inventoryText.rectTransform.anchoredPosition = new Vector2(-24f, -120f);
+            inventoryText.rectTransform.sizeDelta = new Vector2(650f, 48f);
+            inventoryText.gameObject.AddComponent<GatheringHud>().Configure(inventoryText, gathering);
 
             SafeAreaLayout layout = safeArea.gameObject.AddComponent<SafeAreaLayout>();
             layout.Configure(safeArea, joystickArea, pauseButton);
