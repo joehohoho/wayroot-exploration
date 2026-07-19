@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-**Phase 2 — Controlled interaction and gathering loop: owner-approved to proceed.**
+**Phase 2 — Controlled interaction and gathering loop: implemented and desktop-validated; iPhone evidence remains pending.**
 
 Phase 1 completed desktop owner play review on 2026-07-19; physical-iPhone evidence remains an independent mobile gate. The project remains pinned to Unity **6000.5.4f1**.
 
@@ -12,7 +12,7 @@ Phase 1 completed desktop owner play review on 2026-07-19; physical-iPhone evide
 |---|---|---|
 | 0 | Repository, URP project foundation, assemblies, bootstrap, docs, ADRs, editor validation | Complete |
 | 1 | Handcrafted test scene, movement, top-down camera, touch/desktop input, safe area, obstruction fading | Implemented; desktop-validated; iPhone pending |
-| 2 | Controlled interaction, three prototype gathering nodes, bounded inventory, pickup feedback, and one local gathered-state save | Owner-approved; planned |
+| 2 | Controlled interaction, three prototype gathering nodes, bounded inventory, pickup feedback, and one local gathered-state save | Implemented; desktop-validated; iPhone pending |
 | 3 | Basic combat, stats, sword, target selection, one enemy, defeat/respawn | Deferred |
 | 4 | Vertical-slice progression: weapons, enemies, equipment, skills, crafting, merchant, NPC/quest | Deferred |
 | 5 | Homestead and building | Deferred |

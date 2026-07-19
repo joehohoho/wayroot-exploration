@@ -61,7 +61,8 @@ Follow `Documentation/Phase1ManualTest.md` for Editor, Device Simulator, profile
 - `Documentation/Roadmap.md` — milestones 0–9 and current status
 - `Documentation/OpenQuestions.md` — decisions needing owner input
 - `Documentation/Phase1ImplementationPlan.md` — approved Phase 1 scope
-- `Documentation/Phase1ManualTest.md` — exact manual validation guide
+- `Documentation/Phase1ManualTest.md` — Phase 1 camera/input/rendering manual validation
+- `Documentation/Phase2ManualTest.md` — Phase 2 gathering/inventory/persistence validation
 - `Documentation/AgentHandoff.md` — durable Codex/Hermes restart context
 - `Documentation/ADRs/` — architecture decisions
 
