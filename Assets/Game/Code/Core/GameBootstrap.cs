@@ -97,22 +97,22 @@ namespace Wayroot.Core
         private static PrototypeGatheringController CreateGathering(PrototypeInputReader input, PrototypePlayerController player)
         {
             InventoryState inventory = new();
-            GatheringNode flower = CreateGatheringNode("Wildflower (hold E)", PrimitiveType.Sphere, new Vector3(-2f, 0.5f, 2f), new Color(0.95f, 0.35f, 0.65f), ResourceType.WildPetal, 1);
-            GatheringNode tree = CreateGatheringNode("Young Tree (hold E)", PrimitiveType.Cylinder, new Vector3(3f, 1f, 2f), new Color(0.32f, 0.6f, 0.2f), ResourceType.Timber, 3);
-            GatheringNode rock = CreateGatheringNode("Stone Outcrop (hold E)", PrimitiveType.Cube, new Vector3(-3f, 0.65f, -2f), new Color(0.45f, 0.48f, 0.55f), ResourceType.Stone, 3);
+            GatheringNode flower = CreateGatheringNode("wildflower-01", "Wildflower (hold E)", PrimitiveType.Sphere, new Vector3(-2f, 0.5f, 2f), new Color(0.95f, 0.35f, 0.65f), ResourceType.WildPetal, 1);
+            GatheringNode tree = CreateGatheringNode("young-tree-01", "Young Tree (hold E)", PrimitiveType.Cylinder, new Vector3(3f, 1f, 2f), new Color(0.32f, 0.6f, 0.2f), ResourceType.Timber, 3);
+            GatheringNode rock = CreateGatheringNode("stone-outcrop-01", "Stone Outcrop (hold E)", PrimitiveType.Cube, new Vector3(-3f, 0.65f, -2f), new Color(0.45f, 0.48f, 0.55f), ResourceType.Stone, 3);
             PrototypeGatheringController controller = new GameObject("Prototype Gathering").AddComponent<PrototypeGatheringController>();
             controller.Configure(input, player, inventory, new[] { flower, tree, rock });
             return controller;
         }
 
-        private static GatheringNode CreateGatheringNode(string name, PrimitiveType primitive, Vector3 position, Color color, ResourceType resource, int steps)
+        private static GatheringNode CreateGatheringNode(string id, string name, PrimitiveType primitive, Vector3 position, Color color, ResourceType resource, int steps)
         {
             GameObject nodeObject = GameObject.CreatePrimitive(primitive);
             nodeObject.name = name;
             nodeObject.transform.position = position;
             SetMaterialColor(nodeObject.GetComponent<Renderer>(), color);
             GatheringNode node = nodeObject.AddComponent<GatheringNode>();
-            node.Configure(resource, steps, nodeObject.GetComponent<Renderer>());
+            node.Configure(id, resource, steps, nodeObject.GetComponent<Renderer>());
             return node;
         }
 
@@ -143,6 +143,11 @@ namespace Wayroot.Core
             button.onClick.AddListener(pause.Toggle);
             CreateText("Pause Label", pauseButton, "PAUSE", 32, TextAnchor.MiddleCenter);
 
+            RectTransform gatherButton = CreatePanel("Gather Button", safeArea, new Color(0.2f, 0.5f, 0.25f, 0.9f));
+            gatherButton.sizeDelta = new Vector2(180f, 105f);
+            CreateText("Gather Label", gatherButton, "HOLD\nGATHER", 26, TextAnchor.MiddleCenter);
+            gatherButton.gameObject.AddComponent<VirtualActionButton>().Configure(input);
+
             RectTransform developmentText = CreateText("Development Overlay", safeArea, string.Empty, 26, TextAnchor.UpperLeft).rectTransform;
             developmentText.anchorMin = new Vector2(0f, 1f);
             developmentText.anchorMax = new Vector2(1f, 1f);
@@ -160,7 +165,7 @@ namespace Wayroot.Core
             inventoryText.gameObject.AddComponent<GatheringHud>().Configure(inventoryText, gathering);
 
             SafeAreaLayout layout = safeArea.gameObject.AddComponent<SafeAreaLayout>();
-            layout.Configure(safeArea, joystickArea, pauseButton);
+            layout.Configure(safeArea, joystickArea, gatherButton);
         }
 
         private static void CreateEventSystem()
