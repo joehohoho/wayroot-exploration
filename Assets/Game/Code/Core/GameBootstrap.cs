@@ -5,6 +5,8 @@ using UnityEngine.UI;
 using Wayroot.Camera;
 using Wayroot.Character;
 using Wayroot.Input;
+using Wayroot.Inventory;
+using Wayroot.Gathering;
 using Wayroot.UI;
 
 namespace Wayroot.Core
@@ -33,6 +35,7 @@ namespace Wayroot.Core
             PrototypePlayerController player = CreatePlayer(input);
             TopDownCameraController cameraController = CreateCamera(player.transform, input, out UnityEngine.Camera sceneCamera);
             CreateObstruction(sceneCamera, player.transform);
+            CreateGathering(input, player);
             PauseController pause = new GameObject("Pause Controller").AddComponent<PauseController>();
             pause.Configure(player, cameraController);
             CreateRuntimeUi(input, player, cameraController, pause);
@@ -89,6 +92,26 @@ namespace Wayroot.Core
             tree.AddComponent<FadeableObstruction>();
             CameraObstructionFader fader = sourceCamera.gameObject.AddComponent<CameraObstructionFader>();
             fader.Configure(sourceCamera, target);
+        }
+
+        private static void CreateGathering(PrototypeInputReader input, PrototypePlayerController player)
+        {
+            InventoryState inventory = new();
+            GatheringNode flower = CreateGatheringNode("Wildflower (hold E)", PrimitiveType.Sphere, new Vector3(-2f, 0.5f, 2f), new Color(0.95f, 0.35f, 0.65f), ResourceType.WildPetal, 1);
+            GatheringNode tree = CreateGatheringNode("Young Tree (hold E)", PrimitiveType.Cylinder, new Vector3(3f, 1f, 2f), new Color(0.32f, 0.6f, 0.2f), ResourceType.Timber, 3);
+            GatheringNode rock = CreateGatheringNode("Stone Outcrop (hold E)", PrimitiveType.Cube, new Vector3(-3f, 0.65f, -2f), new Color(0.45f, 0.48f, 0.55f), ResourceType.Stone, 3);
+            new GameObject("Prototype Gathering").AddComponent<PrototypeGatheringController>().Configure(input, player, inventory, new[] { flower, tree, rock });
+        }
+
+        private static GatheringNode CreateGatheringNode(string name, PrimitiveType primitive, Vector3 position, Color color, ResourceType resource, int steps)
+        {
+            GameObject nodeObject = GameObject.CreatePrimitive(primitive);
+            nodeObject.name = name;
+            nodeObject.transform.position = position;
+            SetMaterialColor(nodeObject.GetComponent<Renderer>(), color);
+            GatheringNode node = nodeObject.AddComponent<GatheringNode>();
+            node.Configure(resource, steps, nodeObject.GetComponent<Renderer>());
+            return node;
         }
 
         private static void CreateRuntimeUi(PrototypeInputReader input, PrototypePlayerController player, TopDownCameraController cameraController, PauseController pause)
