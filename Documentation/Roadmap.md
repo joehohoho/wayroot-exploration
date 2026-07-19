@@ -32,9 +32,10 @@ The owner approved Phase 1 on 2026-07-19. The project remains pinned to Unity **
 ### Phase 1
 
 - Unity batch compile: **passed**.
-- EditMode tests: **7 passed, 0 failed**.
+- EditMode tests: **8 passed, 0 failed** (includes a regression check that a render pipeline is assigned).
 - PlayMode composition test: **1 passed, 0 failed**.
-- Windows desktop development build: **passed**; ignored artifact `Builds/WayrootPhase1.exe` was produced locally.
+- Windows desktop development build: **passed**; a timed runtime smoke launch produced no runtime exception or missing-shader error.
+- The URP render-pipeline asset is source-controlled at `Assets/Game/Settings/WayrootPrototypeRenderPipeline.asset`; this corrected a reported magenta-screen failure caused by an unassigned pipeline asset.
 - Phase 1 manual/iPhone instructions: `Documentation/Phase1ManualTest.md`.
 
 ## Next milestone gate

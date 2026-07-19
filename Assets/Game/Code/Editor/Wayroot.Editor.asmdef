@@ -1,7 +1,10 @@
 {
   "name": "Wayroot.Editor",
   "rootNamespace": "Wayroot.Editor",
-  "references": ["Wayroot.Runtime"],
+  "references": [
+    "Wayroot.Runtime",
+    "Unity.RenderPipelines.Universal.Runtime"
+  ],
   "includePlatforms": ["Editor"],
   "excludePlatforms": [],
   "allowUnsafeCode": false,

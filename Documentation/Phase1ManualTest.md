@@ -15,6 +15,15 @@ Use this guide after the automated verification recorded in the Phase 1 mileston
 9. Press **Escape** or tap **PAUSE**. Confirm the overlay reports `PAUSED` and player movement stops. Use the same control to resume.
 10. In **Window → Analysis → Profiler**, profile 60 seconds of ordinary keyboard movement and camera following. Confirm no recurring managed-allocation spike is attributed to the movement loop or obstruction raycast path.
 
+## Rendering troubleshooting
+
+The scene must render a green ground rather than a solid magenta field. Magenta means a missing/incompatible shader or unassigned render pipeline; it is not expected prototype art.
+
+- Pull the latest `main`, rebuild the Windows player, and launch the newly generated `Builds/WayrootPhase1.exe`.
+- In the Unity Editor, choose **Wayroot → Repair Phase 1 Rendering** if the project was opened with graphics settings reset or the render-pipeline asset reports missing.
+- The repair assigns the source-controlled `Assets/Game/Settings/WayrootPrototypeRenderPipeline.asset`. Re-enter Play mode after it completes.
+- Check the Console for current errors. The Phase 1 build must not contain `TMP_Settings` null-reference or missing-shader errors.
+
 ## Landscape safe-area / handedness check
 
 1. Open **Window → General → Device Simulator** and select an iPhone landscape preset with a notch/safe area.

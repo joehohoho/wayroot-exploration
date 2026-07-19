@@ -1,4 +1,3 @@
-using TMPro;
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
@@ -117,16 +116,16 @@ namespace Wayroot.Core
             pauseButton.anchoredPosition = new Vector2(-56f, 56f);
             Button button = pauseButton.gameObject.AddComponent<Button>();
             button.onClick.AddListener(pause.Toggle);
-            CreateText("Pause Label", pauseButton, "PAUSE", 32, TextAlignmentOptions.Center);
+            CreateText("Pause Label", pauseButton, "PAUSE", 32, TextAnchor.MiddleCenter);
 
-            RectTransform developmentText = CreateText("Development Overlay", safeArea, string.Empty, 26, TextAlignmentOptions.TopLeft).rectTransform;
+            RectTransform developmentText = CreateText("Development Overlay", safeArea, string.Empty, 26, TextAnchor.UpperLeft).rectTransform;
             developmentText.anchorMin = new Vector2(0f, 1f);
             developmentText.anchorMax = new Vector2(1f, 1f);
             developmentText.pivot = new Vector2(0.5f, 1f);
             developmentText.anchoredPosition = new Vector2(0f, -24f);
             developmentText.sizeDelta = new Vector2(-48f, 80f);
             DevelopmentOverlay overlay = developmentText.gameObject.AddComponent<DevelopmentOverlay>();
-            overlay.Configure(developmentText.GetComponent<TMP_Text>(), player, cameraController, pause);
+            overlay.Configure(developmentText.GetComponent<Text>(), player, cameraController, pause);
 
             SafeAreaLayout layout = safeArea.gameObject.AddComponent<SafeAreaLayout>();
             layout.Configure(safeArea, joystickArea, pauseButton);
@@ -153,11 +152,12 @@ namespace Wayroot.Core
             return panel.GetComponent<RectTransform>();
         }
 
-        private static TMP_Text CreateText(string name, Transform parent, string value, float fontSize, TextAlignmentOptions alignment)
+        private static Text CreateText(string name, Transform parent, string value, int fontSize, TextAnchor alignment)
         {
-            GameObject textObject = new(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(TextMeshProUGUI));
+            GameObject textObject = new(name, typeof(RectTransform), typeof(CanvasRenderer), typeof(Text));
             textObject.transform.SetParent(parent, false);
-            TMP_Text text = textObject.GetComponent<TMP_Text>();
+            Text text = textObject.GetComponent<Text>();
+            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             text.text = value;
             text.fontSize = fontSize;
             text.alignment = alignment;

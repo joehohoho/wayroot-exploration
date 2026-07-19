@@ -68,27 +68,40 @@ MonoBehaviour:
       - rid: 17528836787273765
       - rid: 17528836787273766
     m_RuntimeSettings:
-      m_List: []
+      m_List:
+      - rid: 17528836787273733
+      - rid: 17528836787273734
+      - rid: 17528836787273739
+      - rid: 17528836787273740
+      - rid: 17528836787273741
+      - rid: 17528836787273742
+      - rid: 17528836787273747
+      - rid: 17528836787273751
+      - rid: 17528836787273754
+      - rid: 17528836787273758
+      - rid: 17528836787273760
+      - rid: 17528836787273761
+      - rid: 17528836787273762
   m_AssetVersion: 10
   m_ObsoleteDefaultVolumeProfile: {fileID: 0}
   m_RenderingLayerNames:
   - Default
   m_ValidRenderingLayers: 0
-  lightLayerName0:
-  lightLayerName1:
-  lightLayerName2:
-  lightLayerName3:
-  lightLayerName4:
-  lightLayerName5:
-  lightLayerName6:
-  lightLayerName7:
+  lightLayerName0: 
+  lightLayerName1: 
+  lightLayerName2: 
+  lightLayerName3: 
+  lightLayerName4: 
+  lightLayerName5: 
+  lightLayerName6: 
+  lightLayerName7: 
   apvScenesData:
     obsoleteSceneBounds:
       m_Keys: []
       m_Values: []
     obsoleteHasProbeVolumes:
       m_Keys: []
-      m_Values:
+      m_Values: 
   references:
     version: 2
     RefIds:
@@ -350,7 +363,7 @@ MonoBehaviour:
         m_version: 0
         m_IncludeReferencedInScenes: 0
         m_IncludeAssetsByLabel: 0
-        m_LabelToInclude:
+        m_LabelToInclude: 
     - rid: 17528836787273758
       type: {class: RenderGraphUtilsResources, ns: UnityEngine.Rendering.RenderGraphModule.Util, asm: Unity.RenderPipelines.Core.Runtime}
       data:
