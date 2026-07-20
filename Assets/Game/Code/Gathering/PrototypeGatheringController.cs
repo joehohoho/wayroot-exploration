@@ -8,6 +8,7 @@ using Wayroot.Inventory;
 using Wayroot.UI;
 using Wayroot.Wayroot;
 using Wayroot.Audio;
+using Wayroot.Art;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -247,6 +248,7 @@ namespace Wayroot.Gathering
             SetRenewalDeadline(node.Id, deadline);
             _feedback?.Show($"GATHERED: +1 {node.Resource.ToString().ToUpperInvariant()} — RETURNS IN 0:20");
             _soundscape?.Play(SoundscapeCue.Gather);
+            _player.GetComponent<ProceduralStylizedAnimator>()?.Emphasize();
 
             SaveInventory();
         }

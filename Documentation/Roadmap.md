@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-**Phase 17 — Moonlit Glade exploration extension is implemented and desktop-validated.**
+**Phase 18 — Major stylized art and procedural-animation pass is implemented and desktop-validated.**
 
 The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner play review; physical-iPhone evidence is an independent gate for the complete controlled slice.
 
@@ -28,6 +28,15 @@ The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner
 | 15 | Befriended Mossling's non-combat nearest-resource guide with renewal fallback | **Implemented; desktop-validated** |
 | 16 | Cozy magical procedural ambient bed, event feedback, and persistent SOUND preference | **Implemented; desktop-validated** |
 | 17 | One persistent Moonlit Glade exploration pocket opened by the first Thorn Guardian victory | **Implemented; desktop-validated** |
+| 18 | Major original runtime-composed stylized graphics and procedural animation pass | **Implemented; desktop-validated** |
+
+## Phase 18 verification record
+
+- Unity **6000.5.4f1** batch compile: **passed** (exit 0).
+- EditMode: **42 passed, 0 failed, 0 skipped**. PlayMode: **18 passed, 0 failed, 0 skipped**, including active procedural player/Mossling/slime/water composition, root/collider preservation, world-label readability, and restore-safe single-rig coverage.
+- Windows development review build: **passed** through `Wayroot.Editor.PhaseEighteenBuild.BuildWindowsReviewPlayer`; ignored output is `Builds/Phase18Review/WayrootPhase18.exe` (667,648-byte executable; 158 MB directory).
+- Timed Windows headless smoke: player remained running for the intended eight seconds (timeout 124); captured output had no application exception, missing-shader, or error text.
+- `Documentation/Phase18ManualTest.md` covers the layered visual/motion review and retained-loop regression route. This remains desktop evidence, not physical-iPhone validation.
 
 ## Phase 16 verification record
 
@@ -94,5 +103,5 @@ See `Documentation/Phase9ProductionReadiness.md` for scope, commands/results, re
 
 ## Next milestone gate
 
-1. Owner reviews the completed Phase 17 Moonlit Glade update and explicitly selects or defers the next bounded slice; do not begin Phase 18 automatically.
+1. Phase 18 is published for owner review. **Do not begin Phase 19 without explicit owner approval.**
 2. Before a release-quality or mobile-ready claim, complete `Documentation/Phase9iPhoneBlockers.md` and the touch-only `Documentation/Phase9FullLoopPlaytest.md` on physical iPhone hardware.

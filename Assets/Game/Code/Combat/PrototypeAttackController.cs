@@ -4,6 +4,7 @@ using Wayroot.Gathering;
 using Wayroot.Input;
 using Wayroot.UI;
 using Wayroot.Audio;
+using Wayroot.Art;
 using UnityEngine;
 
 namespace Wayroot.Combat
@@ -43,6 +44,7 @@ namespace Wayroot.Combat
 
             _lastAttack = Time.time;
             target.TakeDamage(_inventory.AttackDamage);
+            _player.GetComponent<ProceduralStylizedAnimator>()?.Emphasize();
             _soundscape?.Play(target.IsDefeated ? SoundscapeCue.Defeat : SoundscapeCue.CombatHit);
             _feedback?.Show(target.IsDefeated
                 ? $"{target.DisplayName} DEFEATED: +1 CORE"

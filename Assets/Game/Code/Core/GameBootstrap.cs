@@ -16,6 +16,7 @@ using Wayroot.UI;
 using Wayroot.Wayroot;
 using Wayroot.Audio;
 using Wayroot.Exploration;
+using Wayroot.Art;
 
 namespace Wayroot.Core
 {
@@ -60,6 +61,7 @@ namespace Wayroot.Core
             pause.Configure(player, cameraController);
             ProceduralSoundscape soundscape = new GameObject("Procedural Cozy Soundscape").AddComponent<ProceduralSoundscape>();
             soundscape.Configure(gathering);
+            CreatePhaseEighteenArtMotion(player, creature, enemy, grove, gathering);
             ActionFeedbackHud feedback = CreateRuntimeUi(input, player, playerHealth, enemy, grove, cameraController, pause, gathering, merchant, build, wayroot, creature, soundscape);
             gathering.SetFeedback(feedback);
             gathering.SetSoundscape(soundscape);
@@ -420,6 +422,64 @@ namespace Wayroot.Core
             RestoredGroveController controller = new GameObject("Restored Grove Controller").AddComponent<RestoredGroveController>();
             controller.Configure(gathering, grove, guardian);
             return controller;
+        }
+
+        private static void CreatePhaseEighteenArtMotion(PrototypePlayerController player, PrototypeCreatureController mossling, PrototypeEnemy slime, RestoredGroveController grove, PrototypeGatheringController gathering)
+        {
+            Transform playerRoot = player.transform;
+            CreateVisualPrimitive("Player Warm Scarf", PrimitiveType.Sphere, playerRoot.position + new Vector3(0f, 0.28f, -0.34f), new Vector3(0.78f, 0.16f, 0.24f), new Color(0.94f, 0.34f, 0.22f)).transform.SetParent(playerRoot, true);
+            CreateVisualPrimitive("Player Lantern Glow", PrimitiveType.Sphere, playerRoot.position + new Vector3(0.48f, 0.35f, 0.2f), Vector3.one * 0.32f, new Color(1f, 0.76f, 0.30f)).transform.SetParent(playerRoot, true);
+            ConfigureMotion(playerRoot.gameObject, ProceduralStylizedAnimator.MotionStyle.Player, player, null, null, gathering,
+                playerRoot.Find("Player Cloak"), playerRoot.Find("Player Lantern"), playerRoot.Find("Player Hair"), playerRoot.Find("Player Warm Scarf"), playerRoot.Find("Player Lantern Glow"));
+
+            Transform mosslingRoot = mossling.transform;
+            CreateVisualPrimitive("Mossling Leaf Cap", PrimitiveType.Sphere, mosslingRoot.position + new Vector3(0f, 0.7f, 0f), new Vector3(0.8f, 0.18f, 0.7f), new Color(0.16f, 0.50f, 0.28f)).transform.SetParent(mosslingRoot, true);
+            CreateVisualPrimitive("Mossling Glow Cheek", PrimitiveType.Sphere, mosslingRoot.position + new Vector3(0.28f, 0.17f, 0.64f), Vector3.one * 0.13f, new Color(1f, 0.78f, 0.32f)).transform.SetParent(mosslingRoot, true);
+            ConfigureMotion(mosslingRoot.gameObject, ProceduralStylizedAnimator.MotionStyle.Mossling, null, mossling, null, gathering,
+                mosslingRoot.Find("Mossling Left Ear"), mosslingRoot.Find("Mossling Right Ear"), mosslingRoot.Find("Mossling Tail"), mosslingRoot.Find("Mossling Leaf Cap"), mosslingRoot.Find("Mossling Glow Cheek"));
+
+            CreateAnimatedEnemyShell(slime.transform, "Slime", new Color(0.96f, 0.32f, 0.38f), ProceduralStylizedAnimator.MotionStyle.Slime, slime, gathering);
+            PrototypeEnemy guardian = grove.GetComponentInChildren<PrototypeEnemy>(true);
+            if (guardian != null) CreateAnimatedEnemyShell(guardian.transform, "Guardian", new Color(0.42f, 0.80f, 0.20f), ProceduralStylizedAnimator.MotionStyle.Guardian, guardian, gathering);
+
+            GameObject creek = GameObject.Find("Sunmeadow Creek");
+            if (creek != null)
+            {
+                CreateVisualPrimitive("Creek Ripple A", PrimitiveType.Sphere, creek.transform.position + new Vector3(-0.35f, 0.08f, -3.2f), new Vector3(0.78f, 0.025f, 0.44f), new Color(0.42f, 0.82f, 0.92f)).transform.SetParent(creek.transform, true);
+                CreateVisualPrimitive("Creek Ripple B", PrimitiveType.Sphere, creek.transform.position + new Vector3(0.32f, 0.08f, 2.5f), new Vector3(0.65f, 0.025f, 0.38f), new Color(0.58f, 0.88f, 0.94f)).transform.SetParent(creek.transform, true);
+                ConfigureMotion(creek, ProceduralStylizedAnimator.MotionStyle.Water, null, null, null, gathering, creek.transform.Find("River Lily 1"), creek.transform.Find("River Lily 2"), creek.transform.Find("Creek Ripple A"), creek.transform.Find("Creek Ripple B"));
+            }
+
+            foreach (Transform canopy in GameObject.FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None))
+            {
+                if (canopy.name == "Tree Canopy Low" || canopy.name == "Tree Canopy High" || canopy.name == "Sunmeadow Flower")
+                {
+                    ConfigureMotion(canopy.gameObject, ProceduralStylizedAnimator.MotionStyle.Foliage, null, null, null, gathering, canopy);
+                }
+            }
+
+            GameObject wayroot = GameObject.Find("Dormant Wayroot (hold E)");
+            if (wayroot != null) ConfigureMotion(wayroot, ProceduralStylizedAnimator.MotionStyle.Landmark, null, null, null, gathering, wayroot.transform.Find("Wayroot Heart"), wayroot.transform.Find("Wayroot Petal Crown"));
+            GameObject bloomwell = GameObject.Find("Moonlit Bloomwell Discovery");
+            if (bloomwell != null) ConfigureMotion(bloomwell, ProceduralStylizedAnimator.MotionStyle.Landmark, null, null, null, gathering, bloomwell.transform.Find("Bloomwell Moon"), bloomwell.transform.Find("Bloomwell Mote One"), bloomwell.transform.Find("Bloomwell Mote Two"), bloomwell.transform.Find("Bloomwell Mote Three"));
+        }
+
+        private static void CreateAnimatedEnemyShell(Transform enemyRoot, string name, Color color, ProceduralStylizedAnimator.MotionStyle style, PrototypeEnemy enemy, PrototypeGatheringController gathering)
+        {
+            CreateVisualPrimitive($"{name} Animated Shell", PrimitiveType.Sphere, enemyRoot.position + new Vector3(0f, -0.08f, -0.05f), new Vector3(1.12f, 0.84f, 1.12f), color).transform.SetParent(enemyRoot, true);
+            CreateVisualPrimitive($"{name} Attack Pulse", PrimitiveType.Sphere, enemyRoot.position + new Vector3(0f, 0.22f, 0.66f), new Vector3(0.28f, 0.18f, 0.10f), new Color(1f, 0.76f, 0.32f)).transform.SetParent(enemyRoot, true);
+            ConfigureMotion(enemyRoot.gameObject, style, null, null, enemy, gathering, enemyRoot.Find($"{name} Animated Shell"), enemyRoot.Find($"{name} Attack Pulse"));
+        }
+
+        private static void ConfigureMotion(GameObject owner, ProceduralStylizedAnimator.MotionStyle style, PrototypePlayerController player, PrototypeCreatureController mossling, PrototypeEnemy enemy, PrototypeGatheringController gathering, params Transform[] candidates)
+        {
+            int count = 0;
+            for (int index = 0; index < candidates.Length; index++) if (candidates[index] != null) count++;
+            Transform[] parts = new Transform[count];
+            int write = 0;
+            for (int index = 0; index < candidates.Length; index++) if (candidates[index] != null) parts[write++] = candidates[index];
+            if (parts.Length == 0) return;
+            owner.AddComponent<ProceduralStylizedAnimator>().Configure(style, parts, player, mossling, enemy, gathering);
         }
 
         private static MoonlitGladeController CreateMoonlitGlade(Transform grove, PrototypeGatheringController gathering, PrototypeEnemy guardian, UnityEngine.Camera sceneCamera)

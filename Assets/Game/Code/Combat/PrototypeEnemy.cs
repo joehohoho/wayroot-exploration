@@ -1,4 +1,5 @@
 using UnityEngine;
+using Wayroot.Art;
 using Wayroot.UI;
 
 namespace Wayroot.Combat
@@ -45,6 +46,7 @@ namespace Wayroot.Combat
         {
             if (IsDefeated) return;
             _health = CombatRules.ApplyDamage(_health, damage, out bool defeated);
+            GetComponent<ProceduralStylizedAnimator>()?.Emphasize(defeated ? 0.48f : 0.22f);
             if (!defeated) return;
 
             _respawnAt = Time.time + _profile.RespawnDelaySeconds;
