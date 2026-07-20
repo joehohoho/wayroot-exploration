@@ -24,6 +24,7 @@ namespace Wayroot.Gathering
         private ActionFeedbackHud? _feedback;
 
         public GatheringNode? CurrentTarget { get; private set; }
+        public IReadOnlyList<GatheringNode> Nodes => _nodes;
         public int WeaponLevel => _save.weaponLevel;
         public bool ShelterBuilt => _save.shelterBuilt;
         public bool HasActiveShelterReturnPoint => _save.activeShelterReturnPoint;

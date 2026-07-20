@@ -321,6 +321,9 @@ namespace Wayroot.Core
             CreateCreatureFeature("Mossling Tail", creature.transform, new Vector3(0f, 0.05f, -0.62f), new Vector3(0.3f, 0.3f, 0.5f), new Color(0.18f, 0.5f, 0.28f));
             PrototypeCreatureController controller = creature.AddComponent<PrototypeCreatureController>();
             controller.Configure(input, player, gathering, new Vector3(-4.1f, 0.6f, -4.1f));
+            MosslingResourceGuide guide = creature.AddComponent<MosslingResourceGuide>();
+            guide.Configure(player, gathering);
+            controller.SetResourceGuide(guide);
             CreateWorldIdentifier("MOSSling\nCOMPANION", creature.transform, new Vector3(0f, 1.55f, 0f), sceneCamera, new Color(0.8f, 1f, 0.72f));
             return controller;
         }

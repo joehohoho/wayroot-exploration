@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-**Phase 14 — warm stylized magical-world art-direction pass is implemented and desktop-validated.**
+**Phase 15 — Mossling resource-guide utility is implemented and desktop-validated.**
 
 The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner play review; physical-iPhone evidence is an independent gate for the complete controlled slice.
 
@@ -25,6 +25,15 @@ The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner
 | 12 | Shelter rest and active return point | **Implemented; owner-confirmed** |
 | 13 | One Wayroot-gated restored-grove Thorn Guardian encounter | **Implemented; desktop-validated** |
 | 14 | Cohesive warm stylized magical-world art direction using original runtime geometry, URP materials, and lighting | **Implemented; desktop-validated** |
+| 15 | Befriended Mossling's non-combat nearest-resource guide with renewal fallback | **Implemented; desktop-validated** |
+
+## Phase 15 verification record
+
+- Unity **6000.5.4f1** batch compile: **passed** (exit 0).
+- EditMode: **37 passed, 0 failed, 0 skipped**. PlayMode: **12 passed, 0 failed, 0 skipped**, including pure target selection plus live post-gather retarget and renewal-only no-marker coverage.
+- Windows development review build: **passed** through `Wayroot.Editor.PhaseFifteenBuild.BuildWindowsReviewPlayer`; ignored output is `Builds/Phase15Review/WayrootPhase15.exe` (667,648-byte executable; 158 MB directory).
+- Timed Windows smoke: player remained running for the intended eight seconds (timeout 124); captured output had no application exception, missing-shader, or error text.
+- `Documentation/Phase15ManualTest.md` covers fresh befriending, available-resource marker/trail, post-gather retarget, renewal countdown/no-marker behavior, restart, and RESET. This remains desktop evidence, not physical-iPhone validation.
 
 ## Phase 14 verification record
 
@@ -75,5 +84,5 @@ See `Documentation/Phase9ProductionReadiness.md` for scope, commands/results, re
 
 ## Next milestone gate
 
-1. Owner reviews the completed Phase 14 art-direction pass and explicitly selects or defers the next bounded slice; do not begin Phase 15 automatically.
+1. Owner reviews the completed Phase 15 resource-guide update and explicitly selects or defers the next bounded slice; do not begin Phase 16 automatically.
 2. Before a release-quality or mobile-ready claim, complete `Documentation/Phase9iPhoneBlockers.md` and the touch-only `Documentation/Phase9FullLoopPlaytest.md` on physical iPhone hardware.

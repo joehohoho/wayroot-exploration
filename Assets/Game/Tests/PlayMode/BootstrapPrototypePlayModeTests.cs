@@ -155,5 +155,45 @@ namespace Wayroot.Tests.PlayMode
             PrototypeGatheringSaveService.Reset();
             Assert.That(PrototypeGatheringSaveService.Load().creatureBefriended, Is.False);
         }
+
+        [UnityTest]
+        public IEnumerator BefriendedMossling_GuidesAvailableResourcesThenShowsRenewalStatusWithoutADepletedMarker()
+        {
+            PrototypeGatheringSaveService.Reset();
+            PrototypeGatheringSaveService.Save(new PrototypeGatheringSave { creatureBefriended = true });
+
+            AsyncOperation operation = SceneManager.LoadSceneAsync("Bootstrap", LoadSceneMode.Single);
+            yield return operation;
+            yield return null;
+
+            GameObject creature = GameObject.Find("Friendly Mossling (hold E)");
+            global::Wayroot.Creatures.MosslingResourceGuide guide = creature.GetComponent<global::Wayroot.Creatures.MosslingResourceGuide>();
+            GameObject marker = GameObject.Find("Mossling Guide Available Marker");
+            Assert.That(guide.Selection.Kind, Is.EqualTo(global::Wayroot.Creatures.MosslingGuideKind.Available));
+            Assert.That(marker.activeSelf, Is.True);
+            Assert.That(guide.Status, Does.Contain("GUIDE"));
+
+            GatheringNode flower = GameObject.Find("Wildflower (hold E)").GetComponent<GatheringNode>();
+            Assert.That(flower.TryGather(), Is.True);
+            yield return null;
+
+            Assert.That(guide.Selection.Kind, Is.EqualTo(global::Wayroot.Creatures.MosslingGuideKind.Available));
+            Assert.That(guide.Selection.NodeName, Is.Not.EqualTo("WILDFLOWER"));
+            Assert.That(marker.activeSelf, Is.True);
+
+            long deadline = System.DateTime.UtcNow.AddSeconds(12).Ticks;
+            foreach (GatheringNode node in GameObject.FindObjectsByType<GatheringNode>(FindObjectsSortMode.None))
+            {
+                node.StartRenewal(deadline);
+            }
+
+            yield return null;
+
+            Assert.That(guide.Selection.Kind, Is.EqualTo(global::Wayroot.Creatures.MosslingGuideKind.Renewing));
+            Assert.That(marker.activeSelf, Is.False);
+            Assert.That(guide.Status, Does.Contain("renews"));
+
+            PrototypeGatheringSaveService.Reset();
+        }
     }
 }

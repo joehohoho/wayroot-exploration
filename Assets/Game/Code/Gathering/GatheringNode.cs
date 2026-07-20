@@ -17,6 +17,7 @@ namespace Wayroot.Gathering
         private TextMesh? _worldLabel;
 
         public string Id => _id;
+        public string DisplayName => string.IsNullOrEmpty(_displayName) ? name : _displayName;
         public int Steps => _steps;
         public int RequiredSteps => _requiredSteps;
         public bool IsAvailable => isActiveAndEnabled && _renderer.enabled && _steps < _requiredSteps;

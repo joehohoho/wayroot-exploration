@@ -21,11 +21,14 @@ namespace Wayroot.Creatures
         private bool _wasInteracting;
         private bool _waitingAtShelter;
         private ActionFeedbackHud? _feedback;
+        private MosslingResourceGuide? _resourceGuide;
 
         public bool IsInRange { get; private set; }
         public bool IsBefriended => _gathering.CreatureBefriended;
         public string Status { get; private set; } = "MOSSling: hold E / GATHER to befriend.";
+        public string GuideStatus => _resourceGuide?.Status ?? string.Empty;
         public void SetFeedback(ActionFeedbackHud feedback) => _feedback = feedback;
+        public void SetResourceGuide(MosslingResourceGuide resourceGuide) => _resourceGuide = resourceGuide;
 
         public void Configure(PrototypeInputReader input, PrototypePlayerController player, PrototypeGatheringController gathering, Vector3 shelterHome)
         {
@@ -39,16 +42,20 @@ namespace Wayroot.Creatures
                 _waitingAtShelter = true;
                 Status = "MOSSling is waiting at the shelter.";
             }
+
+            _resourceGuide?.SetGuidanceEnabled(IsBefriended);
         }
 
         private void Update()
         {
             if (!IsBefriended)
             {
+                _resourceGuide?.SetGuidanceEnabled(false);
                 UpdateBefriendPrompt();
                 return;
             }
 
+            _resourceGuide?.SetGuidanceEnabled(true);
             UpdateFollow();
         }
 
@@ -63,6 +70,7 @@ namespace Wayroot.Creatures
                 Status = "MOSSling befriended: it will follow safely.";
                 _feedback?.Show(Status);
                 _waitingAtShelter = false;
+                _resourceGuide?.SetGuidanceEnabled(true);
             }
 
             _wasInteracting = interacting;

@@ -6,7 +6,7 @@
 2. **Future character/presentation depth:** Phase 14 establishes original runtime-composed warm stylized primitives. Decide whether a later approved phase should add authored licensed art/UI/audio; no unvalidated asset may enter tracking.
 3. **iPhone worker and signing:** identify a compatible Mac/Xcode machine, Apple signing owner, supported-device/iOS policy, and secure signing process before the physical-device checkpoint.
 4. **Release acceptance:** decide whether the default launch presentation, Unity splash, provisional app identity, and prototype-only visual content are acceptable for a device review; they are not assumed store-ready.
-5. **Post-Phase-14 selection:** choose or defer the next bounded vertical slice after reviewing this art-direction pass. Do not assume crafting, quest, or region expansion follows automatically.
+5. **Post-Phase-15 selection:** choose or defer the next bounded vertical slice after reviewing the Mossling resource-guide utility. Do not assume crafting, quest, or region expansion follows automatically.
 
 ## Resolved
 
@@ -21,4 +21,5 @@
 - Phase 11: after the Wayroot is restored, the three existing resource nodes use persisted UTC renewal deadlines and a fixed 20-second prototype interval. Legacy depleted IDs migrate to deadlines; no timer/notification/reward system was added.
 - Phase 12: a built shelter can be rested at to persist one active return point; player defeat restores health and returns there, with RESET clearing it.
 - Phase 13: restoring the first Wayroot visibly opens one compact Sunmeadow grove edge with one Thorn Guardian (8 health, 2 contact damage, 15-second fixed respawn). It uses existing attack, player health, shelter return, and Slime Core rewards only.
-- Phase 14: warm modern stylized 3D magical-world art direction uses original runtime-composed geometry plus source-controlled URP materials/lighting; it preserves interaction positions, labels, and current gameplay loops.
+- Phase 14: warm modern stylized 3D magical-world art direction uses original runtime-composed geometry plus source-controlled URP materials/lighting; it preserves interaction positions, labels, and current gameplay/persistence loops.
+- Phase 15: a befriended Mossling non-combat companion guides only toward the nearest available existing flower/tree/stone node. When none are available it reports the nearest renewal countdown without marking depleted nodes; RESET clears befriending/guidance and restart retains the existing companion save behavior.
