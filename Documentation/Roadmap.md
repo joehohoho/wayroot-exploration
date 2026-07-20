@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-**Phase 9 — production-readiness package is complete and desktop-validated. Physical-iPhone evidence, release identity/signing, and owner selection of the next vertical slice remain open. Do not begin Phase 10 gameplay expansion without explicit owner approval.**
+**Phase 10 — first Wayroot restoration objective is implemented and desktop-validated. Physical-iPhone evidence and release identity/signing remain open. Do not begin Phase 11 without explicit owner approval.**
 
 The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner play review; physical-iPhone evidence is an independent gate for the complete controlled slice.
 
@@ -20,7 +20,16 @@ The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner
 | 7 | Sunmeadow visual region | Implemented; desktop-validated; owner review pending |
 | 8 | Mobile vertical-slice polish | Implemented; desktop-validated; physical-iPhone evidence pending |
 | 9 | Production readiness, full-loop playtest, iPhone blockers, and next-feature decision proposal | **Complete; device/release gates explicitly pending** |
-| 10 | One owner-selected next vertical slice | **Blocked pending owner decision** |
+| 10 | One persistent first Wayroot restoration objective in Sunmeadow | **Implemented; desktop-validated** |
+
+## Phase 10 verification record
+
+- Unity **6000.5.4f1** batch compile: **passed** (exit 0).
+- EditMode: **25 passed, 0 failed, 0 skipped**, including the pure Wayroot prerequisite and safe-spending rules.
+- PlayMode: **5 passed, 0 failed, 0 skipped**, including restored-state Bootstrap composition and RESET coverage.
+- Windows development review build: **passed** through `Wayroot.Editor.PhaseTenBuild.BuildWindowsReviewPlayer`; ignored output is `Builds/Phase10Review/WayrootPhase10.exe` (667,648-byte executable; 158 MB directory).
+- Timed Windows smoke: player remained running for the intended eight seconds (timeout 124); captured output had no application exception, missing-shader, or error text.
+- Device Simulator: a landscape/safe-area manual review procedure is in `Documentation/Phase10ManualTest.md`. It is not physical-iPhone evidence.
 
 ## Phase 9 verification record
 

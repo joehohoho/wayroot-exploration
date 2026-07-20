@@ -1,8 +1,8 @@
 # Wayroot Exploration *(working title)*
 
-A peaceful top-down 3D mobile exploration prototype made with Unity: gather materials, survive light combat, improve a weapon, build a shelter, befriend a creature, and explore the Sunmeadow clearing.
+A peaceful top-down 3D mobile exploration prototype made with Unity: gather materials, survive light combat, improve a weapon, build a shelter, befriend a creature, and restore the first Wayroot in the Sunmeadow clearing.
 
-> **Status:** Phase 9 production-readiness and next-feature decision package is complete. The controlled Phase 0–8 slice is desktop-validated; physical-iPhone evidence and an explicit owner choice are required before Phase 10 gameplay work.
+> **Status:** Phase 10’s one persistent Wayroot restoration objective is implemented. Desktop and Device Simulator review evidence are documented; physical-iPhone evidence remains an independent gate.
 
 ## Technology
 
@@ -23,8 +23,9 @@ A peaceful top-down 3D mobile exploration prototype made with Unity: gather mate
 2. Open this folder in Unity Hub and allow Package Manager to resolve dependencies.
 3. Open `Assets/Game/Scenes/Bootstrap.unity` and press **Play**.
 4. Move with **WASD**, arrow keys, gamepad left stick, or the on-screen joystick.
-5. Use mouse wheel or touch pinch to zoom. Use **HOLD GATHER** / `E` / gamepad south for gathering, interaction, and befriending; use **HOLD ATTACK** / Space for combat. Press **Escape** or **PAUSE** to toggle pause.
-6. Use **RESET** to clear the local prototype progression save.
+5. Build **IRON EDGE** and the **SHELTER**, then bring `3 PETAL + 3 TIMBER + 3 STONE + 1 CORE` to the labelled dormant Wayroot. Use **HOLD GATHER** / `E` / gamepad south to restore it once; restoration persists until **RESET**.
+6. Use mouse wheel or touch pinch to zoom. Use **HOLD ATTACK** / Space for combat. Press **Escape** or **PAUSE** to toggle pause.
+7. Use **RESET** to clear the local prototype progression save.
 
 ## Automated validation
 
@@ -38,17 +39,17 @@ UNITY="/c/Program Files/Unity/Hub/Editor/6000.5.4f1/Editor/Unity.exe"
 "$UNITY" -batchmode -nographics -projectPath "$PROJECT_PATH" -runTests -testPlatform PlayMode -testResults "$(cygpath -w "$PWD/TestResults/playmode.xml")" -logFile "$(cygpath -w "$PWD/Logs/playmode-tests.log")"
 ```
 
-Phase 9 results: batch compile passed; EditMode **22/22**; PlayMode **4/4**; the Windows development review build passed. See the readiness report for exact scope and limitations.
+Phase 10 results: batch compile passed; EditMode **25/25**; PlayMode **5/5**; the Windows development review build and bounded smoke passed. See `Documentation/Phase10ManualTest.md` and the handoff for exact scope and limitations.
 
 ## Manual and mobile validation
 
-- `Documentation/Phase9FullLoopPlaytest.md` — fresh-reset through gathering, combat, progression, shelter, companion, restart, and reset.
-- `Documentation/Phase9iPhoneBlockers.md` — actual Mac/Xcode/signing/device prerequisites and touch/performance evidence. Windows and Device Simulator do not close this gate.
+Phase 10 includes `Documentation/Phase10ManualTest.md` for the full objective/restart/reset path and Device Simulator review guide. Physical iPhone validation remains blocked as documented in `Documentation/Phase9iPhoneBlockers.md`.
 
 ## Documentation
 
 - `Documentation/Phase9ProductionReadiness.md` — current evidence, release/device blockers, and explicit non-claims
-- `Documentation/Phase10DecisionProposal.md` — ranked post-slice choices; recommended one-Wayroot objective is **not implemented**
+- `Documentation/Phase10ImplementationPlan.md` and `Documentation/Phase10ManualTest.md` — approved objective contract and manual/Device Simulator review path
+- `Documentation/Phase10DecisionProposal.md` — original decision record for the now-implemented Wayroot objective
 - `Documentation/Roadmap.md` — milestone status and gates
 - `Documentation/OpenQuestions.md` — owner decisions still required
 - `Documentation/AgentHandoff.md` — durable restart context

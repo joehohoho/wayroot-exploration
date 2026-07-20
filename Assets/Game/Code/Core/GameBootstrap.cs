@@ -13,6 +13,7 @@ using Wayroot.Combat;
 using Wayroot.Creatures;
 using Wayroot.Progression;
 using Wayroot.UI;
+using Wayroot.Wayroot;
 
 namespace Wayroot.Core
 {
@@ -49,14 +50,16 @@ namespace Wayroot.Core
             PrototypeGatheringController gathering = CreateGathering(input, player, sceneCamera);
             PrototypeMerchantController merchant = CreateMerchant(input, player, gathering, sceneCamera);
             PrototypeBuildController build = CreateBuildPlot(input, player, gathering, sceneCamera);
+            PrototypeWayrootController wayroot = CreateWayroot(input, player, gathering, sceneCamera);
             PrototypeCreatureController creature = CreateCreature(input, player, gathering, sceneCamera);
             PrototypeEnemy enemy = CreateCombat(input, player, playerHealth, gathering, sceneCamera, out PrototypeAttackController attack);
             PauseController pause = new GameObject("Pause Controller").AddComponent<PauseController>();
             pause.Configure(player, cameraController);
-            ActionFeedbackHud feedback = CreateRuntimeUi(input, player, playerHealth, enemy, cameraController, pause, gathering, merchant, build, creature);
+            ActionFeedbackHud feedback = CreateRuntimeUi(input, player, playerHealth, enemy, cameraController, pause, gathering, merchant, build, wayroot, creature);
             gathering.SetFeedback(feedback);
             merchant.SetFeedback(feedback);
             build.SetFeedback(feedback);
+            wayroot.SetFeedback(feedback);
             creature.SetFeedback(feedback);
             attack.SetFeedback(feedback);
             enemy.SetFeedback(feedback);
@@ -254,6 +257,43 @@ namespace Wayroot.Core
             return build;
         }
 
+        private static PrototypeWayrootController CreateWayroot(PrototypeInputReader input, PrototypePlayerController player, PrototypeGatheringController gathering, UnityEngine.Camera sceneCamera)
+        {
+            GameObject wayroot = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            wayroot.name = "Dormant Wayroot (hold E)";
+            wayroot.transform.position = new Vector3(-0.8f, 0.9f, -5.2f);
+            wayroot.transform.localScale = new Vector3(1.05f, 0.9f, 1.05f);
+            Renderer dormantRenderer = wayroot.GetComponent<Renderer>();
+            SetMaterialColor(dormantRenderer, new Color(0.24f, 0.16f, 0.38f));
+
+            GameObject restoredVisual = new("Restored Wayroot Bloom");
+            restoredVisual.transform.position = wayroot.transform.position;
+            CreateWayrootPiece("Wayroot Bloom Core", restoredVisual.transform, new Vector3(0f, 1.15f, 0f), new Vector3(0.7f, 1.0f, 0.7f), new Color(0.25f, 1f, 0.68f));
+            CreateWayrootPiece("Wayroot Bloom Left", restoredVisual.transform, new Vector3(-0.85f, 0.55f, 0f), new Vector3(0.45f, 0.5f, 0.45f), new Color(0.52f, 0.96f, 0.54f));
+            CreateWayrootPiece("Wayroot Bloom Right", restoredVisual.transform, new Vector3(0.85f, 0.55f, 0f), new Vector3(0.45f, 0.5f, 0.45f), new Color(0.52f, 0.96f, 0.54f));
+            restoredVisual.SetActive(false);
+
+            GameObject labelObject = new("Wayroot World Label");
+            TextMesh label = labelObject.AddComponent<TextMesh>();
+            label.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            label.fontSize = 44;
+            label.characterSize = 0.12f;
+            label.anchor = TextAnchor.MiddleCenter;
+            label.alignment = TextAlignment.Center;
+            label.color = new Color(0.76f, 0.65f, 1f);
+            labelObject.AddComponent<WorldIdentifier>().Configure(wayroot.transform, new Vector3(0f, 2.15f, 0f), sceneCamera);
+
+            PrototypeWayrootController controller = wayroot.AddComponent<PrototypeWayrootController>();
+            controller.Configure(input, player, gathering, restoredVisual, dormantRenderer, label);
+            return controller;
+        }
+
+        private static void CreateWayrootPiece(string name, Transform parent, Vector3 localPosition, Vector3 localScale, Color color)
+        {
+            GameObject piece = CreateVisualPrimitive(name, PrimitiveType.Sphere, parent.position + localPosition, localScale, color);
+            piece.transform.SetParent(parent, true);
+        }
+
         private static PrototypeCreatureController CreateCreature(PrototypeInputReader input, PrototypePlayerController player, PrototypeGatheringController gathering, UnityEngine.Camera sceneCamera)
         {
             GameObject creature = GameObject.CreatePrimitive(PrimitiveType.Sphere);
@@ -353,7 +393,7 @@ namespace Wayroot.Core
             return node;
         }
 
-        private static ActionFeedbackHud CreateRuntimeUi(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeEnemy enemy, TopDownCameraController cameraController, PauseController pause, PrototypeGatheringController gathering, PrototypeMerchantController merchant, PrototypeBuildController build, PrototypeCreatureController creature)
+        private static ActionFeedbackHud CreateRuntimeUi(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeEnemy enemy, TopDownCameraController cameraController, PauseController pause, PrototypeGatheringController gathering, PrototypeMerchantController merchant, PrototypeBuildController build, PrototypeWayrootController wayroot, PrototypeCreatureController creature)
         {
             Canvas canvas = new GameObject("Prototype HUD").AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -422,7 +462,7 @@ namespace Wayroot.Core
             inventoryText.rectTransform.pivot = new Vector2(1f, 1f);
             inventoryText.rectTransform.anchoredPosition = new Vector2(-24f, -120f);
             inventoryText.rectTransform.sizeDelta = new Vector2(700f, 90f);
-            inventoryText.gameObject.AddComponent<GatheringHud>().Configure(inventoryText, gathering, merchant, build, creature);
+            inventoryText.gameObject.AddComponent<GatheringHud>().Configure(inventoryText, gathering, merchant, build, wayroot, creature);
 
             Text combatText = CreateText("Combat Status", safeArea, string.Empty, 24, TextAnchor.UpperLeft);
             combatText.rectTransform.anchorMin = combatText.rectTransform.anchorMax = new Vector2(0f, 1f);

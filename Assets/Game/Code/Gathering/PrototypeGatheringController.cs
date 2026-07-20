@@ -5,6 +5,7 @@ using Wayroot.Combat;
 using Wayroot.Input;
 using Wayroot.Inventory;
 using Wayroot.UI;
+using Wayroot.Wayroot;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -24,6 +25,7 @@ namespace Wayroot.Gathering
         public int WeaponLevel => _save.weaponLevel;
         public bool ShelterBuilt => _save.shelterBuilt;
         public bool CreatureBefriended => _save.creatureBefriended;
+        public bool WayrootRestored => _save.wayrootRestored;
         public int AttackDamage => WeaponUpgradeRules.GetAttackDamage(WeaponLevel);
         public int GetCount(ResourceType resource) => _inventory.GetCount(resource);
         public void SetFeedback(ActionFeedbackHud feedback) => _feedback = feedback;
@@ -80,6 +82,25 @@ namespace Wayroot.Gathering
             status = "IRON EDGE purchased: ATK 1 -> 2.";
             return true;
         }
+        public bool TryRestoreWayroot(out string status)
+        {
+            if (_save.wayrootRestored)
+            {
+                status = "WAYROOT already restored: Sunmeadow is renewed.";
+                return false;
+            }
+
+            if (!WayrootRestorationRules.TryRestore(false, WeaponLevel >= WeaponUpgradeRules.MaximumLevel, ShelterBuilt, _inventory))
+            {
+                status = GetWayrootRequirementStatus();
+                return false;
+            }
+
+            _save.wayrootRestored = true;
+            SaveInventory();
+            status = "WAYROOT RESTORED: Sunmeadow clearing blooms.";
+            return true;
+        }
         public void AwardCombatCore()
         {
             if (_inventory.TryAdd(ResourceType.SlimeCore, 1, out _, out _))
@@ -95,6 +116,20 @@ namespace Wayroot.Gathering
             _save.stone = _inventory.GetCount(ResourceType.Stone);
             _save.slimeCores = _inventory.GetCount(ResourceType.SlimeCore);
             PrototypeGatheringSaveService.Save(_save);
+        }
+        private string GetWayrootRequirementStatus()
+        {
+            if (WeaponLevel < WeaponUpgradeRules.MaximumLevel)
+            {
+                return "WAYROOT needs IRON EDGE weapon upgrade.";
+            }
+
+            if (!ShelterBuilt)
+            {
+                return "WAYROOT needs a built SHELTER.";
+            }
+
+            return $"WAYROOT needs {WayrootRestorationRules.PetalCost} PETAL + {WayrootRestorationRules.TimberCost} TIMBER + {WayrootRestorationRules.StoneCost} STONE + {WayrootRestorationRules.CoreCost} CORE.";
         }
         public void ResetPrototype()
         {

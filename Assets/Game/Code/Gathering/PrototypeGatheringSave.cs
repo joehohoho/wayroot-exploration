@@ -8,7 +8,7 @@ namespace Wayroot.Gathering
     [System.Serializable]
     public sealed class PrototypeGatheringSave
     {
-        public int version = 4;
+        public int version = 5;
         public int petals;
         public int timber;
         public int stone;
@@ -16,6 +16,8 @@ namespace Wayroot.Gathering
         public int weaponLevel;
         public bool shelterBuilt;
         public bool creatureBefriended;
+        // Missing in Phase 0-9 saves defaults false through JsonUtility for backward compatibility.
+        public bool wayrootRestored;
         public List<string> depletedNodeIds = new();
     }
 

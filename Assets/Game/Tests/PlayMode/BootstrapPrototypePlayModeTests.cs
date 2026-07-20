@@ -26,6 +26,27 @@ namespace Wayroot.Tests.PlayMode
         }
 
         [UnityTest]
+        public IEnumerator WayrootRestoration_PersistsItsClearingBloomAcrossSceneRestartAndResetClearsIt()
+        {
+            PrototypeGatheringSaveService.Reset();
+            PrototypeGatheringSaveService.Save(new PrototypeGatheringSave { wayrootRestored = true });
+
+            AsyncOperation operation = SceneManager.LoadSceneAsync("Bootstrap", LoadSceneMode.Single);
+            yield return operation;
+            yield return null;
+
+            GameObject wayroot = GameObject.Find("Dormant Wayroot (hold E)");
+            GameObject bloom = GameObject.Find("Restored Wayroot Bloom");
+            Assert.That(wayroot, Is.Not.Null);
+            Assert.That(bloom, Is.Not.Null);
+            Assert.That(bloom.activeSelf, Is.True);
+            Assert.That(GameObject.Find("Wayroot World Label").GetComponent<TextMesh>().text, Is.EqualTo("WAYROOT\nRESTORED"));
+
+            PrototypeGatheringSaveService.Reset();
+            Assert.That(PrototypeGatheringSaveService.Load().wayrootRestored, Is.False);
+        }
+
+        [UnityTest]
         public IEnumerator BefriendedCreature_RestoresAtTheShelterAndResetClearsItsState()
         {
             PrototypeGatheringSaveService.Reset();

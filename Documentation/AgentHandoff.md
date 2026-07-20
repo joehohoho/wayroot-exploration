@@ -4,24 +4,26 @@ Read this file before resuming after a quota reset/session loss, then update it 
 
 ## 2026-07-20 status
 
-- **Current milestone:** Phase 9 production-readiness, playtest, iPhone-blocker, and next-feature decision package is complete. **Do not begin Phase 10 gameplay expansion without explicit owner approval.**
-- **Repository:** `Wayroot Exploration` / `wayroot-exploration`, branch `main`. Inspect public `main` and working tree before resuming.
+- **Current milestone:** Phase 10 first Wayroot restoration objective is implemented and verified. **Do not begin Phase 11 without explicit owner approval.**
+- **Repository:** `Wayroot Exploration` / `wayroot-exploration`, branch `main`. This phase must be committed/pushed after the final diff review.
 - **Pinned editor:** Unity **6000.5.4f1** (`d550df8bd089`). Do not change the project pin without owner approval.
 - **Packages:** Input System **1.19.0**, URP **17.5.0**, Unity Test Framework **1.7.0**, uGUI **2.0.0**. `activeInputHandler: 1` is required.
-- **Current slice:** the runtime-built Bootstrap scene retains Sunmeadow presentation, touch UI, gathering/inventory, slime combat/drop/respawn, merchant weapon upgrade, shelter/persistence, and Mossling companion/persistence. It is a controlled primitive-asset prototype, not an iOS-certified release.
-- **Phase 9 documents:** read `Phase9ProductionReadiness.md`, `Phase9FullLoopPlaytest.md`, `Phase9iPhoneBlockers.md`, and `Phase10DecisionProposal.md` before proposing further work.
-- **Automation completed in Phase 9:** Unity batch compile passed; EditMode **22/22**; PlayMode **4/4**. `Wayroot.Editor.PhaseEightBuild.BuildWindowsReviewPlayer` passed and produced ignored `Builds/Phase8Review/WayrootPhase8.exe` (667,648 bytes; 158 MB directory). The player survived the intentional eight-second smoke timeout (124) and captured output had no application exception, missing-shader, or error text.
-- **Environment note:** Unity logs reported LicenseClient handshake/access-token messages while compile/tests/build returned success. Treat that as a local/CI licensing follow-up, not proof of a product error.
-- **iPhone status:** blocked. Windows evidence does not validate iOS compilation/signing, physical touch behavior, safe area, performance, persistence, or App Store readiness. Apple team/profile fields are empty and automatic signing is disabled; no Mac/Xcode/iOS Build Support or signed device result was available.
-- **Git hygiene:** generated `Builds/`, `Logs/`, `TestResults/`, `Library/`, etc. are ignored. Unity may rewrite whitespace-only `ProjectSettings/ProjectSettings.asset` during batch work; restore it before committing.
+- **Phase 10 contract:** one dormant labelled Wayroot in the existing Sunmeadow clearing restores via the existing `E` / gamepad-south / **HOLD GATHER** interaction only after **IRON EDGE**, a built **SHELTER**, and exactly `3 PETAL + 3 TIMBER + 3 STONE + 1 CORE`. It spends safely once, persists across restart, and RESET returns it to dormant. A primitive green bloom/label provides the only new clearing presentation.
+- **Persistence:** `PrototypeGatheringSave` is version 5; old save JSON omits `wayrootRestored`, which defaults to `false` through `JsonUtility`. `PrototypeGatheringSaveService.Reset()` deletes the record, clearing Wayroot state.
+- **Tests:** pure `WayrootRestorationRulesTests` cover prerequisites, fixed one-time spending, and non-spending failure. PlayMode coverage saves restored state, reloads Bootstrap, asserts bloom/label composition, then asserts RESET state.
+- **Manual/device guide:** `Documentation/Phase10ManualTest.md` documents fresh-reset objective validation, restart/reset behavior, and a Device Simulator review procedure. Device Simulator remains desktop evidence only.
+- **Phase 10 automation:** batch compile passed; EditMode **25/25**; PlayMode **5/5**. `Wayroot.Editor.PhaseTenBuild.BuildWindowsReviewPlayer` passed and produced ignored `Builds/Phase10Review/WayrootPhase10.exe` (667,648-byte executable; 158 MB directory). Its eight-second Windows smoke stayed alive until intentional timeout 124 with no captured application exception, error, or missing-shader text.
+- **Environment note:** Unity logs still contain transient LicenseClient handshake/access-token messages despite all successful exits, and existing nullable/obsolete API compiler warnings. Treat licensing as local/CI follow-up; no Phase 10 compile error occurred.
+- **iPhone status:** blocked. Windows/Device Simulator evidence does not validate iOS compilation, signing, physical touch behavior, safe area, performance, persistence, or App Store readiness. No Mac/Xcode/iOS Build Support/signed-device result is available.
+- **Git hygiene:** generated `Builds/`, `Logs/`, `TestResults/`, `Library/`, etc. are ignored. Unity rewrites `ProjectSettings/ProjectSettings.asset`; restore that whitespace/settings churn before committing.
 
 ## First actions when resuming
 
-1. Read `AGENTS.md`, this handoff, `Documentation/Roadmap.md`, `Documentation/OpenQuestions.md`, and all four Phase 9 documents.
-2. Inspect `git status --short --branch`, last five commits, and verify `origin/main` equals local `HEAD` before work.
-3. Obtain an explicit owner Phase 10 selection, or follow the owner-approved physical-iPhone validation path only.
-4. For iPhone work, complete prerequisites and record every real device result; do not claim a simulator/desktop pass closes the gate.
+1. Inspect `git status --short --branch`, `git log --oneline -5`, then compare local `HEAD` to `origin/main`.
+2. Read `AGENTS.md`, this handoff, `Documentation/Roadmap.md`, `Documentation/OpenQuestions.md`, `Documentation/Phase10ImplementationPlan.md`, and `Documentation/Phase10ManualTest.md`.
+3. If Phase 10 is not yet published, review staged diff, run the documented checks after any code change, commit, push, fetch, and compare `HEAD` to `origin/main`.
+4. Obtain explicit Phase 11 authorization before new gameplay. For iPhone work, complete `Documentation/Phase9iPhoneBlockers.md` with real Mac/Xcode/signed-device evidence.
 
 ## Resume prompt
 
-> Preserve Unity 6000.5.4f1 and the approved Phase 0–8 controlled slice. Phase 9 is documentation/validation complete, not an authorization to implement Phase 10. Use the published readiness report and actual Unity execution; close physical-iPhone blockers only with real Mac/Xcode/signed-device evidence.
+> Preserve Unity 6000.5.4f1 and the approved Phase 0–10 controlled slice. Phase 10’s finite Wayroot objective is complete: do not expand it into resource renewal, crafting, quest trees, regions, or repeatable loops without a new owner-approved phase. Use actual Unity execution; do not claim a Device Simulator or Windows pass is physical-iPhone validation.
