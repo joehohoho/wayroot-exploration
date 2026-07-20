@@ -105,6 +105,13 @@ namespace Wayroot.Core
             SetMaterialColor(enemyObject.GetComponent<Renderer>(), new Color(0.85f, 0.25f, 0.3f));
             PrototypeEnemy enemy = enemyObject.AddComponent<PrototypeEnemy>();
             enemy.Configure(enemyObject.GetComponent<Renderer>());
+            GameObject healthBar = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            healthBar.name = "Slime Health Bar";
+            healthBar.transform.SetParent(enemyObject.transform, false);
+            healthBar.transform.localScale = new Vector3(1f, 0.12f, 0.12f);
+            healthBar.transform.localPosition = new Vector3(0f, 1.8f, 0f);
+            SetMaterialColor(healthBar.GetComponent<Renderer>(), new Color(0.2f, 0.9f, 0.25f));
+            healthBar.AddComponent<PrototypeWorldHealthBar>().Configure(enemy, healthBar.transform);
             enemyObject.AddComponent<PrototypeEnemyChase>().Configure(player.transform, playerHealth);
             new GameObject("Prototype Attack").AddComponent<PrototypeAttackController>().Configure(input, player, enemy);
             return enemy;

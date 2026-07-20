@@ -6,10 +6,12 @@ namespace Wayroot.Combat
     {
         private Transform _player = null!;
         private PrototypePlayerHealth _health = null!;
+        private PrototypeEnemy _enemy = null!;
         private float _nextDamage;
-        public void Configure(Transform player, PrototypePlayerHealth health) { _player = player; _health = health; }
+        public void Configure(Transform player, PrototypePlayerHealth health) { _player = player; _health = health; _enemy = GetComponent<PrototypeEnemy>(); }
         private void Update()
         {
+            if (_enemy.IsDefeated) return;
             Vector3 delta = _player.position - transform.position; delta.y = 0f;
             if (delta.sqrMagnitude > 36f || delta.sqrMagnitude < 0.01f) return;
             transform.position += delta.normalized * (1.5f * Time.deltaTime);
