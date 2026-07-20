@@ -1,15 +1,17 @@
 using System;
 using System.Collections.Generic;
+using Wayroot.Audio;
 
 namespace Wayroot.Gathering
 {
     /// <summary>Normalizes versioned gathering saves and migrates Phase 10 depleted IDs to Phase 11 renewal deadlines.</summary>
     public static class PrototypeGatheringSaveMigration
     {
-        public const int CurrentVersion = 7;
+        public const int CurrentVersion = 8;
 
         public static void Normalize(PrototypeGatheringSave save, DateTime utcNow)
         {
+            if (save.version < CurrentVersion) save.soundEnabled = SoundscapeRules.DefaultSoundEnabled;
             save.depletedNodeIds ??= new List<string>();
             save.renewalNodes ??= new List<RenewalNodeSave>();
 

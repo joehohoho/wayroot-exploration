@@ -3,6 +3,7 @@ using Wayroot.Combat;
 using Wayroot.Gathering;
 using Wayroot.Input;
 using Wayroot.UI;
+using Wayroot.Audio;
 using UnityEngine;
 
 namespace Wayroot.Building
@@ -21,6 +22,7 @@ namespace Wayroot.Building
         private Vector3 _shelterReturnPoint;
         private bool _wasInteracting;
         private ActionFeedbackHud? _feedback;
+        private ProceduralSoundscape? _soundscape;
 
         public bool IsInRange { get; private set; }
         public string Status { get; private set; } = "SHELTER: 3 TIMBER + 3 STONE";
@@ -30,6 +32,8 @@ namespace Wayroot.Building
             _feedback = feedback;
             if (_gathering.HasActiveShelterReturnPoint) _feedback.Show("RETURN POINT RESTORED: SHELTER ACTIVE.");
         }
+
+        public void SetSoundscape(ProceduralSoundscape soundscape) => _soundscape = soundscape;
 
         public void Configure(PrototypeInputReader input, PrototypePlayerController player, PrototypeGatheringController gathering, PrototypePlayerHealth playerHealth, GameObject shelter, Renderer plotRenderer, TextMesh shelterLabel, Vector3 shelterReturnPoint)
         {
@@ -69,6 +73,7 @@ namespace Wayroot.Building
                 }
 
                 _feedback?.Show(Status);
+                if (_gathering.ShelterBuilt) _soundscape?.Play(SoundscapeCue.ShelterRest);
                 ApplyBuiltVisual(_gathering.ShelterBuilt);
             }
 

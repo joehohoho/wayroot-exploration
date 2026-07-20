@@ -3,6 +3,7 @@ using Wayroot.Character;
 using Wayroot.Gathering;
 using Wayroot.Input;
 using Wayroot.UI;
+using Wayroot.Audio;
 using UnityEngine;
 
 namespace Wayroot.Combat
@@ -17,8 +18,10 @@ namespace Wayroot.Combat
         private PrototypeGatheringController _inventory = null!;
         private float _lastAttack = -100f;
         private ActionFeedbackHud? _feedback;
+        private ProceduralSoundscape? _soundscape;
 
         public void SetFeedback(ActionFeedbackHud feedback) => _feedback = feedback;
+        public void SetSoundscape(ProceduralSoundscape soundscape) => _soundscape = soundscape;
 
         public void Configure(PrototypeInputReader input, PrototypePlayerController player, PrototypeGatheringController inventory, params PrototypeEnemy[] enemies)
         {
@@ -40,6 +43,7 @@ namespace Wayroot.Combat
 
             _lastAttack = Time.time;
             target.TakeDamage(_inventory.AttackDamage);
+            _soundscape?.Play(target.IsDefeated ? SoundscapeCue.Defeat : SoundscapeCue.CombatHit);
             _feedback?.Show(target.IsDefeated
                 ? $"{target.DisplayName} DEFEATED: +1 CORE"
                 : $"HIT: {target.DisplayName} {target.Health}/{target.MaxHealth}");

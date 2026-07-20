@@ -7,6 +7,7 @@ using Wayroot.Input;
 using Wayroot.Inventory;
 using Wayroot.UI;
 using Wayroot.Wayroot;
+using Wayroot.Audio;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -22,6 +23,7 @@ namespace Wayroot.Gathering
         private PrototypeGatheringSave _save = null!;
         private float _nextStepTime;
         private ActionFeedbackHud? _feedback;
+        private ProceduralSoundscape? _soundscape;
 
         public GatheringNode? CurrentTarget { get; private set; }
         public IReadOnlyList<GatheringNode> Nodes => _nodes;
@@ -30,11 +32,20 @@ namespace Wayroot.Gathering
         public bool HasActiveShelterReturnPoint => _save.activeShelterReturnPoint;
         public bool CreatureBefriended => _save.creatureBefriended;
         public bool WayrootRestored => _save.wayrootRestored;
+        public bool SoundEnabled => _save.soundEnabled;
         public int AttackDamage => WeaponUpgradeRules.GetAttackDamage(WeaponLevel);
         public int GetCount(ResourceType resource) => _inventory.GetCount(resource);
         public string RenewalStatus => GetRenewalStatus(DateTime.UtcNow);
 
         public void SetFeedback(ActionFeedbackHud feedback) => _feedback = feedback;
+        public void SetSoundscape(ProceduralSoundscape soundscape) => _soundscape = soundscape;
+
+        public void SetSoundEnabled(bool enabled)
+        {
+            if (_save.soundEnabled == enabled) return;
+            _save.soundEnabled = enabled;
+            SaveInventory();
+        }
 
         public bool TryBuildShelter(out string status)
         {
@@ -179,6 +190,7 @@ namespace Wayroot.Gathering
                 {
                     RemoveRenewal(node.Id);
                     _feedback?.Show($"RESOURCE RETURNED: {node.Resource.ToString().ToUpperInvariant()}");
+                    _soundscape?.Play(SoundscapeCue.Renewal);
                     changed = true;
                 }
             }
@@ -211,6 +223,7 @@ namespace Wayroot.Gathering
             node.StartRenewal(deadline);
             SetRenewalDeadline(node.Id, deadline);
             _feedback?.Show($"GATHERED: +1 {node.Resource.ToString().ToUpperInvariant()} — RETURNS IN 0:20");
+            _soundscape?.Play(SoundscapeCue.Gather);
 
             SaveInventory();
         }

@@ -14,6 +14,7 @@ using Wayroot.Creatures;
 using Wayroot.Progression;
 using Wayroot.UI;
 using Wayroot.Wayroot;
+using Wayroot.Audio;
 
 namespace Wayroot.Core
 {
@@ -56,17 +57,25 @@ namespace Wayroot.Core
             RestoredGroveController grove = CreateRestoredGrove(input, player, playerHealth, gathering, sceneCamera, attack, enemy);
             PauseController pause = new GameObject("Pause Controller").AddComponent<PauseController>();
             pause.Configure(player, cameraController);
-            ActionFeedbackHud feedback = CreateRuntimeUi(input, player, playerHealth, enemy, grove, cameraController, pause, gathering, merchant, build, wayroot, creature);
+            ProceduralSoundscape soundscape = new GameObject("Procedural Cozy Soundscape").AddComponent<ProceduralSoundscape>();
+            soundscape.Configure(gathering);
+            ActionFeedbackHud feedback = CreateRuntimeUi(input, player, playerHealth, enemy, grove, cameraController, pause, gathering, merchant, build, wayroot, creature, soundscape);
             gathering.SetFeedback(feedback);
+            gathering.SetSoundscape(soundscape);
             merchant.SetFeedback(feedback);
             build.SetFeedback(feedback);
             wayroot.SetFeedback(feedback);
             creature.SetFeedback(feedback);
             attack.SetFeedback(feedback);
+            attack.SetSoundscape(soundscape);
             enemy.SetFeedback(feedback);
             grove.SetFeedback(feedback);
             playerHealth.SetFeedback(feedback);
+            playerHealth.SetSoundscape(soundscape);
             pause.SetFeedback(feedback);
+            build.SetSoundscape(soundscape);
+            wayroot.SetSoundscape(soundscape);
+            creature.SetSoundscape(soundscape);
         }
 
         private static void CreateLight()
@@ -450,7 +459,7 @@ namespace Wayroot.Core
             return node;
         }
 
-        private static ActionFeedbackHud CreateRuntimeUi(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeEnemy enemy, RestoredGroveController grove, TopDownCameraController cameraController, PauseController pause, PrototypeGatheringController gathering, PrototypeMerchantController merchant, PrototypeBuildController build, PrototypeWayrootController wayroot, PrototypeCreatureController creature)
+        private static ActionFeedbackHud CreateRuntimeUi(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeEnemy enemy, RestoredGroveController grove, TopDownCameraController cameraController, PauseController pause, PrototypeGatheringController gathering, PrototypeMerchantController merchant, PrototypeBuildController build, PrototypeWayrootController wayroot, PrototypeCreatureController creature, ProceduralSoundscape soundscape)
         {
             Canvas canvas = new GameObject("Prototype HUD").AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -483,15 +492,24 @@ namespace Wayroot.Core
             pauseButton.pivot = new Vector2(0f, 1f);
             pauseButton.anchoredPosition = new Vector2(24f, -150f);
             Button button = pauseButton.gameObject.AddComponent<Button>();
-            button.onClick.AddListener(pause.Toggle);
+            button.onClick.AddListener(() => { soundscape.Play(SoundscapeCue.Ui); pause.Toggle(); });
             CreateText("Pause Label", pauseButton, "PAUSE", 32, TextAnchor.MiddleCenter);
+
+            RectTransform soundButton = CreatePanel("Sound Toggle Button", safeArea, new Color(0.16f, 0.36f, 0.30f, 0.88f));
+            soundButton.sizeDelta = new Vector2(180f, 62f);
+            soundButton.anchorMin = soundButton.anchorMax = new Vector2(0f, 1f);
+            soundButton.pivot = new Vector2(0f, 1f);
+            soundButton.anchoredPosition = new Vector2(24f, -244f);
+            Text soundLabel = CreateText("Sound Toggle Label", soundButton, string.Empty, 20, TextAnchor.MiddleCenter);
+            soundButton.gameObject.AddComponent<Button>();
+            soundButton.gameObject.AddComponent<SoundToggleButton>().Configure(soundLabel, soundscape);
 
             RectTransform resetButton = CreatePanel("Reset Prototype Button", safeArea, new Color(0.42f, 0.18f, 0.18f, 0.9f));
             resetButton.sizeDelta = new Vector2(180f, 70f);
             resetButton.anchorMin = resetButton.anchorMax = new Vector2(1f, 1f);
             resetButton.pivot = new Vector2(1f, 1f);
             resetButton.anchoredPosition = new Vector2(-24f, -278f);
-            resetButton.gameObject.AddComponent<Button>().onClick.AddListener(gathering.ResetPrototype);
+            resetButton.gameObject.AddComponent<Button>().onClick.AddListener(() => { soundscape.Play(SoundscapeCue.Ui); gathering.ResetPrototype(); });
             CreateText("Reset Label", resetButton, "RESET", 22, TextAnchor.MiddleCenter);
 
             RectTransform gatherButton = CreatePanel("Gather Button", safeArea, new Color(0.2f, 0.5f, 0.25f, 0.9f));

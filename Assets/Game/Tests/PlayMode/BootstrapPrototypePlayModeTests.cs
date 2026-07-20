@@ -3,6 +3,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
+using Wayroot.Audio;
 using Wayroot.Gathering;
 
 namespace Wayroot.Tests.PlayMode
@@ -194,6 +195,31 @@ namespace Wayroot.Tests.PlayMode
             Assert.That(guide.Status, Does.Contain("renews"));
 
             PrototypeGatheringSaveService.Reset();
+        }
+
+        [UnityTest]
+        public IEnumerator SoundToggle_PersistsAcrossRestartAndResetRestoresEnabledDefault()
+        {
+            PrototypeGatheringSaveService.Reset();
+            AsyncOperation firstLoad = SceneManager.LoadSceneAsync("Bootstrap", LoadSceneMode.Single);
+            yield return firstLoad;
+            yield return null;
+
+            ProceduralSoundscape soundscape = GameObject.Find("Procedural Cozy Soundscape").GetComponent<ProceduralSoundscape>();
+            Assert.That(soundscape.IsSoundEnabled, Is.True);
+            soundscape.SetSoundEnabled(false);
+            Assert.That(PrototypeGatheringSaveService.Load().soundEnabled, Is.False);
+
+            AsyncOperation restart = SceneManager.LoadSceneAsync("Bootstrap", LoadSceneMode.Single);
+            yield return restart;
+            yield return null;
+
+            soundscape = GameObject.Find("Procedural Cozy Soundscape").GetComponent<ProceduralSoundscape>();
+            Assert.That(soundscape.IsSoundEnabled, Is.False);
+            Assert.That(GameObject.Find("Sound Toggle Label").GetComponent<UnityEngine.UI.Text>().text, Is.EqualTo("SOUND OFF"));
+
+            PrototypeGatheringSaveService.Reset();
+            Assert.That(PrototypeGatheringSaveService.Load().soundEnabled, Is.True);
         }
     }
 }

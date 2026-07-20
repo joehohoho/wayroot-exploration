@@ -2,6 +2,7 @@ using Wayroot.Character;
 using Wayroot.Gathering;
 using Wayroot.Input;
 using Wayroot.UI;
+using Wayroot.Audio;
 using UnityEngine;
 
 namespace Wayroot.Wayroot
@@ -18,6 +19,7 @@ namespace Wayroot.Wayroot
         private TextMesh _label = null!;
         private bool _wasInteracting;
         private ActionFeedbackHud? _feedback;
+        private ProceduralSoundscape? _soundscape;
 
         public bool IsInRange { get; private set; }
         public string Status { get; private set; } = "WAYROOT: restore the clearing";
@@ -34,6 +36,7 @@ namespace Wayroot.Wayroot
         }
 
         public void SetFeedback(ActionFeedbackHud feedback) => _feedback = feedback;
+        public void SetSoundscape(ProceduralSoundscape soundscape) => _soundscape = soundscape;
 
         private void Update()
         {
@@ -45,6 +48,7 @@ namespace Wayroot.Wayroot
                 _gathering.TryRestoreWayroot(out string status);
                 Status = status;
                 _feedback?.Show(status);
+                if (_gathering.WayrootRestored) _soundscape?.Play(SoundscapeCue.WayrootRestore);
                 ApplyRestoredVisual(_gathering.WayrootRestored);
             }
 

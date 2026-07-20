@@ -17,6 +17,8 @@ namespace Wayroot.Gathering
         // Missing in Phase 0-11 saves defaults false through JsonUtility for backward compatibility.
         public bool activeShelterReturnPoint;
         public bool creatureBefriended;
+        // Missing in pre-Phase 16 saves is migrated to the cozy soundscape's enabled default.
+        public bool soundEnabled = true;
         // Missing in Phase 0-9 saves defaults false through JsonUtility for backward compatibility.
         public bool wayrootRestored;
         // Retained only to read Phase 0-10 JSON. Normalize migrates these IDs to renewalNodes.

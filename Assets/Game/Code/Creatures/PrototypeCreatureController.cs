@@ -2,6 +2,7 @@ using Wayroot.Character;
 using Wayroot.Gathering;
 using Wayroot.Input;
 using Wayroot.UI;
+using Wayroot.Audio;
 using UnityEngine;
 
 namespace Wayroot.Creatures
@@ -22,6 +23,7 @@ namespace Wayroot.Creatures
         private bool _waitingAtShelter;
         private ActionFeedbackHud? _feedback;
         private MosslingResourceGuide? _resourceGuide;
+        private ProceduralSoundscape? _soundscape;
 
         public bool IsInRange { get; private set; }
         public bool IsBefriended => _gathering.CreatureBefriended;
@@ -29,6 +31,7 @@ namespace Wayroot.Creatures
         public string GuideStatus => _resourceGuide?.Status ?? string.Empty;
         public void SetFeedback(ActionFeedbackHud feedback) => _feedback = feedback;
         public void SetResourceGuide(MosslingResourceGuide resourceGuide) => _resourceGuide = resourceGuide;
+        public void SetSoundscape(ProceduralSoundscape soundscape) => _soundscape = soundscape;
 
         public void Configure(PrototypeInputReader input, PrototypePlayerController player, PrototypeGatheringController gathering, Vector3 shelterHome)
         {
@@ -69,6 +72,7 @@ namespace Wayroot.Creatures
                 _gathering.BefriendCreature();
                 Status = "MOSSling befriended: it will follow safely.";
                 _feedback?.Show(Status);
+                _soundscape?.Play(SoundscapeCue.MosslingGuide);
                 _waitingAtShelter = false;
                 _resourceGuide?.SetGuidanceEnabled(true);
             }

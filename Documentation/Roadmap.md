@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-**Phase 15 — Mossling resource-guide utility is implemented and desktop-validated.**
+**Phase 16 — cozy magical procedural soundscape is implemented and desktop-validated.**
 
 The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner play review; physical-iPhone evidence is an independent gate for the complete controlled slice.
 
@@ -26,6 +26,15 @@ The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner
 | 13 | One Wayroot-gated restored-grove Thorn Guardian encounter | **Implemented; desktop-validated** |
 | 14 | Cohesive warm stylized magical-world art direction using original runtime geometry, URP materials, and lighting | **Implemented; desktop-validated** |
 | 15 | Befriended Mossling's non-combat nearest-resource guide with renewal fallback | **Implemented; desktop-validated** |
+| 16 | Cozy magical procedural ambient bed, event feedback, and persistent SOUND preference | **Implemented; desktop-validated** |
+
+## Phase 16 verification record
+
+- Unity **6000.5.4f1** batch compile: **passed** (exit 0). The only reported C# warnings are pre-existing obsolete `FindObjectsByType` overloads in an older PlayMode test.
+- EditMode: **40 passed, 0 failed, 0 skipped**, including deterministic procedural-profile and default-enabled preference rules. PlayMode: **13 passed, 0 failed, 0 skipped**, including SOUND OFF restart persistence, visible label state, and RESET's enabled default.
+- Windows development review build: **passed** through `Wayroot.Editor.PhaseSixteenBuild.BuildWindowsReviewPlayer`; ignored output is `Builds/Phase16Review/WayrootPhase16.exe` (667,648-byte executable; 158 MB directory).
+- Timed Windows headless smoke: player remained running for the intended eight seconds (timeout 124); captured output had no application exception, missing-shader, or error text. The runtime bypasses audio-source/clip work in batch mode.
+- `Documentation/Phase16ManualTest.md` covers sound toggle/persistence/reset, ambient bed, every feedback family, and retained-loop regression checks. This remains desktop evidence, not physical-iPhone validation.
 
 ## Phase 15 verification record
 
@@ -84,5 +93,5 @@ See `Documentation/Phase9ProductionReadiness.md` for scope, commands/results, re
 
 ## Next milestone gate
 
-1. Owner reviews the completed Phase 15 resource-guide update and explicitly selects or defers the next bounded slice; do not begin Phase 16 automatically.
+1. Owner reviews the completed Phase 16 soundscape update and explicitly selects or defers the next bounded slice; do not begin Phase 17 automatically.
 2. Before a release-quality or mobile-ready claim, complete `Documentation/Phase9iPhoneBlockers.md` and the touch-only `Documentation/Phase9FullLoopPlaytest.md` on physical iPhone hardware.
