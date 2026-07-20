@@ -1,8 +1,8 @@
 # Wayroot Exploration — Agent Instructions
 
 ## Current scope
-- **Current milestone:** Phase 7 Sunmeadow visual-region slice is owner-approved and underway. Do not begin Phase 8 without approval.
-- Unity **6000.5.4f1** is owner-approved and pinned for Phases 0–7. Do not change `ProjectSettings/ProjectVersion.txt` without owner approval.
+- **Current milestone:** Phase 8 mobile playability and polish slice is owner-approved and underway. Do not begin Phase 9 without approval.
+- Unity **6000.5.4f1** is owner-approved and pinned for Phases 0–8. Do not change `ProjectSettings/ProjectVersion.txt` without owner approval.
 - Use C#, URP, Unity Input System, TextMeshPro, and Unity Test Framework. The legacy Input Manager is prohibited.
 - iPhone/landscape/touch is primary; desktop is development-only.
 - No networking, Addressables, accounts, cloud save, analytics, purchases, backend, paid package, or Android adaptation during prototype work unless explicitly scheduled.

@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-**Phase 7 — Sunmeadow visual-region slice: implemented and desktop-validated; owner play review and iPhone evidence remain pending.**
+**Phase 8 — Mobile playability and polish slice: implemented and desktop-validated; owner landscape-touch review and physical-iPhone evidence remain pending.**
 
 Phase 1 completed desktop owner play review on 2026-07-19; physical-iPhone evidence remains an independent mobile gate. The project remains pinned to Unity **6000.5.4f1**. Phase 8 is not authorized.
 

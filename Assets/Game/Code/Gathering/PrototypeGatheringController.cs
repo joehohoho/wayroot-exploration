@@ -4,6 +4,7 @@ using Wayroot.Building;
 using Wayroot.Combat;
 using Wayroot.Input;
 using Wayroot.Inventory;
+using Wayroot.UI;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 
@@ -18,12 +19,14 @@ namespace Wayroot.Gathering
         private InventoryState _inventory = null!;
         private PrototypeGatheringSave _save = null!;
         private float _nextStepTime;
+        private ActionFeedbackHud? _feedback;
         public GatheringNode? CurrentTarget { get; private set; }
         public int WeaponLevel => _save.weaponLevel;
         public bool ShelterBuilt => _save.shelterBuilt;
         public bool CreatureBefriended => _save.creatureBefriended;
         public int AttackDamage => WeaponUpgradeRules.GetAttackDamage(WeaponLevel);
         public int GetCount(ResourceType resource) => _inventory.GetCount(resource);
+        public void SetFeedback(ActionFeedbackHud feedback) => _feedback = feedback;
         public bool TryBuildShelter(out string status)
         {
             if (_save.shelterBuilt)
@@ -79,7 +82,11 @@ namespace Wayroot.Gathering
         }
         public void AwardCombatCore()
         {
-            if (_inventory.TryAdd(ResourceType.SlimeCore, 1, out _, out _)) SaveInventory();
+            if (_inventory.TryAdd(ResourceType.SlimeCore, 1, out _, out _))
+            {
+                SaveInventory();
+                _feedback?.Show("SLIME DEFEATED: +1 CORE");
+            }
         }
         private void SaveInventory()
         {
@@ -91,6 +98,7 @@ namespace Wayroot.Gathering
         }
         public void ResetPrototype()
         {
+            _feedback?.Show("RESET: prototype progress cleared.");
             PrototypeGatheringSaveService.Reset();
             SceneManager.LoadScene(SceneManager.GetActiveScene().name);
         }
@@ -112,6 +120,7 @@ namespace Wayroot.Gathering
         private void OnNodeCompleted(GatheringNode node)
         {
             _inventory.TryAdd(node.Resource, 1, out _, out _); _save.depletedNodeIds.Add(node.Id); SaveInventory();
+            _feedback?.Show($"GATHERED: +1 {node.Resource.ToString().ToUpperInvariant()}");
         }
         private void OnDestroy() { foreach (GatheringNode node in _nodes) if (node != null) node.Completed -= OnNodeCompleted; }
     }

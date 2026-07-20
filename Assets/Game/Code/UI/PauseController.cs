@@ -9,6 +9,7 @@ namespace Wayroot.UI
     {
         [SerializeField] private PrototypePlayerController player = null!;
         [SerializeField] private TopDownCameraController cameraController = null!;
+        private ActionFeedbackHud? _feedback;
         public bool IsPaused { get; private set; }
 
         private void Update()
@@ -27,6 +28,8 @@ namespace Wayroot.UI
             cameraController = prototypeCamera;
         }
 
+        public void SetFeedback(ActionFeedbackHud feedback) => _feedback = feedback;
+
         public void Toggle() => SetPaused(!IsPaused);
 
         public void SetPaused(bool value)
@@ -35,6 +38,7 @@ namespace Wayroot.UI
             player.SetPaused(value);
             cameraController.SetPaused(value);
             Time.timeScale = value ? 0f : 1f;
+            _feedback?.Show(value ? "PAUSED" : "RESUMED");
         }
     }
 }

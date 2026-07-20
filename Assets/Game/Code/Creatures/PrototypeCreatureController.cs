@@ -1,6 +1,7 @@
 using Wayroot.Character;
 using Wayroot.Gathering;
 using Wayroot.Input;
+using Wayroot.UI;
 using UnityEngine;
 
 namespace Wayroot.Creatures
@@ -19,10 +20,12 @@ namespace Wayroot.Creatures
         private Vector3 _shelterHome;
         private bool _wasInteracting;
         private bool _waitingAtShelter;
+        private ActionFeedbackHud? _feedback;
 
         public bool IsInRange { get; private set; }
         public bool IsBefriended => _gathering.CreatureBefriended;
         public string Status { get; private set; } = "MOSSling: hold E / GATHER to befriend.";
+        public void SetFeedback(ActionFeedbackHud feedback) => _feedback = feedback;
 
         public void Configure(PrototypeInputReader input, PrototypePlayerController player, PrototypeGatheringController gathering, Vector3 shelterHome)
         {
@@ -58,6 +61,7 @@ namespace Wayroot.Creatures
             {
                 _gathering.BefriendCreature();
                 Status = "MOSSling befriended: it will follow safely.";
+                _feedback?.Show(Status);
                 _waitingAtShelter = false;
             }
 

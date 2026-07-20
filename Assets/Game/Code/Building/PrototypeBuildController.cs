@@ -1,6 +1,7 @@
 using Wayroot.Character;
 using Wayroot.Gathering;
 using Wayroot.Input;
+using Wayroot.UI;
 using UnityEngine;
 
 namespace Wayroot.Building
@@ -15,9 +16,11 @@ namespace Wayroot.Building
         private GameObject _shelter = null!;
         private Renderer _plotRenderer = null!;
         private bool _wasInteracting;
+        private ActionFeedbackHud? _feedback;
 
         public bool IsInRange { get; private set; }
         public string Status { get; private set; } = "SHELTER: 3 TIMBER + 3 STONE";
+        public void SetFeedback(ActionFeedbackHud feedback) => _feedback = feedback;
 
         public void Configure(PrototypeInputReader input, PrototypePlayerController player, PrototypeGatheringController gathering, GameObject shelter, Renderer plotRenderer)
         {
@@ -42,6 +45,7 @@ namespace Wayroot.Building
             {
                 _gathering.TryBuildShelter(out string status);
                 Status = status;
+                _feedback?.Show(Status);
                 ApplyBuiltVisual(_gathering.ShelterBuilt);
             }
 

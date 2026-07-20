@@ -1,6 +1,7 @@
 using Wayroot.Character;
 using Wayroot.Gathering;
 using Wayroot.Input;
+using Wayroot.UI;
 using UnityEngine;
 
 namespace Wayroot.Combat
@@ -13,6 +14,8 @@ namespace Wayroot.Combat
         private PrototypeEnemy _enemy = null!;
         private PrototypeGatheringController _inventory = null!;
         private float _lastAttack = -100f;
+        private ActionFeedbackHud? _feedback;
+        public void SetFeedback(ActionFeedbackHud feedback) => _feedback = feedback;
         public void Configure(PrototypeInputReader input, PrototypePlayerController player, PrototypeEnemy enemy, PrototypeGatheringController inventory)
         {
             _input = input; _player = player; _enemy = enemy; _inventory = inventory; _enemy.Defeated += AwardCore;
@@ -24,6 +27,7 @@ namespace Wayroot.Combat
             if (!CombatRules.CanAttack(distance, Range, Time.time - _lastAttack, Cooldown)) return;
             _lastAttack = Time.time;
             _enemy.TakeDamage(_inventory.AttackDamage);
+            _feedback?.Show(_enemy.IsDefeated ? "SLIME DEFEATED: CORE DROPPED" : $"HIT: SLIME {_enemy.Health}/5");
         }
         private void AwardCore() => _inventory.AwardCombatCore();
         private void OnDestroy() { if (_enemy != null) _enemy.Defeated -= AwardCore; }

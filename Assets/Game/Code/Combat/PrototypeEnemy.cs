@@ -1,4 +1,5 @@
 using UnityEngine;
+using Wayroot.UI;
 
 namespace Wayroot.Combat
 {
@@ -11,6 +12,7 @@ namespace Wayroot.Combat
         private Collider _collider = null!;
         private Vector3 _home;
         private float _respawnAt;
+        private ActionFeedbackHud? _feedback;
         public bool IsDefeated => _health <= 0;
         public int Health => _health;
         public event System.Action? Defeated;
@@ -25,6 +27,7 @@ namespace Wayroot.Combat
             if (IsDefeated && Time.time >= _respawnAt) Respawn();
         }
         public void Configure(Renderer renderer) => body = renderer;
+        public void SetFeedback(ActionFeedbackHud feedback) => _feedback = feedback;
         public void TakeDamage(int damage)
         {
             _health = CombatRules.ApplyDamage(_health, damage, out bool defeated);
@@ -40,6 +43,7 @@ namespace Wayroot.Combat
             _health = maxHealth;
             body.enabled = true;
             _collider.enabled = true;
+            _feedback?.Show("SLIME RESPAWNED");
         }
     }
 }

@@ -33,7 +33,7 @@ namespace Wayroot.Core
             Application.targetFrameRate = 60;
             BuildPrototype();
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
-            Debug.Log($"{ProjectIdentity.ProductName}: Phase 7 Sunmeadow clearing loaded.", this);
+            Debug.Log($"{ProjectIdentity.ProductName}: Phase 8 mobile polish loaded.", this);
 #endif
         }
 
@@ -46,14 +46,22 @@ namespace Wayroot.Core
             PrototypePlayerHealth playerHealth = player.gameObject.AddComponent<PrototypePlayerHealth>();
             TopDownCameraController cameraController = CreateCamera(player.transform, input, out UnityEngine.Camera sceneCamera);
             CreateObstruction(sceneCamera, player.transform);
-            PrototypeGatheringController gathering = CreateGathering(input, player);
-            PrototypeMerchantController merchant = CreateMerchant(input, player, gathering);
-            PrototypeBuildController build = CreateBuildPlot(input, player, gathering);
-            PrototypeCreatureController creature = CreateCreature(input, player, gathering);
-            PrototypeEnemy enemy = CreateCombat(input, player, playerHealth, gathering);
+            PrototypeGatheringController gathering = CreateGathering(input, player, sceneCamera);
+            PrototypeMerchantController merchant = CreateMerchant(input, player, gathering, sceneCamera);
+            PrototypeBuildController build = CreateBuildPlot(input, player, gathering, sceneCamera);
+            PrototypeCreatureController creature = CreateCreature(input, player, gathering, sceneCamera);
+            PrototypeEnemy enemy = CreateCombat(input, player, playerHealth, gathering, sceneCamera, out PrototypeAttackController attack);
             PauseController pause = new GameObject("Pause Controller").AddComponent<PauseController>();
             pause.Configure(player, cameraController);
-            CreateRuntimeUi(input, player, playerHealth, enemy, cameraController, pause, gathering, merchant, build, creature);
+            ActionFeedbackHud feedback = CreateRuntimeUi(input, player, playerHealth, enemy, cameraController, pause, gathering, merchant, build, creature);
+            gathering.SetFeedback(feedback);
+            merchant.SetFeedback(feedback);
+            build.SetFeedback(feedback);
+            creature.SetFeedback(feedback);
+            attack.SetFeedback(feedback);
+            enemy.SetFeedback(feedback);
+            playerHealth.SetFeedback(feedback);
+            pause.SetFeedback(feedback);
         }
 
         private static void CreateLight()
@@ -188,7 +196,7 @@ namespace Wayroot.Core
             fader.Configure(sourceCamera, target);
         }
 
-        private static PrototypeMerchantController CreateMerchant(PrototypeInputReader input, PrototypePlayerController player, PrototypeGatheringController gathering)
+        private static PrototypeMerchantController CreateMerchant(PrototypeInputReader input, PrototypePlayerController player, PrototypeGatheringController gathering, UnityEngine.Camera sceneCamera)
         {
             GameObject station = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
             station.name = "Iron Edge Merchant Station (hold E)";
@@ -205,10 +213,11 @@ namespace Wayroot.Core
 
             PrototypeMerchantController merchant = station.AddComponent<PrototypeMerchantController>();
             merchant.Configure(input, player, gathering);
+            CreateWorldIdentifier("MERCHANT\nIRON EDGE", station.transform, new Vector3(0f, 2.25f, 0f), sceneCamera, new Color(1f, 0.85f, 0.35f));
             return merchant;
         }
 
-        private static PrototypeBuildController CreateBuildPlot(PrototypeInputReader input, PrototypePlayerController player, PrototypeGatheringController gathering)
+        private static PrototypeBuildController CreateBuildPlot(PrototypeInputReader input, PrototypePlayerController player, PrototypeGatheringController gathering, UnityEngine.Camera sceneCamera)
         {
             GameObject plot = GameObject.CreatePrimitive(PrimitiveType.Cube);
             plot.name = "Shelter Build Plot (hold E)";
@@ -240,10 +249,12 @@ namespace Wayroot.Core
 
             PrototypeBuildController build = plot.AddComponent<PrototypeBuildController>();
             build.Configure(input, player, gathering, shelter, plotRenderer);
+            CreateWorldIdentifier("SHELTER\nBUILD PLOT", plot.transform, new Vector3(0f, 1.35f, 0f), sceneCamera, new Color(1f, 0.9f, 0.48f));
+            CreateWorldIdentifier("SHELTER\nHOME", shelter.transform, new Vector3(0f, 3.25f, 0f), sceneCamera, new Color(0.62f, 1f, 0.66f));
             return build;
         }
 
-        private static PrototypeCreatureController CreateCreature(PrototypeInputReader input, PrototypePlayerController player, PrototypeGatheringController gathering)
+        private static PrototypeCreatureController CreateCreature(PrototypeInputReader input, PrototypePlayerController player, PrototypeGatheringController gathering, UnityEngine.Camera sceneCamera)
         {
             GameObject creature = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             creature.name = "Friendly Mossling (hold E)";
@@ -256,6 +267,7 @@ namespace Wayroot.Core
             CreateCreatureFeature("Mossling Tail", creature.transform, new Vector3(0f, 0.05f, -0.62f), new Vector3(0.3f, 0.3f, 0.5f), new Color(0.18f, 0.5f, 0.28f));
             PrototypeCreatureController controller = creature.AddComponent<PrototypeCreatureController>();
             controller.Configure(input, player, gathering, new Vector3(-4.1f, 0.6f, -4.1f));
+            CreateWorldIdentifier("MOSSling\nCOMPANION", creature.transform, new Vector3(0f, 1.55f, 0f), sceneCamera, new Color(0.8f, 1f, 0.72f));
             return controller;
         }
 
@@ -280,7 +292,7 @@ namespace Wayroot.Core
             SetMaterialColor(piece.GetComponent<Renderer>(), color);
         }
 
-        private static PrototypeEnemy CreateCombat(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeGatheringController gathering)
+        private static PrototypeEnemy CreateCombat(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeGatheringController gathering, UnityEngine.Camera sceneCamera, out PrototypeAttackController attack)
         {
             GameObject enemyObject = GameObject.CreatePrimitive(PrimitiveType.Capsule);
             enemyObject.name = "Practice Slime (hold SPACE)";
@@ -296,11 +308,13 @@ namespace Wayroot.Core
             SetMaterialColor(healthBar.GetComponent<Renderer>(), new Color(0.2f, 0.9f, 0.25f));
             healthBar.AddComponent<PrototypeWorldHealthBar>().Configure(enemy, healthBar.transform);
             enemyObject.AddComponent<PrototypeEnemyChase>().Configure(player.transform, playerHealth);
-            new GameObject("Prototype Attack").AddComponent<PrototypeAttackController>().Configure(input, player, enemy, gathering);
+            attack = new GameObject("Prototype Attack").AddComponent<PrototypeAttackController>();
+            attack.Configure(input, player, enemy, gathering);
+            CreateWorldIdentifier("SLIME\nHOLD ATTACK", enemyObject.transform, new Vector3(0f, 2.2f, 0f), sceneCamera, new Color(1f, 0.64f, 0.64f));
             return enemy;
         }
 
-        private static PrototypeGatheringController CreateGathering(PrototypeInputReader input, PrototypePlayerController player)
+        private static PrototypeGatheringController CreateGathering(PrototypeInputReader input, PrototypePlayerController player, UnityEngine.Camera sceneCamera)
         {
             InventoryState inventory = new();
             GatheringNode flower = CreateGatheringNode("wildflower-01", "Wildflower (hold E)", PrimitiveType.Sphere, new Vector3(-2f, 0.5f, 2f), new Color(0.95f, 0.35f, 0.65f), ResourceType.WildPetal, 1);
@@ -308,7 +322,24 @@ namespace Wayroot.Core
             GatheringNode rock = CreateGatheringNode("stone-outcrop-01", "Stone Outcrop (hold E)", PrimitiveType.Cube, new Vector3(-3f, 0.65f, -2f), new Color(0.45f, 0.48f, 0.55f), ResourceType.Stone, 3);
             PrototypeGatheringController controller = new GameObject("Prototype Gathering").AddComponent<PrototypeGatheringController>();
             controller.Configure(input, player, inventory, new[] { flower, tree, rock });
+            CreateWorldIdentifier("WILDFLOWER\nPETAL", flower.transform, new Vector3(0f, 1.05f, 0f), sceneCamera, new Color(1f, 0.76f, 0.88f));
+            CreateWorldIdentifier("YOUNG TREE\nTIMBER", tree.transform, new Vector3(0f, 2.35f, 0f), sceneCamera, new Color(0.78f, 1f, 0.68f));
+            CreateWorldIdentifier("STONE OUTCROP\nSTONE", rock.transform, new Vector3(0f, 1.45f, 0f), sceneCamera, new Color(0.88f, 0.92f, 1f));
             return controller;
+        }
+
+        private static void CreateWorldIdentifier(string value, Transform target, Vector3 offset, UnityEngine.Camera sceneCamera, Color color)
+        {
+            GameObject label = new($"World Label: {value.Replace("\n", " ")}");
+            TextMesh text = label.AddComponent<TextMesh>();
+            text.text = value;
+            text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
+            text.fontSize = 44;
+            text.characterSize = 0.12f;
+            text.anchor = TextAnchor.MiddleCenter;
+            text.alignment = TextAlignment.Center;
+            text.color = color;
+            label.AddComponent<WorldIdentifier>().Configure(target, offset, sceneCamera);
         }
 
         private static GatheringNode CreateGatheringNode(string id, string name, PrimitiveType primitive, Vector3 position, Color color, ResourceType resource, int steps)
@@ -322,7 +353,7 @@ namespace Wayroot.Core
             return node;
         }
 
-        private static void CreateRuntimeUi(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeEnemy enemy, TopDownCameraController cameraController, PauseController pause, PrototypeGatheringController gathering, PrototypeMerchantController merchant, PrototypeBuildController build, PrototypeCreatureController creature)
+        private static ActionFeedbackHud CreateRuntimeUi(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeEnemy enemy, TopDownCameraController cameraController, PauseController pause, PrototypeGatheringController gathering, PrototypeMerchantController merchant, PrototypeBuildController build, PrototypeCreatureController creature)
         {
             Canvas canvas = new GameObject("Prototype HUD").AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -334,9 +365,16 @@ namespace Wayroot.Core
 
             RectTransform safeArea = CreatePanel("Safe Area", canvas.transform, new Color(0f, 0f, 0f, 0f));
             Stretch(safeArea);
+            RectTransform titleCard = CreatePanel("Wayroot Title Card", safeArea, new Color(0.04f, 0.11f, 0.12f, 0.82f));
+            titleCard.sizeDelta = new Vector2(420f, 68f);
+            titleCard.anchorMin = titleCard.anchorMax = new Vector2(0.5f, 1f);
+            titleCard.pivot = new Vector2(0.5f, 1f);
+            titleCard.anchoredPosition = new Vector2(0f, -20f);
+            CreateText("Wayroot Title", titleCard, "WAYROOT  |  SUNMEADOW", 24, TextAnchor.MiddleCenter);
             RectTransform joystickArea = CreatePanel("Movement Joystick", safeArea, new Color(0f, 0f, 0f, 0.28f));
             joystickArea.sizeDelta = new Vector2(230f, 230f);
             joystickArea.anchoredPosition = new Vector2(56f, 56f);
+            CreateText("Move Label", joystickArea, "MOVE", 20, TextAnchor.UpperCenter).rectTransform.anchoredPosition = new Vector2(0f, -12f);
             RectTransform joystickHandle = CreatePanel("Joystick Handle", joystickArea, new Color(0.8f, 0.9f, 1f, 0.75f));
             joystickHandle.sizeDelta = new Vector2(100f, 100f);
             joystickHandle.anchorMin = joystickHandle.anchorMax = joystickHandle.pivot = new Vector2(0.5f, 0.5f);
@@ -370,12 +408,12 @@ namespace Wayroot.Core
             CreateText("Attack Label", attackButton, "HOLD\nATTACK", 26, TextAnchor.MiddleCenter);
             attackButton.gameObject.AddComponent<VirtualAttackButton>().Configure(input);
 
-            RectTransform developmentText = CreateText("Development Overlay", safeArea, string.Empty, 26, TextAnchor.UpperLeft).rectTransform;
+            RectTransform developmentText = CreateText("Development Overlay", safeArea, string.Empty, 18, TextAnchor.UpperLeft).rectTransform;
             developmentText.anchorMin = new Vector2(0f, 1f);
             developmentText.anchorMax = new Vector2(1f, 1f);
             developmentText.pivot = new Vector2(0.5f, 1f);
-            developmentText.anchoredPosition = new Vector2(0f, -24f);
-            developmentText.sizeDelta = new Vector2(-48f, 80f);
+            developmentText.anchoredPosition = new Vector2(24f, -96f);
+            developmentText.sizeDelta = new Vector2(570f, 36f);
             DevelopmentOverlay overlay = developmentText.gameObject.AddComponent<DevelopmentOverlay>();
             overlay.Configure(developmentText.GetComponent<Text>(), player, cameraController, pause);
 
@@ -393,8 +431,18 @@ namespace Wayroot.Core
             combatText.rectTransform.sizeDelta = new Vector2(650f, 48f);
             combatText.gameObject.AddComponent<CombatHud>().Configure(combatText, playerHealth, enemy);
 
+            RectTransform feedbackCard = CreatePanel("Action Feedback Card", safeArea, new Color(0.04f, 0.10f, 0.14f, 0.9f));
+            feedbackCard.sizeDelta = new Vector2(540f, 62f);
+            feedbackCard.anchorMin = feedbackCard.anchorMax = new Vector2(0.5f, 0f);
+            feedbackCard.pivot = new Vector2(0.5f, 0f);
+            feedbackCard.anchoredPosition = new Vector2(0f, 34f);
+            Text feedbackText = CreateText("Action Feedback", feedbackCard, string.Empty, 24, TextAnchor.MiddleCenter);
+            ActionFeedbackHud feedback = feedbackText.gameObject.AddComponent<ActionFeedbackHud>();
+            feedback.Configure(feedbackText);
+
             SafeAreaLayout layout = safeArea.gameObject.AddComponent<SafeAreaLayout>();
             layout.Configure(safeArea, joystickArea, gatherButton);
+            return feedback;
         }
 
         private static void CreateEventSystem()

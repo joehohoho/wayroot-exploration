@@ -1,6 +1,7 @@
 using Wayroot.Character;
 using Wayroot.Gathering;
 using Wayroot.Input;
+using Wayroot.UI;
 using UnityEngine;
 
 namespace Wayroot.Progression
@@ -13,9 +14,11 @@ namespace Wayroot.Progression
         private PrototypePlayerController _player = null!;
         private PrototypeGatheringController _progression = null!;
         private bool _wasInteracting;
+        private ActionFeedbackHud? _feedback;
 
         public bool IsInRange { get; private set; }
         public string Status { get; private set; } = "IRON EDGE: 1 PETAL + 1 CORE -> ATK 2";
+        public void SetFeedback(ActionFeedbackHud feedback) => _feedback = feedback;
 
         public void Configure(PrototypeInputReader input, PrototypePlayerController player, PrototypeGatheringController progression)
         {
@@ -33,6 +36,7 @@ namespace Wayroot.Progression
             {
                 _progression.TryPurchaseWeaponUpgrade(out string status);
                 Status = status;
+                _feedback?.Show(Status);
             }
 
             _wasInteracting = interacting;
