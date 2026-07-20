@@ -1,8 +1,8 @@
 # Wayroot Exploration *(working title)*
 
-A peaceful top-down 3D mobile exploration game made with Unity: restore magical Wayroots while gathering, crafting, building a homestead, discovering original creatures, and optionally engaging in light combat.
+A peaceful top-down 3D mobile exploration prototype made with Unity: gather materials, survive light combat, improve a weapon, build a shelter, befriend a creature, and explore the Sunmeadow clearing.
 
-> **Status:** Phase 1 has passed desktop owner play review. Phase 2's bounded controlled gathering loop is approved to proceed; physical-iPhone evidence remains pending.
+> **Status:** Phase 9 production-readiness and next-feature decision package is complete. The controlled Phase 0–8 slice is desktop-validated; physical-iPhone evidence and an explicit owner choice are required before Phase 10 gameplay work.
 
 ## Technology
 
@@ -14,61 +14,48 @@ A peaceful top-down 3D mobile exploration game made with Unity: restore magical 
 | Input | Input System 1.19.0 (`activeInputHandler: 1`) |
 | Runtime touch UI | uGUI prototype (ADR-007) |
 | Primary target | iPhone, landscape, touch-first |
-| Development | Desktop editor builds with device-independent input actions |
-| Source control | Git and Git LFS for approved binary source assets |
-
-The local workstation has Unity 6000.5.4f1, which the owner approved as the project pin because Unity Hub did not offer a suitable Unity 6.0 LTS update.
+| Development validation | Desktop editor builds with device-independent input actions |
+| Source control | Git; generated builds, test results, and signing material are ignored |
 
 ## Run the current prototype
 
 1. Use Unity **6000.5.4f1**. iPhone builds additionally require a Mac with the same editor, iOS Build Support, full Xcode, and configured signing.
 2. Open this folder in Unity Hub and allow Package Manager to resolve dependencies.
 3. Open `Assets/Game/Scenes/Bootstrap.unity` and press **Play**.
-4. Use **WASD**, arrow keys, gamepad left stick, or the on-screen joystick to move.
-5. Use the mouse wheel or touch pinch to zoom. Press **Escape** or **PAUSE** to toggle pause.
-
-The small controlled scene deliberately contains only primitive placeholder geometry, one player, one fadeable test obstruction, camera, joystick, pause button, and development overlay. It has no gathering, combat, inventory, saves, or generated world.
+4. Move with **WASD**, arrow keys, gamepad left stick, or the on-screen joystick.
+5. Use mouse wheel or touch pinch to zoom. Use **HOLD GATHER** / `E` / gamepad south for gathering, interaction, and befriending; use **HOLD ATTACK** / Space for combat. Press **Escape** or **PAUSE** to toggle pause.
+6. Use **RESET** to clear the local prototype progression save.
 
 ## Automated validation
 
 ```bash
 # Git Bash, from the project root
-"/c/Program Files/Unity/Hub/Editor/6000.5.4f1/Editor/Unity.exe" \
-  -batchmode -nographics -quit -projectPath "$PWD" -logFile Logs/compile.log
+PROJECT_PATH="$(cygpath -w "$PWD")"
+UNITY="/c/Program Files/Unity/Hub/Editor/6000.5.4f1/Editor/Unity.exe"
 
-# Do not pass -quit to Unity Test Framework; it owns process shutdown.
-"/c/Program Files/Unity/Hub/Editor/6000.5.4f1/Editor/Unity.exe" \
-  -batchmode -nographics -projectPath "$PWD" \
-  -runTests -testPlatform EditMode -testResults TestResults/editmode.xml \
-  -logFile Logs/editmode-tests.log
-
-"/c/Program Files/Unity/Hub/Editor/6000.5.4f1/Editor/Unity.exe" \
-  -batchmode -nographics -projectPath "$PWD" \
-  -runTests -testPlatform PlayMode -testResults TestResults/playmode.xml \
-  -logFile Logs/playmode-tests.log
+"$UNITY" -batchmode -nographics -quit -projectPath "$PROJECT_PATH" -logFile "$(cygpath -w "$PWD/Logs/compile.log")"
+"$UNITY" -batchmode -nographics -projectPath "$PROJECT_PATH" -runTests -testPlatform EditMode -testResults "$(cygpath -w "$PWD/TestResults/editmode.xml")" -logFile "$(cygpath -w "$PWD/Logs/editmode-tests.log")"
+"$UNITY" -batchmode -nographics -projectPath "$PROJECT_PATH" -runTests -testPlatform PlayMode -testResults "$(cygpath -w "$PWD/TestResults/playmode.xml")" -logFile "$(cygpath -w "$PWD/Logs/playmode-tests.log")"
 ```
 
-In the Editor use **Window → General → Test Runner** to run EditMode or PlayMode tests.
+Phase 9 results: batch compile passed; EditMode **22/22**; PlayMode **4/4**; the Windows development review build passed. See the readiness report for exact scope and limitations.
 
-## Manual testing
+## Manual and mobile validation
 
-Follow `Documentation/Phase1ManualTest.md` for Editor, Device Simulator, profiler, safe-area, and iPhone handoff instructions.
+- `Documentation/Phase9FullLoopPlaytest.md` — fresh-reset through gathering, combat, progression, shelter, companion, restart, and reset.
+- `Documentation/Phase9iPhoneBlockers.md` — actual Mac/Xcode/signing/device prerequisites and touch/performance evidence. Windows and Device Simulator do not close this gate.
 
 ## Documentation
 
-- `Documentation/GameDesign.md` — approved product direction
-- `Documentation/Architecture.md` — layers, data flow, Mermaid diagram
-- `Documentation/Roadmap.md` — milestones 0–9 and current status
-- `Documentation/OpenQuestions.md` — decisions needing owner input
-- `Documentation/Phase1ImplementationPlan.md` — approved Phase 1 scope
-- `Documentation/Phase1ManualTest.md` — Phase 1 camera/input/rendering manual validation
-- `Documentation/Phase2ManualTest.md` — Phase 2 gathering/inventory/persistence validation
-- `Documentation/AgentHandoff.md` — durable Codex/Hermes restart context
-- `Documentation/ADRs/` — architecture decisions
+- `Documentation/Phase9ProductionReadiness.md` — current evidence, release/device blockers, and explicit non-claims
+- `Documentation/Phase10DecisionProposal.md` — ranked post-slice choices; recommended one-Wayroot objective is **not implemented**
+- `Documentation/Roadmap.md` — milestone status and gates
+- `Documentation/OpenQuestions.md` — owner decisions still required
+- `Documentation/AgentHandoff.md` — durable restart context
+- `Documentation/GameDesign.md`, `Documentation/Architecture.md`, and `Documentation/ADRs/` — product and architecture context
 
 ## Current limitations
 
-- The Phase 1 primitive scene and runtime-built uGUI are prototype-only placeholders.
-- iPhone build/device performance has not been verified; Windows cannot produce a signed iOS build.
-- No Android tooling or CI Unity license setup has been verified.
-- Title/repository name is provisional and may change later.
+- Primitive assets, runtime-built UI, controlled content, and working title are prototype-only.
+- iPhone compilation/signing, physical-device behavior/performance, App Store acceptance, and a human full-loop playtest are not yet validated.
+- No networking, cloud save, analytics, purchases, Android adaptation, or backend is included.

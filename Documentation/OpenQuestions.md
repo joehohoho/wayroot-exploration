@@ -2,16 +2,18 @@
 
 ## Open owner decisions
 
-1. **Final title/repository name:** `Wayroot Exploration` / `wayroot-exploration` is a working title derived from provisional lore. Rename later before branding, bundle IDs, or public asset naming become permanent.
-2. **Placeholder character:** primitives only, or an approved/licensed placeholder asset? Phase 1 uses primitives; no unvalidated asset may enter production tracking.
-3. **iPhone worker:** identify compatible Mac/Xcode machine and signing owner before the physical-device checkpoint.
-4. **Phase 2 presentation defaults:** wildflower / young tree / stone outcrop, with Wild Petal, Timber, and Stone prototype rewards, are implementation defaults only; final naming, art, timing, economy, tools, and audio remain owner decisions.
+1. **Final title/repository name:** `Wayroot Exploration` / `wayroot-exploration` is a working title derived from provisional lore. Decide before branding, bundle IDs, or public asset naming become permanent.
+2. **Placeholder character and presentation:** retain primitives only, or approve licensed placeholder art/UI/audio in a separately scoped slice? No unvalidated asset may enter tracking.
+3. **iPhone worker and signing:** identify a compatible Mac/Xcode machine, Apple signing owner, supported-device/iOS policy, and secure signing process before the physical-device checkpoint.
+4. **Release acceptance:** decide whether the default launch presentation, Unity splash, provisional app identity, and prototype-only visual content are acceptable for a device review; they are not assumed store-ready.
+5. **Phase 10 selection:** choose or defer one candidate from `Documentation/Phase10DecisionProposal.md`. The recommended one-Wayroot restoration objective needs an exact existing-resource requirement, relationship to weapon/shelter progression, completion feedback/reward, and the mobile gate that must pass before review.
 
 ## Resolved
 
-- Engine: Unity **6000.5.4f1**, owner-approved and pinned for Phase 0/1 because Unity Hub offers no suitable 6.0 LTS update.
+- Engine: Unity **6000.5.4f1**, owner-approved and pinned for Phases 0–9.
 - Pipeline: URP.
 - Input: Unity Input System, version **1.19.0**, with `activeInputHandler: 1`.
-- Runtime Phase 1 touch UI: **uGUI**, selected in ADR-007 for its proven pointer/virtual-joystick path.
+- Runtime touch UI: **uGUI**, selected in ADR-007 for its proven pointer/virtual-joystick path.
 - Saving: versioned plain save records plus seed/delta world persistence.
 - State: ScriptableObjects for static authored definitions and plain C# types for mutable state.
+- Phase 9 scope: production-readiness evidence and a decision package only; no automatic Phase 10 implementation.
