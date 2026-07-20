@@ -8,12 +8,13 @@ namespace Wayroot.Gathering
     [System.Serializable]
     public sealed class PrototypeGatheringSave
     {
-        public int version = 2;
+        public int version = 3;
         public int petals;
         public int timber;
         public int stone;
         public int slimeCores;
         public int weaponLevel;
+        public bool shelterBuilt;
         public List<string> depletedNodeIds = new();
     }
 

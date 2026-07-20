@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using Wayroot.Character;
+using Wayroot.Building;
 using Wayroot.Combat;
 using Wayroot.Input;
 using Wayroot.Inventory;
@@ -19,8 +20,30 @@ namespace Wayroot.Gathering
         private float _nextStepTime;
         public GatheringNode? CurrentTarget { get; private set; }
         public int WeaponLevel => _save.weaponLevel;
+        public bool ShelterBuilt => _save.shelterBuilt;
         public int AttackDamage => WeaponUpgradeRules.GetAttackDamage(WeaponLevel);
         public int GetCount(ResourceType resource) => _inventory.GetCount(resource);
+        public bool TryBuildShelter(out string status)
+        {
+            if (_save.shelterBuilt)
+            {
+                status = "SHELTER already built.";
+                return false;
+            }
+
+            if (!ShelterBuildRules.CanBuild(false, _inventory))
+            {
+                status = $"Need {ShelterBuildRules.TimberCost} TIMBER + {ShelterBuildRules.StoneCost} STONE.";
+                return false;
+            }
+
+            _inventory.TrySpend(ResourceType.Timber, ShelterBuildRules.TimberCost);
+            _inventory.TrySpend(ResourceType.Stone, ShelterBuildRules.StoneCost);
+            _save.shelterBuilt = true;
+            SaveInventory();
+            status = "SHELTER built: home is ready.";
+            return true;
+        }
         public bool TryPurchaseWeaponUpgrade(out string status)
         {
             if (WeaponLevel >= WeaponUpgradeRules.MaximumLevel)

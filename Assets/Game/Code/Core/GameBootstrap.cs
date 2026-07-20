@@ -7,6 +7,7 @@ using Wayroot.Character;
 using Wayroot.Input;
 using Wayroot.Inventory;
 using Wayroot.Gathering;
+using Wayroot.Building;
 using Wayroot.Combat;
 using Wayroot.Progression;
 using Wayroot.UI;
@@ -40,10 +41,11 @@ namespace Wayroot.Core
             CreateObstruction(sceneCamera, player.transform);
             PrototypeGatheringController gathering = CreateGathering(input, player);
             PrototypeMerchantController merchant = CreateMerchant(input, player, gathering);
+            PrototypeBuildController build = CreateBuildPlot(input, player, gathering);
             PrototypeEnemy enemy = CreateCombat(input, player, playerHealth, gathering);
             PauseController pause = new GameObject("Pause Controller").AddComponent<PauseController>();
             pause.Configure(player, cameraController);
-            CreateRuntimeUi(input, player, playerHealth, enemy, cameraController, pause, gathering, merchant);
+            CreateRuntimeUi(input, player, playerHealth, enemy, cameraController, pause, gathering, merchant, build);
         }
 
         private static void CreateLight()
@@ -119,6 +121,51 @@ namespace Wayroot.Core
             return merchant;
         }
 
+        private static PrototypeBuildController CreateBuildPlot(PrototypeInputReader input, PrototypePlayerController player, PrototypeGatheringController gathering)
+        {
+            GameObject plot = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            plot.name = "Shelter Build Plot (hold E)";
+            plot.transform.position = new Vector3(-6f, 0.1f, -5f);
+            plot.transform.localScale = new Vector3(3.8f, 0.2f, 3.8f);
+            Renderer plotRenderer = plot.GetComponent<Renderer>();
+            SetMaterialColor(plotRenderer, new Color(0.77f, 0.58f, 0.22f));
+
+            GameObject sign = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            sign.name = "Shelter Blueprint Sign";
+            sign.transform.SetParent(plot.transform, false);
+            sign.transform.localScale = new Vector3(1.7f, 1.1f, 0.15f);
+            sign.transform.localPosition = new Vector3(0f, 1.15f, 0f);
+            SetMaterialColor(sign.GetComponent<Renderer>(), new Color(0.12f, 0.24f, 0.42f));
+
+            GameObject shelter = new("Built Shelter");
+            shelter.transform.position = plot.transform.position;
+            CreateShelterPiece("Shelter Back Wall", shelter.transform, new Vector3(0f, 1.15f, 0.85f), new Vector3(2.5f, 2.1f, 0.18f), new Color(0.48f, 0.29f, 0.12f));
+            CreateShelterPiece("Shelter Left Wall", shelter.transform, new Vector3(-1.15f, 1.15f, 0f), new Vector3(0.18f, 2.1f, 1.8f), new Color(0.56f, 0.34f, 0.14f));
+            CreateShelterPiece("Shelter Right Wall", shelter.transform, new Vector3(1.15f, 1.15f, 0f), new Vector3(0.18f, 2.1f, 1.8f), new Color(0.56f, 0.34f, 0.14f));
+            GameObject roof = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            roof.name = "Shelter Roof";
+            roof.transform.SetParent(shelter.transform, false);
+            roof.transform.localPosition = new Vector3(0f, 2.45f, 0f);
+            roof.transform.localScale = new Vector3(3.1f, 0.25f, 2.5f);
+            roof.transform.localRotation = Quaternion.Euler(0f, 0f, 0f);
+            SetMaterialColor(roof.GetComponent<Renderer>(), new Color(0.72f, 0.18f, 0.13f));
+            shelter.SetActive(false);
+
+            PrototypeBuildController build = plot.AddComponent<PrototypeBuildController>();
+            build.Configure(input, player, gathering, shelter, plotRenderer);
+            return build;
+        }
+
+        private static void CreateShelterPiece(string name, Transform parent, Vector3 localPosition, Vector3 localScale, Color color)
+        {
+            GameObject piece = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            piece.name = name;
+            piece.transform.SetParent(parent, false);
+            piece.transform.localPosition = localPosition;
+            piece.transform.localScale = localScale;
+            SetMaterialColor(piece.GetComponent<Renderer>(), color);
+        }
+
         private static PrototypeEnemy CreateCombat(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeGatheringController gathering)
         {
             GameObject enemyObject = GameObject.CreatePrimitive(PrimitiveType.Capsule);
@@ -161,7 +208,7 @@ namespace Wayroot.Core
             return node;
         }
 
-        private static void CreateRuntimeUi(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeEnemy enemy, TopDownCameraController cameraController, PauseController pause, PrototypeGatheringController gathering, PrototypeMerchantController merchant)
+        private static void CreateRuntimeUi(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeEnemy enemy, TopDownCameraController cameraController, PauseController pause, PrototypeGatheringController gathering, PrototypeMerchantController merchant, PrototypeBuildController build)
         {
             Canvas canvas = new GameObject("Prototype HUD").AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -223,7 +270,7 @@ namespace Wayroot.Core
             inventoryText.rectTransform.pivot = new Vector2(1f, 1f);
             inventoryText.rectTransform.anchoredPosition = new Vector2(-24f, -120f);
             inventoryText.rectTransform.sizeDelta = new Vector2(700f, 90f);
-            inventoryText.gameObject.AddComponent<GatheringHud>().Configure(inventoryText, gathering, merchant);
+            inventoryText.gameObject.AddComponent<GatheringHud>().Configure(inventoryText, gathering, merchant, build);
 
             Text combatText = CreateText("Combat Status", safeArea, string.Empty, 24, TextAnchor.UpperLeft);
             combatText.rectTransform.anchorMin = combatText.rectTransform.anchorMax = new Vector2(0f, 1f);
