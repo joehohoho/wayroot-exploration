@@ -23,7 +23,7 @@ namespace Wayroot.Camera
 
         public void SetObstructing(bool value)
         {
-            if (!_initialized)
+            if (!_initialized || _renderer == null)
             {
                 return;
             }

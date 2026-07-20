@@ -2,9 +2,9 @@
 
 ## Current milestone
 
-**Phase 6 — Creature companion vertical slice: implemented and desktop-validated; owner play review and iPhone evidence remain pending.**
+**Phase 7 — Sunmeadow visual-region slice: implemented and desktop-validated; owner play review and iPhone evidence remain pending.**
 
-Phase 1 completed desktop owner play review on 2026-07-19; physical-iPhone evidence remains an independent mobile gate. The project remains pinned to Unity **6000.5.4f1**. Phase 7 is not authorized.
+Phase 1 completed desktop owner play review on 2026-07-19; physical-iPhone evidence remains an independent mobile gate. The project remains pinned to Unity **6000.5.4f1**. Phase 8 is not authorized.
 
 ## Phases
 
@@ -17,7 +17,7 @@ Phase 1 completed desktop owner play review on 2026-07-19; physical-iPhone evide
 | 4 | One merchant-station weapon upgrade using a slime combat drop and local persistence | Implemented; desktop-validated; owner review pending |
 | 5 | Homestead and building | Implemented; desktop-validated; owner review pending |
 | 6 | Creature vertical slice | Implemented; desktop-validated; owner review pending |
-| 7 | Generated Sunmeadow region | Deferred; only after the controlled loops are enjoyable |
+| 7 | Generated Sunmeadow region | Implemented; desktop-validated; owner review pending |
 | 8 | Mobile vertical-slice polish and iPhone profiling | Deferred |
 | 9 | Production planning and post-slice features | Deferred |
 
@@ -59,6 +59,11 @@ Phase 1 completed desktop owner play review on 2026-07-19; physical-iPhone evide
 - `creatureBefriended` is persisted in the version-4 local save. A restart restores the creature at the shelter home until the player walks up; RESET clears it.
 - Unity batch compile, EditMode, PlayMode, Windows development build, and timed player smoke are completed for the review build; exact results are recorded in the published handoff.
 
+### Phase 7
+
+- The runtime-controlled scene is now a coherent Sunmeadow clearing: grass/meadow zones, a warm footpath, east creek/shore, north grove, south rock garden, clustered flowers, and a warm URP/ambient palette. All props use built-in primitives/materials only and retain existing Phase 1–6 landmarks and loops.
+- Unity batch compile, EditMode, PlayMode, Windows development build, and timed player smoke are completed for the review build; exact results are recorded in the published handoff.
+
 ## Next milestone gate
 
-The owner must play/review the cohesive Phase 6 loop using `Documentation/Phase6ManualTest.md`. Do not begin Phase 7 without explicit approval.
+The owner must play/review the cohesive Phase 7 scene using `Documentation/Phase7ManualTest.md`. Do not begin Phase 8 without explicit approval.

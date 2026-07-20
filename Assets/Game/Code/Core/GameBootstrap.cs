@@ -1,6 +1,7 @@
 using UnityEngine;
 using UnityEngine.EventSystems;
 using UnityEngine.InputSystem.UI;
+using UnityEngine.Rendering;
 using UnityEngine.UI;
 using Wayroot.Camera;
 using Wayroot.Character;
@@ -15,10 +16,15 @@ using Wayroot.UI;
 
 namespace Wayroot.Core
 {
-    /// <summary>Composes the intentionally small, disposable Phase 1 prototype scene.</summary>
+    /// <summary>Composes the controlled Phase 7 Sunmeadow prototype scene and its retained gameplay loops.</summary>
     public sealed class GameBootstrap : MonoBehaviour
     {
-        private static readonly Color GroundColor = new(0.31f, 0.56f, 0.28f, 1f);
+        private static readonly Color GroundColor = new(0.34f, 0.61f, 0.30f, 1f);
+        private static readonly Color MeadowColor = new(0.47f, 0.72f, 0.35f, 1f);
+        private static readonly Color PathColor = new(0.76f, 0.61f, 0.35f, 1f);
+        private static readonly Color WaterColor = new(0.16f, 0.55f, 0.70f, 1f);
+        private static readonly Color TrunkColor = new(0.27f, 0.16f, 0.07f, 1f);
+        private static readonly Color LeafColor = new(0.12f, 0.43f, 0.20f, 1f);
         private static readonly Color PlayerColor = new(0.24f, 0.62f, 0.94f, 1f);
         private static readonly Color TreeColor = new(0.28f, 0.17f, 0.08f, 1f);
 
@@ -27,7 +33,7 @@ namespace Wayroot.Core
             Application.targetFrameRate = 60;
             BuildPrototype();
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
-            Debug.Log($"{ProjectIdentity.ProductName}: Phase 1 prototype loaded.", this);
+            Debug.Log($"{ProjectIdentity.ProductName}: Phase 7 Sunmeadow clearing loaded.", this);
 #endif
         }
 
@@ -52,19 +58,96 @@ namespace Wayroot.Core
 
         private static void CreateLight()
         {
+            RenderSettings.ambientMode = AmbientMode.Trilight;
+            RenderSettings.ambientSkyColor = new Color(0.36f, 0.63f, 0.82f);
+            RenderSettings.ambientEquatorColor = new Color(0.54f, 0.70f, 0.42f);
+            RenderSettings.ambientGroundColor = new Color(0.16f, 0.28f, 0.16f);
+            RenderSettings.fog = true;
+            RenderSettings.fogColor = new Color(0.62f, 0.78f, 0.76f);
+            RenderSettings.fogDensity = 0.012f;
             GameObject lightObject = new("Sunmeadow Sun");
             Light light = lightObject.AddComponent<Light>();
             light.type = LightType.Directional;
-            light.intensity = 1.2f;
-            lightObject.transform.rotation = Quaternion.Euler(50f, -35f, 0f);
+            light.color = new Color(1f, 0.88f, 0.67f);
+            light.intensity = 1.45f;
+            light.shadows = LightShadows.Soft;
+            lightObject.transform.rotation = Quaternion.Euler(48f, -28f, 0f);
         }
 
         private static void CreateGround()
         {
             GameObject ground = GameObject.CreatePrimitive(PrimitiveType.Plane);
-            ground.name = "Sunmeadow Test Ground";
+            ground.name = "Sunmeadow Clearing";
             ground.transform.localScale = new Vector3(4f, 1f, 4f);
             SetMaterialColor(ground.GetComponent<Renderer>(), GroundColor);
+            CreateVisualRegion();
+        }
+
+        private static void CreateVisualRegion()
+        {
+            GameObject meadow = CreateVisualPrimitive("Sunmeadow Wildflower Meadow", PrimitiveType.Plane, new Vector3(-3.5f, 0.012f, 3.4f), new Vector3(1.15f, 1f, 0.9f), MeadowColor);
+            meadow.transform.rotation = Quaternion.Euler(0f, -14f, 0f);
+            CreateVisualPrimitive("Sunmeadow Footpath", PrimitiveType.Cube, new Vector3(-1.5f, 0.035f, -2f), new Vector3(2.1f, 0.07f, 13.5f), PathColor).transform.rotation = Quaternion.Euler(0f, 37f, 0f);
+            CreateVisualPrimitive("Sunmeadow Creek", PrimitiveType.Cube, new Vector3(6.6f, 0.025f, 0.8f), new Vector3(2.1f, 0.05f, 18f), WaterColor).transform.rotation = Quaternion.Euler(0f, -11f, 0f);
+            CreateVisualPrimitive("Sunmeadow Creek Shore", PrimitiveType.Cube, new Vector3(5.35f, 0.02f, 0.8f), new Vector3(0.35f, 0.04f, 18.3f), new Color(0.82f, 0.72f, 0.45f)).transform.rotation = Quaternion.Euler(0f, -11f, 0f);
+
+            Transform northGrove = new GameObject("Sunmeadow North Grove").transform;
+            CreateTree(northGrove, new Vector3(-7.6f, 0f, 7.5f), 1.15f);
+            CreateTree(northGrove, new Vector3(-4.8f, 0f, 7.8f), 0.85f);
+            CreateTree(northGrove, new Vector3(0.2f, 0f, 8.2f), 1.3f);
+            CreateTree(northGrove, new Vector3(4.1f, 0f, 7.2f), 0.95f);
+            CreateTree(northGrove, new Vector3(8.4f, 0f, 6.4f), 1.25f);
+
+            Transform rockGarden = new GameObject("Sunmeadow South Rock Garden").transform;
+            CreateRock(rockGarden, new Vector3(-8.1f, 0.45f, -7.4f), new Vector3(1.25f, 0.9f, 0.95f));
+            CreateRock(rockGarden, new Vector3(-6.6f, 0.3f, -7.6f), new Vector3(0.75f, 0.6f, 0.7f));
+            CreateRock(rockGarden, new Vector3(-7.2f, 0.22f, -6.25f), new Vector3(0.55f, 0.45f, 0.52f));
+            CreateTree(rockGarden, new Vector3(8.9f, 0f, -6.8f), 1.2f);
+            CreateTree(rockGarden, new Vector3(6.8f, 0f, -7.7f), 0.8f);
+
+            Transform flowerCluster = new GameObject("Sunmeadow Flower Clusters").transform;
+            CreateFlowerCluster(flowerCluster, new Vector3(-5.3f, 0f, 4.2f), new Color(0.98f, 0.42f, 0.55f));
+            CreateFlowerCluster(flowerCluster, new Vector3(-2.5f, 0f, 4.6f), new Color(1f, 0.82f, 0.24f));
+            CreateFlowerCluster(flowerCluster, new Vector3(1.2f, 0f, 5.7f), new Color(0.72f, 0.45f, 0.94f));
+            CreateFlowerCluster(flowerCluster, new Vector3(2.5f, 0f, -5.7f), new Color(0.98f, 0.42f, 0.55f));
+            CreateFlowerCluster(flowerCluster, new Vector3(4.4f, 0f, 3.8f), new Color(1f, 0.82f, 0.24f));
+        }
+
+        private static GameObject CreateVisualPrimitive(string name, PrimitiveType primitive, Vector3 position, Vector3 scale, Color color)
+        {
+            GameObject visual = GameObject.CreatePrimitive(primitive);
+            visual.name = name;
+            visual.transform.position = position;
+            visual.transform.localScale = scale;
+            Destroy(visual.GetComponent<Collider>());
+            SetMaterialColor(visual.GetComponent<Renderer>(), color);
+            return visual;
+        }
+
+        private static void CreateTree(Transform parent, Vector3 position, float size)
+        {
+            GameObject tree = new("Sunmeadow Tree");
+            tree.transform.SetParent(parent);
+            tree.transform.position = position;
+            CreateVisualPrimitive("Tree Trunk", PrimitiveType.Cylinder, position + new Vector3(0f, size, 0f), new Vector3(0.28f * size, size, 0.28f * size), TrunkColor).transform.SetParent(tree.transform, true);
+            CreateVisualPrimitive("Tree Canopy Low", PrimitiveType.Sphere, position + new Vector3(0f, size * 2.05f, 0f), new Vector3(1.35f * size, 1.0f * size, 1.35f * size), LeafColor).transform.SetParent(tree.transform, true);
+            CreateVisualPrimitive("Tree Canopy High", PrimitiveType.Sphere, position + new Vector3(0.18f * size, size * 2.85f, 0.04f), new Vector3(0.92f * size, 0.85f * size, 0.92f * size), new Color(0.18f, 0.52f, 0.24f)).transform.SetParent(tree.transform, true);
+        }
+
+        private static void CreateRock(Transform parent, Vector3 position, Vector3 scale)
+        {
+            CreateVisualPrimitive("Sunmeadow Rock", PrimitiveType.Sphere, position, scale, new Color(0.33f, 0.40f, 0.43f)).transform.SetParent(parent, true);
+        }
+
+        private static void CreateFlowerCluster(Transform parent, Vector3 center, Color petalColor)
+        {
+            for (int index = 0; index < 3; index++)
+            {
+                float angle = index * 2.1f;
+                Vector3 position = center + new Vector3(Mathf.Cos(angle) * 0.45f, 0f, Mathf.Sin(angle) * 0.45f);
+                CreateVisualPrimitive("Sunmeadow Flower Stem", PrimitiveType.Cylinder, position + new Vector3(0f, 0.22f, 0f), new Vector3(0.05f, 0.22f, 0.05f), new Color(0.16f, 0.42f, 0.17f)).transform.SetParent(parent, true);
+                CreateVisualPrimitive("Sunmeadow Flower", PrimitiveType.Sphere, position + new Vector3(0f, 0.5f, 0f), new Vector3(0.3f, 0.15f, 0.3f), petalColor).transform.SetParent(parent, true);
+            }
         }
 
         private static PrototypePlayerController CreatePlayer(PrototypeInputReader input)
@@ -85,6 +168,8 @@ namespace Wayroot.Core
             GameObject cameraObject = new("Prototype Camera");
             cameraObject.tag = "MainCamera";
             sceneCamera = cameraObject.AddComponent<UnityEngine.Camera>();
+            sceneCamera.backgroundColor = new Color(0.49f, 0.73f, 0.86f);
+            sceneCamera.clearFlags = CameraClearFlags.Skybox;
             cameraObject.AddComponent<AudioListener>();
             TopDownCameraController controller = cameraObject.AddComponent<TopDownCameraController>();
             controller.Configure(target, input);
