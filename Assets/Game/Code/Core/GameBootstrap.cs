@@ -38,10 +38,10 @@ namespace Wayroot.Core
             TopDownCameraController cameraController = CreateCamera(player.transform, input, out UnityEngine.Camera sceneCamera);
             CreateObstruction(sceneCamera, player.transform);
             PrototypeGatheringController gathering = CreateGathering(input, player);
-            CreateCombat(input, player, playerHealth);
+            PrototypeEnemy enemy = CreateCombat(input, player, playerHealth);
             PauseController pause = new GameObject("Pause Controller").AddComponent<PauseController>();
             pause.Configure(player, cameraController);
-            CreateRuntimeUi(input, player, cameraController, pause, gathering);
+            CreateRuntimeUi(input, player, playerHealth, enemy, cameraController, pause, gathering);
         }
 
         private static void CreateLight()
@@ -97,7 +97,7 @@ namespace Wayroot.Core
             fader.Configure(sourceCamera, target);
         }
 
-        private static void CreateCombat(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth)
+        private static PrototypeEnemy CreateCombat(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth)
         {
             GameObject enemyObject = GameObject.CreatePrimitive(PrimitiveType.Capsule);
             enemyObject.name = "Practice Slime (hold SPACE)";
@@ -107,6 +107,7 @@ namespace Wayroot.Core
             enemy.Configure(enemyObject.GetComponent<Renderer>());
             enemyObject.AddComponent<PrototypeEnemyChase>().Configure(player.transform, playerHealth);
             new GameObject("Prototype Attack").AddComponent<PrototypeAttackController>().Configure(input, player, enemy);
+            return enemy;
         }
 
         private static PrototypeGatheringController CreateGathering(PrototypeInputReader input, PrototypePlayerController player)
@@ -131,7 +132,7 @@ namespace Wayroot.Core
             return node;
         }
 
-        private static void CreateRuntimeUi(PrototypeInputReader input, PrototypePlayerController player, TopDownCameraController cameraController, PauseController pause, PrototypeGatheringController gathering)
+        private static void CreateRuntimeUi(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeEnemy enemy, TopDownCameraController cameraController, PauseController pause, PrototypeGatheringController gathering)
         {
             Canvas canvas = new GameObject("Prototype HUD").AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -171,6 +172,14 @@ namespace Wayroot.Core
             CreateText("Gather Label", gatherButton, "HOLD\nGATHER", 26, TextAnchor.MiddleCenter);
             gatherButton.gameObject.AddComponent<VirtualActionButton>().Configure(input);
 
+            RectTransform attackButton = CreatePanel("Attack Button", safeArea, new Color(0.72f, 0.2f, 0.2f, 0.92f));
+            attackButton.sizeDelta = new Vector2(180f, 105f);
+            attackButton.anchorMin = attackButton.anchorMax = new Vector2(1f, 0f);
+            attackButton.pivot = new Vector2(1f, 0f);
+            attackButton.anchoredPosition = new Vector2(-260f, 56f);
+            CreateText("Attack Label", attackButton, "HOLD\nATTACK", 26, TextAnchor.MiddleCenter);
+            attackButton.gameObject.AddComponent<VirtualAttackButton>().Configure(input);
+
             RectTransform developmentText = CreateText("Development Overlay", safeArea, string.Empty, 26, TextAnchor.UpperLeft).rectTransform;
             developmentText.anchorMin = new Vector2(0f, 1f);
             developmentText.anchorMax = new Vector2(1f, 1f);
@@ -186,6 +195,13 @@ namespace Wayroot.Core
             inventoryText.rectTransform.anchoredPosition = new Vector2(-24f, -120f);
             inventoryText.rectTransform.sizeDelta = new Vector2(650f, 48f);
             inventoryText.gameObject.AddComponent<GatheringHud>().Configure(inventoryText, gathering);
+
+            Text combatText = CreateText("Combat Status", safeArea, string.Empty, 24, TextAnchor.UpperLeft);
+            combatText.rectTransform.anchorMin = combatText.rectTransform.anchorMax = new Vector2(0f, 1f);
+            combatText.rectTransform.pivot = new Vector2(0f, 1f);
+            combatText.rectTransform.anchoredPosition = new Vector2(24f, -120f);
+            combatText.rectTransform.sizeDelta = new Vector2(650f, 48f);
+            combatText.gameObject.AddComponent<CombatHud>().Configure(combatText, playerHealth, enemy);
 
             SafeAreaLayout layout = safeArea.gameObject.AddComponent<SafeAreaLayout>();
             layout.Configure(safeArea, joystickArea, gatherButton);
