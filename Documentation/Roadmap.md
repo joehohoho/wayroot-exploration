@@ -2,9 +2,9 @@
 
 ## Current milestone
 
-**Phase 5 — Homestead/building vertical slice: implemented and desktop-validated; owner play review and iPhone evidence remain pending.**
+**Phase 6 — Creature companion vertical slice: implemented and desktop-validated; owner play review and iPhone evidence remain pending.**
 
-Phase 1 completed desktop owner play review on 2026-07-19; physical-iPhone evidence remains an independent mobile gate. The project remains pinned to Unity **6000.5.4f1**. Phase 6 is not authorized.
+Phase 1 completed desktop owner play review on 2026-07-19; physical-iPhone evidence remains an independent mobile gate. The project remains pinned to Unity **6000.5.4f1**. Phase 7 is not authorized.
 
 ## Phases
 
@@ -16,8 +16,8 @@ Phase 1 completed desktop owner play review on 2026-07-19; physical-iPhone evide
 | 3 | Basic combat, stats, sword, target selection, one enemy, defeat/respawn | Implemented; desktop-validated; iPhone pending |
 | 4 | One merchant-station weapon upgrade using a slime combat drop and local persistence | Implemented; desktop-validated; owner review pending |
 | 5 | Homestead and building | Implemented; desktop-validated; owner review pending |
-| 6 | Creature vertical slice | Deferred |
-| 7 | Generated Sunmeadow region | Deferred; only after Phases 1–4 are enjoyable in a controlled scene |
+| 6 | Creature vertical slice | Implemented; desktop-validated; owner review pending |
+| 7 | Generated Sunmeadow region | Deferred; only after the controlled loops are enjoyable |
 | 8 | Mobile vertical-slice polish and iPhone profiling | Deferred |
 | 9 | Production planning and post-slice features | Deferred |
 
@@ -53,6 +53,12 @@ Phase 1 completed desktop owner play review on 2026-07-19; physical-iPhone evide
 - The one-time purchase safely spends the fixed cost, persists `shelterBuilt` in the version-3 prototype local save, and reveals a primitive brown-wall/red-roof shelter. RESET clears the build state.
 - Unity batch compile, EditMode, PlayMode, Windows development build, and timed player smoke were completed for the Phase 5 review build; exact results are recorded in the published handoff.
 
+### Phase 6
+
+- One green primitive Mossling with yellow ears is composed into the controlled scene. It reuses E/gamepad-south/touch HOLD GATHER for befriending, follows with a 1.5-unit safety buffer, and pauses safely with the player.
+- `creatureBefriended` is persisted in the version-4 local save. A restart restores the creature at the shelter home until the player walks up; RESET clears it.
+- Unity batch compile, EditMode, PlayMode, Windows development build, and timed player smoke are completed for the review build; exact results are recorded in the published handoff.
+
 ## Next milestone gate
 
-The owner must play/review the cohesive Phase 5 loop using `Documentation/Phase5ManualTest.md`. Do not begin Phase 6 without explicit approval.
+The owner must play/review the cohesive Phase 6 loop using `Documentation/Phase6ManualTest.md`. Do not begin Phase 7 without explicit approval.

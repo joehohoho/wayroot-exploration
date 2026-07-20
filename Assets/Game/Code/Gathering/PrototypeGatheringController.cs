@@ -21,6 +21,7 @@ namespace Wayroot.Gathering
         public GatheringNode? CurrentTarget { get; private set; }
         public int WeaponLevel => _save.weaponLevel;
         public bool ShelterBuilt => _save.shelterBuilt;
+        public bool CreatureBefriended => _save.creatureBefriended;
         public int AttackDamage => WeaponUpgradeRules.GetAttackDamage(WeaponLevel);
         public int GetCount(ResourceType resource) => _inventory.GetCount(resource);
         public bool TryBuildShelter(out string status)
@@ -44,6 +45,17 @@ namespace Wayroot.Gathering
             status = "SHELTER built: home is ready.";
             return true;
         }
+        public void BefriendCreature()
+        {
+            if (_save.creatureBefriended)
+            {
+                return;
+            }
+
+            _save.creatureBefriended = true;
+            SaveInventory();
+        }
+
         public bool TryPurchaseWeaponUpgrade(out string status)
         {
             if (WeaponLevel >= WeaponUpgradeRules.MaximumLevel)

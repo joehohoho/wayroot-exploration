@@ -9,6 +9,7 @@ using Wayroot.Inventory;
 using Wayroot.Gathering;
 using Wayroot.Building;
 using Wayroot.Combat;
+using Wayroot.Creatures;
 using Wayroot.Progression;
 using Wayroot.UI;
 
@@ -42,10 +43,11 @@ namespace Wayroot.Core
             PrototypeGatheringController gathering = CreateGathering(input, player);
             PrototypeMerchantController merchant = CreateMerchant(input, player, gathering);
             PrototypeBuildController build = CreateBuildPlot(input, player, gathering);
+            PrototypeCreatureController creature = CreateCreature(input, player, gathering);
             PrototypeEnemy enemy = CreateCombat(input, player, playerHealth, gathering);
             PauseController pause = new GameObject("Pause Controller").AddComponent<PauseController>();
             pause.Configure(player, cameraController);
-            CreateRuntimeUi(input, player, playerHealth, enemy, cameraController, pause, gathering, merchant, build);
+            CreateRuntimeUi(input, player, playerHealth, enemy, cameraController, pause, gathering, merchant, build, creature);
         }
 
         private static void CreateLight()
@@ -156,6 +158,33 @@ namespace Wayroot.Core
             return build;
         }
 
+        private static PrototypeCreatureController CreateCreature(PrototypeInputReader input, PrototypePlayerController player, PrototypeGatheringController gathering)
+        {
+            GameObject creature = GameObject.CreatePrimitive(PrimitiveType.Sphere);
+            creature.name = "Friendly Mossling (hold E)";
+            creature.transform.position = new Vector3(-5.5f, 0.6f, 3.5f);
+            creature.transform.localScale = new Vector3(1.2f, 1.1f, 1.2f);
+            Destroy(creature.GetComponent<Collider>());
+            SetMaterialColor(creature.GetComponent<Renderer>(), new Color(0.34f, 0.8f, 0.54f));
+            CreateCreatureFeature("Mossling Left Ear", creature.transform, new Vector3(-0.32f, 0.68f, 0f), new Vector3(0.22f, 0.52f, 0.22f), new Color(0.94f, 0.82f, 0.3f));
+            CreateCreatureFeature("Mossling Right Ear", creature.transform, new Vector3(0.32f, 0.68f, 0f), new Vector3(0.22f, 0.52f, 0.22f), new Color(0.94f, 0.82f, 0.3f));
+            CreateCreatureFeature("Mossling Tail", creature.transform, new Vector3(0f, 0.05f, -0.62f), new Vector3(0.3f, 0.3f, 0.5f), new Color(0.18f, 0.5f, 0.28f));
+            PrototypeCreatureController controller = creature.AddComponent<PrototypeCreatureController>();
+            controller.Configure(input, player, gathering, new Vector3(-4.1f, 0.6f, -4.1f));
+            return controller;
+        }
+
+        private static void CreateCreatureFeature(string name, Transform parent, Vector3 localPosition, Vector3 localScale, Color color)
+        {
+            GameObject feature = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            feature.name = name;
+            feature.transform.SetParent(parent, false);
+            feature.transform.localPosition = localPosition;
+            feature.transform.localScale = localScale;
+            Destroy(feature.GetComponent<Collider>());
+            SetMaterialColor(feature.GetComponent<Renderer>(), color);
+        }
+
         private static void CreateShelterPiece(string name, Transform parent, Vector3 localPosition, Vector3 localScale, Color color)
         {
             GameObject piece = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -208,7 +237,7 @@ namespace Wayroot.Core
             return node;
         }
 
-        private static void CreateRuntimeUi(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeEnemy enemy, TopDownCameraController cameraController, PauseController pause, PrototypeGatheringController gathering, PrototypeMerchantController merchant, PrototypeBuildController build)
+        private static void CreateRuntimeUi(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeEnemy enemy, TopDownCameraController cameraController, PauseController pause, PrototypeGatheringController gathering, PrototypeMerchantController merchant, PrototypeBuildController build, PrototypeCreatureController creature)
         {
             Canvas canvas = new GameObject("Prototype HUD").AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -270,7 +299,7 @@ namespace Wayroot.Core
             inventoryText.rectTransform.pivot = new Vector2(1f, 1f);
             inventoryText.rectTransform.anchoredPosition = new Vector2(-24f, -120f);
             inventoryText.rectTransform.sizeDelta = new Vector2(700f, 90f);
-            inventoryText.gameObject.AddComponent<GatheringHud>().Configure(inventoryText, gathering, merchant, build);
+            inventoryText.gameObject.AddComponent<GatheringHud>().Configure(inventoryText, gathering, merchant, build, creature);
 
             Text combatText = CreateText("Combat Status", safeArea, string.Empty, 24, TextAnchor.UpperLeft);
             combatText.rectTransform.anchorMin = combatText.rectTransform.anchorMax = new Vector2(0f, 1f);
