@@ -30,5 +30,16 @@ namespace Wayroot.Tests.EditMode
             Assert.That(remainder, Is.Zero);
             Assert.That(inventory.GetCount(ResourceType.Timber), Is.Zero);
         }
+
+        [Test]
+        public void TrySpend_RequiresEnoughResourcesAndDeductsExactlyTheCost()
+        {
+            InventoryState inventory = new();
+            inventory.TryAdd(ResourceType.SlimeCore, 1, out _, out _);
+
+            Assert.That(inventory.TrySpend(ResourceType.SlimeCore, 2), Is.False);
+            Assert.That(inventory.TrySpend(ResourceType.SlimeCore, 1), Is.True);
+            Assert.That(inventory.GetCount(ResourceType.SlimeCore), Is.Zero);
+        }
     }
 }

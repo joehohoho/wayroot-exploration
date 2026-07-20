@@ -8,6 +8,7 @@ using Wayroot.Input;
 using Wayroot.Inventory;
 using Wayroot.Gathering;
 using Wayroot.Combat;
+using Wayroot.Progression;
 using Wayroot.UI;
 
 namespace Wayroot.Core
@@ -38,10 +39,11 @@ namespace Wayroot.Core
             TopDownCameraController cameraController = CreateCamera(player.transform, input, out UnityEngine.Camera sceneCamera);
             CreateObstruction(sceneCamera, player.transform);
             PrototypeGatheringController gathering = CreateGathering(input, player);
-            PrototypeEnemy enemy = CreateCombat(input, player, playerHealth);
+            PrototypeMerchantController merchant = CreateMerchant(input, player, gathering);
+            PrototypeEnemy enemy = CreateCombat(input, player, playerHealth, gathering);
             PauseController pause = new GameObject("Pause Controller").AddComponent<PauseController>();
             pause.Configure(player, cameraController);
-            CreateRuntimeUi(input, player, playerHealth, enemy, cameraController, pause, gathering);
+            CreateRuntimeUi(input, player, playerHealth, enemy, cameraController, pause, gathering, merchant);
         }
 
         private static void CreateLight()
@@ -97,7 +99,27 @@ namespace Wayroot.Core
             fader.Configure(sourceCamera, target);
         }
 
-        private static PrototypeEnemy CreateCombat(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth)
+        private static PrototypeMerchantController CreateMerchant(PrototypeInputReader input, PrototypePlayerController player, PrototypeGatheringController gathering)
+        {
+            GameObject station = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
+            station.name = "Iron Edge Merchant Station (hold E)";
+            station.transform.position = new Vector3(2f, 0.75f, -3f);
+            station.transform.localScale = new Vector3(1.4f, 0.75f, 1.4f);
+            SetMaterialColor(station.GetComponent<Renderer>(), new Color(0.9f, 0.66f, 0.18f));
+
+            GameObject sign = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            sign.name = "Iron Edge Merchant Sign";
+            sign.transform.SetParent(station.transform, false);
+            sign.transform.localScale = new Vector3(1.2f, 1.1f, 0.15f);
+            sign.transform.localPosition = new Vector3(0f, 1.25f, 0f);
+            SetMaterialColor(sign.GetComponent<Renderer>(), new Color(0.2f, 0.12f, 0.04f));
+
+            PrototypeMerchantController merchant = station.AddComponent<PrototypeMerchantController>();
+            merchant.Configure(input, player, gathering);
+            return merchant;
+        }
+
+        private static PrototypeEnemy CreateCombat(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeGatheringController gathering)
         {
             GameObject enemyObject = GameObject.CreatePrimitive(PrimitiveType.Capsule);
             enemyObject.name = "Practice Slime (hold SPACE)";
@@ -113,7 +135,7 @@ namespace Wayroot.Core
             SetMaterialColor(healthBar.GetComponent<Renderer>(), new Color(0.2f, 0.9f, 0.25f));
             healthBar.AddComponent<PrototypeWorldHealthBar>().Configure(enemy, healthBar.transform);
             enemyObject.AddComponent<PrototypeEnemyChase>().Configure(player.transform, playerHealth);
-            new GameObject("Prototype Attack").AddComponent<PrototypeAttackController>().Configure(input, player, enemy);
+            new GameObject("Prototype Attack").AddComponent<PrototypeAttackController>().Configure(input, player, enemy, gathering);
             return enemy;
         }
 
@@ -139,7 +161,7 @@ namespace Wayroot.Core
             return node;
         }
 
-        private static void CreateRuntimeUi(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeEnemy enemy, TopDownCameraController cameraController, PauseController pause, PrototypeGatheringController gathering)
+        private static void CreateRuntimeUi(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeEnemy enemy, TopDownCameraController cameraController, PauseController pause, PrototypeGatheringController gathering, PrototypeMerchantController merchant)
         {
             Canvas canvas = new GameObject("Prototype HUD").AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -200,8 +222,8 @@ namespace Wayroot.Core
             inventoryText.rectTransform.anchorMin = inventoryText.rectTransform.anchorMax = new Vector2(1f, 1f);
             inventoryText.rectTransform.pivot = new Vector2(1f, 1f);
             inventoryText.rectTransform.anchoredPosition = new Vector2(-24f, -120f);
-            inventoryText.rectTransform.sizeDelta = new Vector2(650f, 48f);
-            inventoryText.gameObject.AddComponent<GatheringHud>().Configure(inventoryText, gathering);
+            inventoryText.rectTransform.sizeDelta = new Vector2(700f, 90f);
+            inventoryText.gameObject.AddComponent<GatheringHud>().Configure(inventoryText, gathering, merchant);
 
             Text combatText = CreateText("Combat Status", safeArea, string.Empty, 24, TextAnchor.UpperLeft);
             combatText.rectTransform.anchorMin = combatText.rectTransform.anchorMax = new Vector2(0f, 1f);

@@ -6,7 +6,8 @@ namespace Wayroot.Inventory
     {
         WildPetal,
         Timber,
-        Stone
+        Stone,
+        SlimeCore
     }
 
     /// <summary>Mutable, bounded runtime inventory; persistence and UI remain separate adapters.</summary>
@@ -39,6 +40,17 @@ namespace Wayroot.Inventory
             }
 
             _counts[resource] = current + accepted;
+            return true;
+        }
+
+        public bool TrySpend(ResourceType resource, int quantity)
+        {
+            if (quantity <= 0 || GetCount(resource) < quantity)
+            {
+                return false;
+            }
+
+            _counts[resource] = GetCount(resource) - quantity;
             return true;
         }
     }

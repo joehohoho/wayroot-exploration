@@ -13,6 +13,7 @@ namespace Wayroot.Combat
         private float _respawnAt;
         public bool IsDefeated => _health <= 0;
         public int Health => _health;
+        public event System.Action? Defeated;
         private void Awake()
         {
             _health = maxHealth;
@@ -31,6 +32,7 @@ namespace Wayroot.Combat
             _respawnAt = Time.time + respawnDelay;
             body.enabled = false;
             _collider.enabled = false;
+            Defeated?.Invoke();
         }
         private void Respawn()
         {
