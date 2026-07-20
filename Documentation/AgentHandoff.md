@@ -4,26 +4,19 @@ Read this file before resuming after a quota reset/session loss, then update it 
 
 ## 2026-07-20 status
 
-- **Current milestone:** Phase 10 first Wayroot restoration objective is implemented and verified. **Do not begin Phase 11 without explicit owner approval.**
-- **Repository:** `Wayroot Exploration` / `wayroot-exploration`, branch `main`. This phase must be committed/pushed after the final diff review.
+- **Current milestone:** Phase 13 restored-grove Thorn Guardian encounter is implemented, validated, and awaiting its final commit/push. **Do not begin Phase 14 without explicit owner approval.**
+- **Repository:** `Wayroot Exploration` / `wayroot-exploration`, branch `main`; pre-existing owner authorization changes in `AGENTS.md` and `Documentation/Phase13ImplementationPlan.md` are intentionally included with this milestone.
 - **Pinned editor:** Unity **6000.5.4f1** (`d550df8bd089`). Do not change the project pin without owner approval.
-- **Packages:** Input System **1.19.0**, URP **17.5.0**, Unity Test Framework **1.7.0**, uGUI **2.0.0**. `activeInputHandler: 1` is required.
-- **Phase 10 contract:** one dormant labelled Wayroot in the existing Sunmeadow clearing restores via the existing `E` / gamepad-south / **HOLD GATHER** interaction only after **IRON EDGE**, a built **SHELTER**, and exactly `3 PETAL + 3 TIMBER + 3 STONE + 1 CORE`. It spends safely once, persists across restart, and RESET returns it to dormant. A primitive green bloom/label provides the only new clearing presentation.
-- **Persistence:** `PrototypeGatheringSave` is version 5; old save JSON omits `wayrootRestored`, which defaults to `false` through `JsonUtility`. `PrototypeGatheringSaveService.Reset()` deletes the record, clearing Wayroot state.
-- **Tests:** pure `WayrootRestorationRulesTests` cover prerequisites, fixed one-time spending, and non-spending failure. PlayMode coverage saves restored state, reloads Bootstrap, asserts bloom/label composition, then asserts RESET state.
-- **Manual/device guide:** `Documentation/Phase10ManualTest.md` documents fresh-reset objective validation, restart/reset behavior, and a Device Simulator review procedure. Device Simulator remains desktop evidence only.
-- **Phase 10 automation:** batch compile passed; EditMode **25/25**; PlayMode **5/5**. `Wayroot.Editor.PhaseTenBuild.BuildWindowsReviewPlayer` passed and produced ignored `Builds/Phase10Review/WayrootPhase10.exe` (667,648-byte executable; 158 MB directory). Its eight-second Windows smoke stayed alive until intentional timeout 124 with no captured application exception, error, or missing-shader text.
-- **Environment note:** Unity logs still contain transient LicenseClient handshake/access-token messages despite all successful exits, and existing nullable/obsolete API compiler warnings. Treat licensing as local/CI follow-up; no Phase 10 compile error occurred.
-- **iPhone status:** blocked. Windows/Device Simulator evidence does not validate iOS compilation, signing, physical touch behavior, safe area, performance, persistence, or App Store readiness. No Mac/Xcode/iOS Build Support/signed-device result is available.
-- **Git hygiene:** generated `Builds/`, `Logs/`, `TestResults/`, `Library/`, etc. are ignored. Unity rewrites `ProjectSettings/ProjectSettings.asset`; restore that whitespace/settings churn before committing.
+- **Phase 13 contract:** the first restored Wayroot visibly opens one compact labelled **RESTORED GROVE** in existing Sunmeadow. It contains exactly one **THORN GUARDIAN** using existing Hold Attack/touch, player health, shelter return, and Slime Core reward loops. Its profile is 8 HP, 2 contact damage, and a fixed 15-second home respawn; it is unavailable before restoration. No region, roster, skill, ranged weapon, phase, quest, currency, loot-table, or Phase 14 work was added.
+- **Implementation:** `ThornGuardianRules` owns pure tuning/gating. `RestoredGroveController` gates the composition from existing persisted Wayroot state. The existing attack controller now selects the nearest active enemy, so it supports both the Practice Slime and guardian without new input. Enemy profile data drives health bar, HUD, chase/contact tuning, names, and respawn feedback.
+- **Tests:** EditMode **33/33** passed, including new pure guardian profile/gate coverage. PlayMode **9/9** passed, including fresh locked composition then saved-Wayroot guardian composition. Batch compile passed.
+- **Windows review:** `Wayroot.Editor.PhaseThirteenBuild.BuildWindowsReviewPlayer` passed, creating ignored `Builds/Phase13Review/WayrootPhase13.exe` (667,648 bytes; 158 MB directory). Eight-second smoke stayed alive until intentional timeout 124 with no captured application exception, error, or missing-shader text.
+- **Manual review:** follow `Documentation/Phase13ManualTest.md`; use RESET for fresh state and see the visible HUD/edge-grove change. Windows evidence is not physical-iPhone validation.
+- **Known environment warnings:** Unity logs contain the pre-existing LicenseClient handshake/access-token messages and `ProjectSettings/TagManager.asset` parser warning despite zero compile/test/build failures. Build-time `ProjectSettings.asset` churn was restored and must remain uncommitted.
 
 ## First actions when resuming
 
-1. Inspect `git status --short --branch`, `git log --oneline -5`, then compare local `HEAD` to `origin/main`.
-2. Read `AGENTS.md`, this handoff, `Documentation/Roadmap.md`, `Documentation/OpenQuestions.md`, `Documentation/Phase10ImplementationPlan.md`, and `Documentation/Phase10ManualTest.md`.
-3. If Phase 10 is not yet published, review staged diff, run the documented checks after any code change, commit, push, fetch, and compare `HEAD` to `origin/main`.
-4. Obtain explicit Phase 11 authorization before new gameplay. For iPhone work, complete `Documentation/Phase9iPhoneBlockers.md` with real Mac/Xcode/signed-device evidence.
-
-## Resume prompt
-
-> Preserve Unity 6000.5.4f1 and the approved Phase 0–10 controlled slice. Phase 10’s finite Wayroot objective is complete: do not expand it into resource renewal, crafting, quest trees, regions, or repeatable loops without a new owner-approved phase. Use actual Unity execution; do not claim a Device Simulator or Windows pass is physical-iPhone validation.
+1. Inspect `git status --short --branch`, `git diff --check`, `git log --oneline -5`, and compare `HEAD` to `origin/main`.
+2. Review the final Phase 13 diff, including the tracked Unity `.meta` files; keep generated `Builds/`, `Logs/`, `TestResults/`, `Library/`, and settings churn out of Git.
+3. Commit/push this cohesive milestone if not already published, fetch, and verify `HEAD == origin/main`; then replace the pending commit/push note in this handoff with the published SHA.
+4. Do not implement Phase 14 absent a new explicit owner authorization. Physical iPhone validation remains independently blocked by the documented Mac/Xcode/signing/device requirements.

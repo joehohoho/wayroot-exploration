@@ -52,10 +52,11 @@ namespace Wayroot.Core
             PrototypeBuildController build = CreateBuildPlot(input, player, playerHealth, gathering, sceneCamera);
             PrototypeWayrootController wayroot = CreateWayroot(input, player, gathering, sceneCamera);
             PrototypeCreatureController creature = CreateCreature(input, player, gathering, sceneCamera);
-            PrototypeEnemy enemy = CreateCombat(input, player, playerHealth, gathering, sceneCamera, out PrototypeAttackController attack);
+            PrototypeEnemy enemy = CreateCombat(input, player, playerHealth, sceneCamera, out PrototypeAttackController attack);
+            RestoredGroveController grove = CreateRestoredGrove(input, player, playerHealth, gathering, sceneCamera, attack, enemy);
             PauseController pause = new GameObject("Pause Controller").AddComponent<PauseController>();
             pause.Configure(player, cameraController);
-            ActionFeedbackHud feedback = CreateRuntimeUi(input, player, playerHealth, enemy, cameraController, pause, gathering, merchant, build, wayroot, creature);
+            ActionFeedbackHud feedback = CreateRuntimeUi(input, player, playerHealth, enemy, grove, cameraController, pause, gathering, merchant, build, wayroot, creature);
             gathering.SetFeedback(feedback);
             merchant.SetFeedback(feedback);
             build.SetFeedback(feedback);
@@ -63,6 +64,7 @@ namespace Wayroot.Core
             creature.SetFeedback(feedback);
             attack.SetFeedback(feedback);
             enemy.SetFeedback(feedback);
+            grove.SetFeedback(feedback);
             playerHealth.SetFeedback(feedback);
             pause.SetFeedback(feedback);
         }
@@ -332,14 +334,15 @@ namespace Wayroot.Core
             SetMaterialColor(piece.GetComponent<Renderer>(), color);
         }
 
-        private static PrototypeEnemy CreateCombat(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeGatheringController gathering, UnityEngine.Camera sceneCamera, out PrototypeAttackController attack)
+        private static PrototypeEnemy CreateCombat(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, UnityEngine.Camera sceneCamera, out PrototypeAttackController attack)
         {
             GameObject enemyObject = GameObject.CreatePrimitive(PrimitiveType.Capsule);
             enemyObject.name = "Practice Slime (hold SPACE)";
             enemyObject.transform.position = new Vector3(5f, 1f, -1f);
             SetMaterialColor(enemyObject.GetComponent<Renderer>(), new Color(0.85f, 0.25f, 0.3f));
             PrototypeEnemy enemy = enemyObject.AddComponent<PrototypeEnemy>();
-            enemy.Configure(enemyObject.GetComponent<Renderer>());
+            EnemyCombatProfile slimeProfile = new("SLIME", ThornGuardianRules.PracticeSlimeHealth, ThornGuardianRules.PracticeSlimeContactDamage, 5f, 1.5f, 6f);
+            enemy.Configure(enemyObject.GetComponent<Renderer>(), slimeProfile);
             GameObject healthBar = GameObject.CreatePrimitive(PrimitiveType.Cube);
             healthBar.name = "Slime Health Bar";
             healthBar.transform.SetParent(enemyObject.transform, false);
@@ -347,11 +350,44 @@ namespace Wayroot.Core
             healthBar.transform.localPosition = new Vector3(0f, 1.8f, 0f);
             SetMaterialColor(healthBar.GetComponent<Renderer>(), new Color(0.2f, 0.9f, 0.25f));
             healthBar.AddComponent<PrototypeWorldHealthBar>().Configure(enemy, healthBar.transform);
-            enemyObject.AddComponent<PrototypeEnemyChase>().Configure(player.transform, playerHealth);
+            enemyObject.AddComponent<PrototypeEnemyChase>().Configure(player.transform, playerHealth, slimeProfile);
             attack = new GameObject("Prototype Attack").AddComponent<PrototypeAttackController>();
-            attack.Configure(input, player, enemy, gathering);
             CreateWorldIdentifier("SLIME\nHOLD ATTACK", enemyObject.transform, new Vector3(0f, 2.2f, 0f), sceneCamera, new Color(1f, 0.64f, 0.64f));
             return enemy;
+        }
+
+        private static RestoredGroveController CreateRestoredGrove(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeGatheringController gathering, UnityEngine.Camera sceneCamera, PrototypeAttackController attack, PrototypeEnemy slime)
+        {
+            GameObject grove = new("Restored Grove Edge");
+            grove.transform.position = new Vector3(-6.7f, 0f, 1.2f);
+            CreateVisualPrimitive("Restored Grove Clearing", PrimitiveType.Cylinder, grove.transform.position + new Vector3(0f, 0.04f, 0f), new Vector3(2.8f, 0.04f, 2.8f), new Color(0.36f, 0.72f, 0.34f)).transform.SetParent(grove.transform, true);
+            CreateVisualPrimitive("Restored Grove Thorn Arch", PrimitiveType.Cube, grove.transform.position + new Vector3(0f, 1.3f, 1.8f), new Vector3(3.4f, 2.5f, 0.35f), new Color(0.20f, 0.38f, 0.14f)).transform.SetParent(grove.transform, true);
+            CreateVisualPrimitive("Restored Grove Bloom", PrimitiveType.Sphere, grove.transform.position + new Vector3(-1.45f, 0.7f, -0.8f), new Vector3(0.7f, 1.4f, 0.7f), new Color(0.7f, 0.94f, 0.30f)).transform.SetParent(grove.transform, true);
+
+            GameObject guardianObject = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            guardianObject.name = "Thorn Guardian (hold ATTACK)";
+            guardianObject.transform.SetParent(grove.transform, true);
+            guardianObject.transform.position = grove.transform.position + new Vector3(0f, 1f, -0.35f);
+            guardianObject.transform.localScale = new Vector3(1.35f, 1.15f, 1.35f);
+            SetMaterialColor(guardianObject.GetComponent<Renderer>(), new Color(0.24f, 0.48f, 0.15f));
+            EnemyCombatProfile guardianProfile = ThornGuardianRules.Profile;
+            PrototypeEnemy guardian = guardianObject.AddComponent<PrototypeEnemy>();
+            guardian.Configure(guardianObject.GetComponent<Renderer>(), guardianProfile);
+            guardianObject.AddComponent<PrototypeEnemyChase>().Configure(player.transform, playerHealth, guardianProfile);
+            GameObject healthBar = GameObject.CreatePrimitive(PrimitiveType.Cube);
+            healthBar.name = "Thorn Guardian Health Bar";
+            healthBar.transform.SetParent(guardianObject.transform, false);
+            healthBar.transform.localScale = new Vector3(1.25f, 0.12f, 0.12f);
+            healthBar.transform.localPosition = new Vector3(0f, 1.95f, 0f);
+            SetMaterialColor(healthBar.GetComponent<Renderer>(), new Color(0.68f, 0.9f, 0.22f));
+            healthBar.AddComponent<PrototypeWorldHealthBar>().Configure(guardian, healthBar.transform);
+            CreateWorldIdentifier("RESTORED GROVE\nTHORN GUARDIAN", guardianObject.transform, new Vector3(0f, 2.45f, 0f), sceneCamera, new Color(0.82f, 1f, 0.48f));
+
+            attack.Configure(input, player, gathering, slime, guardian);
+            grove.SetActive(false);
+            RestoredGroveController controller = new GameObject("Restored Grove Controller").AddComponent<RestoredGroveController>();
+            controller.Configure(gathering, grove, guardian);
+            return controller;
         }
 
         private static PrototypeGatheringController CreateGathering(PrototypeInputReader input, PrototypePlayerController player, UnityEngine.Camera sceneCamera)
@@ -394,7 +430,7 @@ namespace Wayroot.Core
             return node;
         }
 
-        private static ActionFeedbackHud CreateRuntimeUi(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeEnemy enemy, TopDownCameraController cameraController, PauseController pause, PrototypeGatheringController gathering, PrototypeMerchantController merchant, PrototypeBuildController build, PrototypeWayrootController wayroot, PrototypeCreatureController creature)
+        private static ActionFeedbackHud CreateRuntimeUi(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeEnemy enemy, RestoredGroveController grove, TopDownCameraController cameraController, PauseController pause, PrototypeGatheringController gathering, PrototypeMerchantController merchant, PrototypeBuildController build, PrototypeWayrootController wayroot, PrototypeCreatureController creature)
         {
             Canvas canvas = new GameObject("Prototype HUD").AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -473,7 +509,7 @@ namespace Wayroot.Core
             combatText.rectTransform.pivot = new Vector2(0f, 1f);
             combatText.rectTransform.anchoredPosition = new Vector2(24f, -120f);
             combatText.rectTransform.sizeDelta = new Vector2(650f, 48f);
-            combatText.gameObject.AddComponent<CombatHud>().Configure(combatText, playerHealth, enemy);
+            combatText.gameObject.AddComponent<CombatHud>().Configure(combatText, playerHealth, enemy, grove);
 
             RectTransform feedbackCard = CreatePanel("Action Feedback Card", safeArea, new Color(0.04f, 0.10f, 0.14f, 0.9f));
             feedbackCard.sizeDelta = new Vector2(540f, 62f);

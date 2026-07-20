@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using Wayroot.Character;
 using Wayroot.Gathering;
 using Wayroot.Input;
@@ -8,28 +9,68 @@ namespace Wayroot.Combat
 {
     public sealed class PrototypeAttackController : MonoBehaviour
     {
-        private const float Range = 2f, Cooldown = 0.4f;
+        private const float Range = 2f;
+        private const float Cooldown = 0.4f;
+        private readonly List<PrototypeEnemy> _enemies = new();
         private PrototypeInputReader _input = null!;
         private PrototypePlayerController _player = null!;
-        private PrototypeEnemy _enemy = null!;
         private PrototypeGatheringController _inventory = null!;
         private float _lastAttack = -100f;
         private ActionFeedbackHud? _feedback;
+
         public void SetFeedback(ActionFeedbackHud feedback) => _feedback = feedback;
-        public void Configure(PrototypeInputReader input, PrototypePlayerController player, PrototypeEnemy enemy, PrototypeGatheringController inventory)
+
+        public void Configure(PrototypeInputReader input, PrototypePlayerController player, PrototypeGatheringController inventory, params PrototypeEnemy[] enemies)
         {
-            _input = input; _player = player; _enemy = enemy; _inventory = inventory; _enemy.Defeated += AwardCore;
+            _input = input;
+            _player = player;
+            _inventory = inventory;
+            foreach (PrototypeEnemy enemy in enemies)
+            {
+                _enemies.Add(enemy);
+                enemy.Defeated += AwardCore;
+            }
         }
+
         private void Update()
         {
-            if (_player.IsPaused || !_input.AttackHeld || _enemy.IsDefeated) return;
-            float distance = Vector3.Distance(_player.transform.position, _enemy.transform.position);
-            if (!CombatRules.CanAttack(distance, Range, Time.time - _lastAttack, Cooldown)) return;
+            if (_player.IsPaused || !_input.AttackHeld) return;
+            PrototypeEnemy? target = FindAttackTarget();
+            if (target == null || !CombatRules.CanAttack(Vector3.Distance(_player.transform.position, target.transform.position), Range, Time.time - _lastAttack, Cooldown)) return;
+
             _lastAttack = Time.time;
-            _enemy.TakeDamage(_inventory.AttackDamage);
-            _feedback?.Show(_enemy.IsDefeated ? "SLIME DEFEATED: CORE DROPPED" : $"HIT: SLIME {_enemy.Health}/5");
+            target.TakeDamage(_inventory.AttackDamage);
+            _feedback?.Show(target.IsDefeated
+                ? $"{target.DisplayName} DEFEATED: +1 CORE"
+                : $"HIT: {target.DisplayName} {target.Health}/{target.MaxHealth}");
         }
+
+        private PrototypeEnemy? FindAttackTarget()
+        {
+            PrototypeEnemy? nearest = null;
+            float nearestDistance = Range;
+            foreach (PrototypeEnemy enemy in _enemies)
+            {
+                if (!enemy.gameObject.activeInHierarchy || enemy.IsDefeated) continue;
+                float distance = Vector3.Distance(_player.transform.position, enemy.transform.position);
+                if (distance <= nearestDistance)
+                {
+                    nearest = enemy;
+                    nearestDistance = distance;
+                }
+            }
+
+            return nearest;
+        }
+
         private void AwardCore() => _inventory.AwardCombatCore();
-        private void OnDestroy() { if (_enemy != null) _enemy.Defeated -= AwardCore; }
+
+        private void OnDestroy()
+        {
+            foreach (PrototypeEnemy enemy in _enemies)
+            {
+                if (enemy != null) enemy.Defeated -= AwardCore;
+            }
+        }
     }
 }

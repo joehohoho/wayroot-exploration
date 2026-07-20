@@ -5,45 +5,61 @@ namespace Wayroot.Combat
 {
     public sealed class PrototypeEnemy : MonoBehaviour
     {
-        [SerializeField] private int maxHealth = 5;
-        [SerializeField] private float respawnDelay = 5f;
         [SerializeField] private Renderer body = null!;
+        private EnemyCombatProfile _profile;
         private int _health;
         private Collider _collider = null!;
         private Vector3 _home;
         private float _respawnAt;
         private ActionFeedbackHud? _feedback;
+
         public bool IsDefeated => _health <= 0;
         public int Health => _health;
+        public int MaxHealth => _profile.MaxHealth;
+        public string DisplayName => _profile.DisplayName;
         public event System.Action? Defeated;
+
         private void Awake()
         {
-            _health = maxHealth;
+            _profile = new EnemyCombatProfile("SLIME", ThornGuardianRules.PracticeSlimeHealth, ThornGuardianRules.PracticeSlimeContactDamage, 5f, 1.5f, 6f);
+            _health = _profile.MaxHealth;
             _home = transform.position;
             _collider = GetComponent<Collider>();
         }
+
         private void Update()
         {
             if (IsDefeated && Time.time >= _respawnAt) Respawn();
         }
-        public void Configure(Renderer renderer) => body = renderer;
+
+        public void Configure(Renderer renderer, EnemyCombatProfile profile)
+        {
+            body = renderer;
+            _profile = profile;
+            _health = profile.MaxHealth;
+        }
+
         public void SetFeedback(ActionFeedbackHud feedback) => _feedback = feedback;
+
         public void TakeDamage(int damage)
         {
+            if (IsDefeated) return;
             _health = CombatRules.ApplyDamage(_health, damage, out bool defeated);
             if (!defeated) return;
-            _respawnAt = Time.time + respawnDelay;
+
+            _respawnAt = Time.time + _profile.RespawnDelaySeconds;
             body.enabled = false;
             _collider.enabled = false;
             Defeated?.Invoke();
         }
+
         private void Respawn()
         {
             transform.position = _home;
-            _health = maxHealth;
+            _health = _profile.MaxHealth;
             body.enabled = true;
             _collider.enabled = true;
-            _feedback?.Show("SLIME RESPAWNED");
+            _feedback?.Show($"{DisplayName} RESPAWNED");
         }
     }
 }

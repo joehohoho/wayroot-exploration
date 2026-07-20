@@ -89,6 +89,34 @@ namespace Wayroot.Tests.PlayMode
         }
 
         [UnityTest]
+        public IEnumerator RestoredGrove_IsUnavailableBeforeWayrootAndComposesThornGuardianAfterRestoration()
+        {
+            PrototypeGatheringSaveService.Reset();
+            AsyncOperation lockedOperation = SceneManager.LoadSceneAsync("Bootstrap", LoadSceneMode.Single);
+            yield return lockedOperation;
+            yield return null;
+
+            global::Wayroot.Combat.RestoredGroveController lockedGrove = GameObject.Find("Restored Grove Controller").GetComponent<global::Wayroot.Combat.RestoredGroveController>();
+            Assert.That(lockedGrove.IsOpen, Is.False);
+            Assert.That(GameObject.Find("Thorn Guardian (hold ATTACK)"), Is.Null);
+
+            PrototypeGatheringSaveService.Reset();
+            PrototypeGatheringSaveService.Save(new PrototypeGatheringSave { wayrootRestored = true });
+            AsyncOperation restoredOperation = SceneManager.LoadSceneAsync("Bootstrap", LoadSceneMode.Single);
+            yield return restoredOperation;
+            yield return null;
+
+            global::Wayroot.Combat.RestoredGroveController restoredGrove = GameObject.Find("Restored Grove Controller").GetComponent<global::Wayroot.Combat.RestoredGroveController>();
+            global::Wayroot.Combat.PrototypeEnemy guardian = GameObject.Find("Thorn Guardian (hold ATTACK)").GetComponent<global::Wayroot.Combat.PrototypeEnemy>();
+            Assert.That(restoredGrove.IsOpen, Is.True);
+            Assert.That(GameObject.Find("Restored Grove Edge"), Is.Not.Null);
+            Assert.That(guardian.DisplayName, Is.EqualTo("THORN GUARDIAN"));
+            Assert.That(guardian.MaxHealth, Is.EqualTo(8));
+
+            PrototypeGatheringSaveService.Reset();
+        }
+
+        [UnityTest]
         public IEnumerator RenewalDeadline_RestoresTheSavedNodeAndResetClearsRenewalState()
         {
             PrototypeGatheringSaveService.Reset();

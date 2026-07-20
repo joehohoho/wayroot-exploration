@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-**Phase 11 — Wayroot renewal return loop is implemented and desktop-validated. Phase 12 remains blocked pending explicit owner approval.**
+**Phase 13 — restored-grove Thorn Guardian encounter is implemented and desktop-validated. Phase 14 remains blocked pending explicit owner approval.**
 
 The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner play review; physical-iPhone evidence is an independent gate for the complete controlled slice.
 
@@ -22,6 +22,17 @@ The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner
 | 9 | Production readiness, full-loop playtest, iPhone blockers, and next-feature decision proposal | **Complete; device/release gates explicitly pending** |
 | 10 | One persistent first Wayroot restoration objective in Sunmeadow | **Implemented; desktop-validated** |
 | 11 | Bounded persisted renewal return loop for the three existing gathering nodes | **Implemented; desktop-validated** |
+| 12 | Shelter rest and active return point | **Implemented; owner-confirmed** |
+| 13 | One Wayroot-gated restored-grove Thorn Guardian encounter | **Implemented; desktop-validated** |
+
+## Phase 13 verification record
+
+- Unity **6000.5.4f1** batch compile: **passed** (exit 0).
+- EditMode: **33 passed, 0 failed, 0 skipped**, including pure Wayroot-gate and guardian-profile rules.
+- PlayMode: **9 passed, 0 failed, 0 skipped**, including locked/unlocked Bootstrap composition and guardian profile coverage.
+- Windows development review build: **passed** through `Wayroot.Editor.PhaseThirteenBuild.BuildWindowsReviewPlayer`; ignored output is `Builds/Phase13Review/WayrootPhase13.exe` (667,648-byte executable; 158 MB directory).
+- Timed Windows smoke: player remained running for the intended eight seconds (timeout 124); captured output had no application exception, missing-shader, or error text.
+- `Documentation/Phase13ManualTest.md` covers the Wayroot gate, guardian combat/core reward, fixed respawn, shelter return regression, restart, and RESET. This remains desktop evidence, not physical-iPhone validation.
 
 ## Phase 11 verification record
 
@@ -55,5 +66,5 @@ See `Documentation/Phase9ProductionReadiness.md` for scope, commands/results, re
 
 ## Next milestone gate
 
-1. Owner reviews the completed Phase 11 return loop and explicitly selects or defers a bounded Phase 12 slice; do not begin it automatically.
+1. Owner reviews the completed Phase 13 restored-grove encounter and explicitly selects or defers a bounded Phase 14 slice; do not begin it automatically.
 2. Before a release-quality or mobile-ready claim, complete `Documentation/Phase9iPhoneBlockers.md` and the touch-only `Documentation/Phase9FullLoopPlaytest.md` on physical iPhone hardware.

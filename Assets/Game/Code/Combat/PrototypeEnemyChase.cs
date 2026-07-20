@@ -7,15 +7,31 @@ namespace Wayroot.Combat
         private Transform _player = null!;
         private PrototypePlayerHealth _health = null!;
         private PrototypeEnemy _enemy = null!;
+        private EnemyCombatProfile _profile;
         private float _nextDamage;
-        public void Configure(Transform player, PrototypePlayerHealth health) { _player = player; _health = health; _enemy = GetComponent<PrototypeEnemy>(); }
+
+        public void Configure(Transform player, PrototypePlayerHealth health, EnemyCombatProfile profile)
+        {
+            _player = player;
+            _health = health;
+            _profile = profile;
+            _enemy = GetComponent<PrototypeEnemy>();
+        }
+
         private void Update()
         {
-            if (_enemy.IsDefeated) return;
-            Vector3 delta = _player.position - transform.position; delta.y = 0f;
-            if (delta.sqrMagnitude > 36f || delta.sqrMagnitude < 0.01f) return;
-            transform.position += delta.normalized * (1.5f * Time.deltaTime);
-            if (delta.sqrMagnitude <= 1.6f && Time.time >= _nextDamage) { _nextDamage = Time.time + 1f; _health.TakeDamage(1); }
+            if (!_enemy.gameObject.activeInHierarchy || _enemy.IsDefeated) return;
+            Vector3 delta = _player.position - transform.position;
+            delta.y = 0f;
+            float rangeSquared = _profile.ChaseRange * _profile.ChaseRange;
+            if (delta.sqrMagnitude > rangeSquared || delta.sqrMagnitude < 0.01f) return;
+
+            transform.position += delta.normalized * (_profile.ChaseSpeed * Time.deltaTime);
+            if (delta.sqrMagnitude <= 1.6f && Time.time >= _nextDamage)
+            {
+                _nextDamage = Time.time + 1f;
+                _health.TakeDamage(_profile.ContactDamage);
+            }
         }
     }
 }
