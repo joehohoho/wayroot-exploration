@@ -47,6 +47,28 @@ namespace Wayroot.Tests.PlayMode
         }
 
         [UnityTest]
+        public IEnumerator RenewalDeadline_RestoresTheSavedNodeAndResetClearsRenewalState()
+        {
+            PrototypeGatheringSaveService.Reset();
+            PrototypeGatheringSaveService.Save(new PrototypeGatheringSave
+            {
+                wayrootRestored = true,
+                renewalNodes = new() { new RenewalNodeSave { nodeId = "wildflower-01", renewalDeadlineUtcTicks = System.DateTime.UtcNow.AddSeconds(-1).Ticks } }
+            });
+
+            AsyncOperation operation = SceneManager.LoadSceneAsync("Bootstrap", LoadSceneMode.Single);
+            yield return operation;
+            yield return null;
+
+            GatheringNode flower = GameObject.Find("Wildflower (hold E)").GetComponent<GatheringNode>();
+            Assert.That(flower.IsAvailable, Is.True);
+            Assert.That(GameObject.Find("World Label: WILDFLOWER PETAL").GetComponent<TextMesh>().text, Is.EqualTo("WILDFLOWER\nPETAL"));
+
+            PrototypeGatheringSaveService.Reset();
+            Assert.That(PrototypeGatheringSaveService.Load().renewalNodes, Is.Empty);
+        }
+
+        [UnityTest]
         public IEnumerator BefriendedCreature_RestoresAtTheShelterAndResetClearsItsState()
         {
             PrototypeGatheringSaveService.Reset();

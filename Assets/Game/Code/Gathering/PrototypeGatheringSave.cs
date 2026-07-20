@@ -1,6 +1,5 @@
 using System.Collections.Generic;
 using System.IO;
-using Wayroot.Inventory;
 using UnityEngine;
 
 namespace Wayroot.Gathering
@@ -8,7 +7,7 @@ namespace Wayroot.Gathering
     [System.Serializable]
     public sealed class PrototypeGatheringSave
     {
-        public int version = 5;
+        public int version = PrototypeGatheringSaveMigration.CurrentVersion;
         public int petals;
         public int timber;
         public int stone;
@@ -18,18 +17,37 @@ namespace Wayroot.Gathering
         public bool creatureBefriended;
         // Missing in Phase 0-9 saves defaults false through JsonUtility for backward compatibility.
         public bool wayrootRestored;
+        // Retained only to read Phase 0-10 JSON. Normalize migrates these IDs to renewalNodes.
         public List<string> depletedNodeIds = new();
+        public List<RenewalNodeSave> renewalNodes = new();
+    }
+
+    [System.Serializable]
+    public sealed class RenewalNodeSave
+    {
+        public string nodeId = string.Empty;
+        public long renewalDeadlineUtcTicks;
     }
 
     public static class PrototypeGatheringSaveService
     {
         private const string FileName = "wayroot-phase2-gathering.json";
         private static string PathName => Path.Combine(Application.persistentDataPath, FileName);
+
         public static PrototypeGatheringSave Load()
         {
-            try { return File.Exists(PathName) ? JsonUtility.FromJson<PrototypeGatheringSave>(File.ReadAllText(PathName)) ?? new PrototypeGatheringSave() : new PrototypeGatheringSave(); }
+            try
+            {
+                bool exists = File.Exists(PathName);
+                PrototypeGatheringSave save = exists ? JsonUtility.FromJson<PrototypeGatheringSave>(File.ReadAllText(PathName)) ?? new PrototypeGatheringSave() : new PrototypeGatheringSave();
+                bool needsMigrationWrite = exists && (save.version < PrototypeGatheringSaveMigration.CurrentVersion || save.depletedNodeIds == null || save.depletedNodeIds.Count > 0 || save.renewalNodes == null);
+                PrototypeGatheringSaveMigration.Normalize(save, System.DateTime.UtcNow);
+                if (needsMigrationWrite) Save(save);
+                return save;
+            }
             catch { return new PrototypeGatheringSave(); }
         }
+
         public static void Reset()
         {
             if (File.Exists(PathName)) File.Delete(PathName);
@@ -37,6 +55,7 @@ namespace Wayroot.Gathering
 
         public static void Save(PrototypeGatheringSave value)
         {
+            PrototypeGatheringSaveMigration.Normalize(value, System.DateTime.UtcNow);
             string temporary = PathName + ".tmp";
             File.WriteAllText(temporary, JsonUtility.ToJson(value));
             File.Copy(temporary, PathName, true);

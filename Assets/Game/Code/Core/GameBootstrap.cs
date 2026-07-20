@@ -362,13 +362,13 @@ namespace Wayroot.Core
             GatheringNode rock = CreateGatheringNode("stone-outcrop-01", "Stone Outcrop (hold E)", PrimitiveType.Cube, new Vector3(-3f, 0.65f, -2f), new Color(0.45f, 0.48f, 0.55f), ResourceType.Stone, 3);
             PrototypeGatheringController controller = new GameObject("Prototype Gathering").AddComponent<PrototypeGatheringController>();
             controller.Configure(input, player, inventory, new[] { flower, tree, rock });
-            CreateWorldIdentifier("WILDFLOWER\nPETAL", flower.transform, new Vector3(0f, 1.05f, 0f), sceneCamera, new Color(1f, 0.76f, 0.88f));
-            CreateWorldIdentifier("YOUNG TREE\nTIMBER", tree.transform, new Vector3(0f, 2.35f, 0f), sceneCamera, new Color(0.78f, 1f, 0.68f));
-            CreateWorldIdentifier("STONE OUTCROP\nSTONE", rock.transform, new Vector3(0f, 1.45f, 0f), sceneCamera, new Color(0.88f, 0.92f, 1f));
+            flower.SetWorldLabel(CreateWorldIdentifier("WILDFLOWER\nPETAL", flower.transform, new Vector3(0f, 1.05f, 0f), sceneCamera, new Color(1f, 0.76f, 0.88f)), "WILDFLOWER", "PETAL");
+            tree.SetWorldLabel(CreateWorldIdentifier("YOUNG TREE\nTIMBER", tree.transform, new Vector3(0f, 2.35f, 0f), sceneCamera, new Color(0.78f, 1f, 0.68f)), "YOUNG TREE", "TIMBER");
+            rock.SetWorldLabel(CreateWorldIdentifier("STONE OUTCROP\nSTONE", rock.transform, new Vector3(0f, 1.45f, 0f), sceneCamera, new Color(0.88f, 0.92f, 1f)), "STONE OUTCROP", "STONE");
             return controller;
         }
 
-        private static void CreateWorldIdentifier(string value, Transform target, Vector3 offset, UnityEngine.Camera sceneCamera, Color color)
+        private static TextMesh CreateWorldIdentifier(string value, Transform target, Vector3 offset, UnityEngine.Camera sceneCamera, Color color)
         {
             GameObject label = new($"World Label: {value.Replace("\n", " ")}");
             TextMesh text = label.AddComponent<TextMesh>();
@@ -380,6 +380,7 @@ namespace Wayroot.Core
             text.alignment = TextAlignment.Center;
             text.color = color;
             label.AddComponent<WorldIdentifier>().Configure(target, offset, sceneCamera);
+            return text;
         }
 
         private static GatheringNode CreateGatheringNode(string id, string name, PrimitiveType primitive, Vector3 position, Color color, ResourceType resource, int steps)

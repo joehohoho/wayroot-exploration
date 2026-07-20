@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-**Phase 10 — first Wayroot restoration objective is implemented and desktop-validated. Physical-iPhone evidence and release identity/signing remain open. Do not begin Phase 11 without explicit owner approval.**
+**Phase 11 — Wayroot renewal return loop is implemented and desktop-validated. Phase 12 remains blocked pending explicit owner approval.**
 
 The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner play review; physical-iPhone evidence is an independent gate for the complete controlled slice.
 
@@ -21,6 +21,16 @@ The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner
 | 8 | Mobile vertical-slice polish | Implemented; desktop-validated; physical-iPhone evidence pending |
 | 9 | Production readiness, full-loop playtest, iPhone blockers, and next-feature decision proposal | **Complete; device/release gates explicitly pending** |
 | 10 | One persistent first Wayroot restoration objective in Sunmeadow | **Implemented; desktop-validated** |
+| 11 | Bounded persisted renewal return loop for the three existing gathering nodes | **Implemented; desktop-validated** |
+
+## Phase 11 verification record
+
+- Unity **6000.5.4f1** batch compile: **passed** (exit 0).
+- EditMode: **29 passed, 0 failed, 0 skipped**, including pure deadline, due-boundary, and legacy JSON migration rules.
+- PlayMode: **6 passed, 0 failed, 0 skipped**, including a saved expired renewal deadline restoring a runtime-composed node and RESET cleanup.
+- Windows development review build: **passed** through `Wayroot.Editor.PhaseElevenBuild.BuildWindowsReviewPlayer`; ignored output is `Builds/Phase11Review/WayrootPhase11.exe` (667,648-byte executable; 158 MB directory).
+- Timed Windows smoke: player remained running for the intended eight seconds (timeout 124); captured output had no application exception, missing-shader, or error text.
+- `Documentation/Phase11ManualTest.md` covers the fixed 20-second renewal, restart-before/after-deadline, and RESET checks. This remains desktop evidence, not physical-iPhone validation.
 
 ## Phase 10 verification record
 
@@ -45,5 +55,5 @@ See `Documentation/Phase9ProductionReadiness.md` for scope, commands/results, re
 
 ## Next milestone gate
 
-1. Owner reviews the recommended **one Wayroot restoration objective** and alternatives in `Documentation/Phase10DecisionProposal.md`, then explicitly selects/defer a Phase 10 slice.
+1. Owner reviews the completed Phase 11 return loop and explicitly selects or defers a bounded Phase 12 slice; do not begin it automatically.
 2. Before a release-quality or mobile-ready claim, complete `Documentation/Phase9iPhoneBlockers.md` and the touch-only `Documentation/Phase9FullLoopPlaytest.md` on physical iPhone hardware.

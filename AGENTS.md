@@ -1,8 +1,8 @@
 # Wayroot Exploration — Agent Instructions
 
 ## Current scope
-- **Current milestone:** Phase 10 first Wayroot restoration objective is owner-approved and underway. Do not begin Phase 11 without approval.
-- Unity **6000.5.4f1** is owner-approved and pinned for Phases 0–10. Do not change `ProjectSettings/ProjectVersion.txt` without owner approval.
+- **Current milestone:** Phase 11 Wayroot renewal return loop is owner-approved and underway. Do not begin Phase 12 without approval.
+- Unity **6000.5.4f1** is owner-approved and pinned for Phases 0–11. Do not change `ProjectSettings/ProjectVersion.txt` without owner approval.
 - Use C#, URP, Unity Input System, TextMeshPro, and Unity Test Framework. The legacy Input Manager is prohibited.
 - iPhone/landscape/touch is primary; desktop is development-only.
 - No networking, Addressables, accounts, cloud save, analytics, purchases, backend, paid package, or Android adaptation during prototype work unless explicitly scheduled.
