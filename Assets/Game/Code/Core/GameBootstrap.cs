@@ -20,21 +20,21 @@ namespace Wayroot.Core
     /// <summary>Composes the controlled Phase 7 Sunmeadow prototype scene and its retained gameplay loops.</summary>
     public sealed class GameBootstrap : MonoBehaviour
     {
-        private static readonly Color GroundColor = new(0.34f, 0.61f, 0.30f, 1f);
-        private static readonly Color MeadowColor = new(0.47f, 0.72f, 0.35f, 1f);
-        private static readonly Color PathColor = new(0.76f, 0.61f, 0.35f, 1f);
-        private static readonly Color WaterColor = new(0.16f, 0.55f, 0.70f, 1f);
-        private static readonly Color TrunkColor = new(0.27f, 0.16f, 0.07f, 1f);
-        private static readonly Color LeafColor = new(0.12f, 0.43f, 0.20f, 1f);
-        private static readonly Color PlayerColor = new(0.24f, 0.62f, 0.94f, 1f);
-        private static readonly Color TreeColor = new(0.28f, 0.17f, 0.08f, 1f);
+        private static readonly Color GroundColor = new(0.31f, 0.50f, 0.25f, 1f);
+        private static readonly Color MeadowColor = new(0.45f, 0.68f, 0.30f, 1f);
+        private static readonly Color PathColor = new(0.74f, 0.51f, 0.27f, 1f);
+        private static readonly Color WaterColor = new(0.17f, 0.55f, 0.62f, 1f);
+        private static readonly Color TrunkColor = new(0.30f, 0.16f, 0.08f, 1f);
+        private static readonly Color LeafColor = new(0.12f, 0.42f, 0.19f, 1f);
+        private static readonly Color PlayerColor = new(0.31f, 0.60f, 0.83f, 1f);
+        private static readonly Color TreeColor = new(0.30f, 0.16f, 0.08f, 1f);
 
         private void Awake()
         {
             Application.targetFrameRate = 60;
             BuildPrototype();
 #if DEVELOPMENT_BUILD || UNITY_EDITOR
-            Debug.Log($"{ProjectIdentity.ProductName}: Phase 8 mobile polish loaded.", this);
+            Debug.Log($"{ProjectIdentity.ProductName}: Phase 14 warm stylized world loaded.", this);
 #endif
         }
 
@@ -72,17 +72,17 @@ namespace Wayroot.Core
         private static void CreateLight()
         {
             RenderSettings.ambientMode = AmbientMode.Trilight;
-            RenderSettings.ambientSkyColor = new Color(0.36f, 0.63f, 0.82f);
-            RenderSettings.ambientEquatorColor = new Color(0.54f, 0.70f, 0.42f);
-            RenderSettings.ambientGroundColor = new Color(0.16f, 0.28f, 0.16f);
+            RenderSettings.ambientSkyColor = new Color(0.49f, 0.70f, 0.84f);
+            RenderSettings.ambientEquatorColor = new Color(0.71f, 0.76f, 0.49f);
+            RenderSettings.ambientGroundColor = new Color(0.20f, 0.28f, 0.16f);
             RenderSettings.fog = true;
-            RenderSettings.fogColor = new Color(0.62f, 0.78f, 0.76f);
-            RenderSettings.fogDensity = 0.012f;
+            RenderSettings.fogColor = new Color(0.72f, 0.82f, 0.72f);
+            RenderSettings.fogDensity = 0.009f;
             GameObject lightObject = new("Sunmeadow Sun");
             Light light = lightObject.AddComponent<Light>();
             light.type = LightType.Directional;
-            light.color = new Color(1f, 0.88f, 0.67f);
-            light.intensity = 1.45f;
+            light.color = new Color(1f, 0.82f, 0.60f);
+            light.intensity = 1.25f;
             light.shadows = LightShadows.Soft;
             lightObject.transform.rotation = Quaternion.Euler(48f, -28f, 0f);
         }
@@ -101,7 +101,10 @@ namespace Wayroot.Core
             GameObject meadow = CreateVisualPrimitive("Sunmeadow Wildflower Meadow", PrimitiveType.Plane, new Vector3(-3.5f, 0.012f, 3.4f), new Vector3(1.15f, 1f, 0.9f), MeadowColor);
             meadow.transform.rotation = Quaternion.Euler(0f, -14f, 0f);
             CreateVisualPrimitive("Sunmeadow Footpath", PrimitiveType.Cube, new Vector3(-1.5f, 0.035f, -2f), new Vector3(2.1f, 0.07f, 13.5f), PathColor).transform.rotation = Quaternion.Euler(0f, 37f, 0f);
-            CreateVisualPrimitive("Sunmeadow Creek", PrimitiveType.Cube, new Vector3(6.6f, 0.025f, 0.8f), new Vector3(2.1f, 0.05f, 18f), WaterColor).transform.rotation = Quaternion.Euler(0f, -11f, 0f);
+            GameObject creek = CreateVisualPrimitive("Sunmeadow Creek", PrimitiveType.Cube, new Vector3(6.6f, 0.025f, 0.8f), new Vector3(2.1f, 0.05f, 18f), WaterColor);
+            creek.transform.rotation = Quaternion.Euler(0f, -11f, 0f);
+            CreateVisualPrimitive("River Lily 1", PrimitiveType.Sphere, creek.transform.position + new Vector3(-0.38f, 0.09f, -2.4f), new Vector3(0.48f, 0.05f, 0.38f), new Color(0.96f, 0.65f, 0.75f)).transform.SetParent(creek.transform, true);
+            CreateVisualPrimitive("River Lily 2", PrimitiveType.Sphere, creek.transform.position + new Vector3(0.25f, 0.09f, 1.2f), new Vector3(0.36f, 0.05f, 0.30f), new Color(1f, 0.82f, 0.50f)).transform.SetParent(creek.transform, true);
             CreateVisualPrimitive("Sunmeadow Creek Shore", PrimitiveType.Cube, new Vector3(5.35f, 0.02f, 0.8f), new Vector3(0.35f, 0.04f, 18.3f), new Color(0.82f, 0.72f, 0.45f)).transform.rotation = Quaternion.Euler(0f, -11f, 0f);
 
             Transform northGrove = new GameObject("Sunmeadow North Grove").transform;
@@ -143,8 +146,8 @@ namespace Wayroot.Core
             tree.transform.SetParent(parent);
             tree.transform.position = position;
             CreateVisualPrimitive("Tree Trunk", PrimitiveType.Cylinder, position + new Vector3(0f, size, 0f), new Vector3(0.28f * size, size, 0.28f * size), TrunkColor).transform.SetParent(tree.transform, true);
-            CreateVisualPrimitive("Tree Canopy Low", PrimitiveType.Sphere, position + new Vector3(0f, size * 2.05f, 0f), new Vector3(1.35f * size, 1.0f * size, 1.35f * size), LeafColor).transform.SetParent(tree.transform, true);
-            CreateVisualPrimitive("Tree Canopy High", PrimitiveType.Sphere, position + new Vector3(0.18f * size, size * 2.85f, 0.04f), new Vector3(0.92f * size, 0.85f * size, 0.92f * size), new Color(0.18f, 0.52f, 0.24f)).transform.SetParent(tree.transform, true);
+            CreateVisualPrimitive("Tree Canopy Low", PrimitiveType.Sphere, position + new Vector3(-0.18f * size, size * 2.05f, 0f), new Vector3(1.08f * size, 0.92f * size, 1.08f * size), LeafColor).transform.SetParent(tree.transform, true);
+            CreateVisualPrimitive("Tree Canopy High", PrimitiveType.Sphere, position + new Vector3(0.35f * size, size * 2.45f, 0.08f), new Vector3(0.85f * size, 0.72f * size, 0.85f * size), new Color(0.22f, 0.55f, 0.25f)).transform.SetParent(tree.transform, true);
         }
 
         private static void CreateRock(Transform parent, Vector3 position, Vector3 scale)
@@ -171,6 +174,9 @@ namespace Wayroot.Core
             Destroy(playerObject.GetComponent<Collider>());
             playerObject.AddComponent<CharacterController>();
             SetMaterialColor(playerObject.GetComponent<Renderer>(), PlayerColor);
+            CreateVisualPrimitive("Player Cloak", PrimitiveType.Sphere, playerObject.transform.position + new Vector3(0f, -0.1f, 0.05f), new Vector3(0.92f, 0.76f, 0.78f), new Color(0.22f, 0.36f, 0.72f)).transform.SetParent(playerObject.transform, true);
+            CreateVisualPrimitive("Player Lantern", PrimitiveType.Sphere, playerObject.transform.position + new Vector3(0.48f, 0.35f, 0.2f), new Vector3(0.18f, 0.24f, 0.18f), new Color(1f, 0.78f, 0.30f)).transform.SetParent(playerObject.transform, true);
+            CreateVisualPrimitive("Player Hair", PrimitiveType.Sphere, playerObject.transform.position + new Vector3(0f, 0.72f, 0.04f), new Vector3(0.58f, 0.26f, 0.52f), new Color(0.25f, 0.12f, 0.08f)).transform.SetParent(playerObject.transform, true);
             PrototypePlayerController player = playerObject.AddComponent<PrototypePlayerController>();
             player.Configure(input);
             return player;
@@ -208,6 +214,8 @@ namespace Wayroot.Core
             station.transform.position = new Vector3(2f, 0.75f, -3f);
             station.transform.localScale = new Vector3(1.4f, 0.75f, 1.4f);
             SetMaterialColor(station.GetComponent<Renderer>(), new Color(0.9f, 0.66f, 0.18f));
+            CreateVisualPrimitive("Merchant Awning", PrimitiveType.Sphere, station.transform.position + new Vector3(0f, 1.45f, 0f), new Vector3(1.75f, 0.34f, 1.2f), new Color(0.86f, 0.30f, 0.22f)).transform.SetParent(station.transform, true);
+            CreateVisualPrimitive("Merchant Lantern", PrimitiveType.Sphere, station.transform.position + new Vector3(0.78f, 1.12f, 0.1f), new Vector3(0.18f, 0.28f, 0.18f), new Color(1f, 0.78f, 0.30f)).transform.SetParent(station.transform, true);
 
             GameObject sign = GameObject.CreatePrimitive(PrimitiveType.Cube);
             sign.name = "Iron Edge Merchant Sign";
@@ -267,6 +275,8 @@ namespace Wayroot.Core
             wayroot.transform.localScale = new Vector3(1.05f, 0.9f, 1.05f);
             Renderer dormantRenderer = wayroot.GetComponent<Renderer>();
             SetMaterialColor(dormantRenderer, new Color(0.24f, 0.16f, 0.38f));
+            CreateVisualPrimitive("Wayroot Petal Crown", PrimitiveType.Sphere, wayroot.transform.position + new Vector3(0f, 1.05f, 0f), new Vector3(1.35f, 0.32f, 1.35f), new Color(0.45f, 0.72f, 0.45f)).transform.SetParent(wayroot.transform, true);
+            CreateVisualPrimitive("Wayroot Heart", PrimitiveType.Sphere, wayroot.transform.position + new Vector3(0f, 1.32f, 0f), new Vector3(0.42f, 0.62f, 0.42f), new Color(0.28f, 0.94f, 0.60f)).transform.SetParent(wayroot.transform, true);
 
             GameObject restoredVisual = new("Restored Wayroot Bloom");
             restoredVisual.transform.position = wayroot.transform.position;
@@ -304,6 +314,8 @@ namespace Wayroot.Core
             creature.transform.localScale = new Vector3(1.2f, 1.1f, 1.2f);
             Destroy(creature.GetComponent<Collider>());
             SetMaterialColor(creature.GetComponent<Renderer>(), new Color(0.34f, 0.8f, 0.54f));
+            CreateCreatureFeature("Mossling Face", creature.transform, new Vector3(0f, 0.12f, 0.58f), new Vector3(0.58f, 0.36f, 0.12f), new Color(0.84f, 0.94f, 0.56f));
+            CreateCreatureFeature("Mossling Nose", creature.transform, new Vector3(0f, 0.13f, 0.7f), new Vector3(0.12f, 0.12f, 0.08f), new Color(0.24f, 0.16f, 0.10f));
             CreateCreatureFeature("Mossling Left Ear", creature.transform, new Vector3(-0.32f, 0.68f, 0f), new Vector3(0.22f, 0.52f, 0.22f), new Color(0.94f, 0.82f, 0.3f));
             CreateCreatureFeature("Mossling Right Ear", creature.transform, new Vector3(0.32f, 0.68f, 0f), new Vector3(0.22f, 0.52f, 0.22f), new Color(0.94f, 0.82f, 0.3f));
             CreateCreatureFeature("Mossling Tail", creature.transform, new Vector3(0f, 0.05f, -0.62f), new Vector3(0.3f, 0.3f, 0.5f), new Color(0.18f, 0.5f, 0.28f));
@@ -336,10 +348,13 @@ namespace Wayroot.Core
 
         private static PrototypeEnemy CreateCombat(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, UnityEngine.Camera sceneCamera, out PrototypeAttackController attack)
         {
-            GameObject enemyObject = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            GameObject enemyObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             enemyObject.name = "Practice Slime (hold SPACE)";
             enemyObject.transform.position = new Vector3(5f, 1f, -1f);
+            enemyObject.transform.localScale = new Vector3(1.25f, 0.9f, 1.25f);
             SetMaterialColor(enemyObject.GetComponent<Renderer>(), new Color(0.85f, 0.25f, 0.3f));
+            CreateVisualPrimitive("Slime Crown", PrimitiveType.Sphere, enemyObject.transform.position + new Vector3(0f, 0.72f, 0f), new Vector3(0.72f, 0.16f, 0.72f), new Color(1f, 0.70f, 0.28f)).transform.SetParent(enemyObject.transform, true);
+            CreateVisualPrimitive("Slime Face", PrimitiveType.Sphere, enemyObject.transform.position + new Vector3(0f, 0f, 0.62f), new Vector3(0.58f, 0.28f, 0.10f), new Color(1f, 0.68f, 0.68f)).transform.SetParent(enemyObject.transform, true);
             PrototypeEnemy enemy = enemyObject.AddComponent<PrototypeEnemy>();
             EnemyCombatProfile slimeProfile = new("SLIME", ThornGuardianRules.PracticeSlimeHealth, ThornGuardianRules.PracticeSlimeContactDamage, 5f, 1.5f, 6f);
             enemy.Configure(enemyObject.GetComponent<Renderer>(), slimeProfile);
@@ -364,12 +379,14 @@ namespace Wayroot.Core
             CreateVisualPrimitive("Restored Grove Thorn Arch", PrimitiveType.Cube, grove.transform.position + new Vector3(0f, 1.3f, 1.8f), new Vector3(3.4f, 2.5f, 0.35f), new Color(0.20f, 0.38f, 0.14f)).transform.SetParent(grove.transform, true);
             CreateVisualPrimitive("Restored Grove Bloom", PrimitiveType.Sphere, grove.transform.position + new Vector3(-1.45f, 0.7f, -0.8f), new Vector3(0.7f, 1.4f, 0.7f), new Color(0.7f, 0.94f, 0.30f)).transform.SetParent(grove.transform, true);
 
-            GameObject guardianObject = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            GameObject guardianObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             guardianObject.name = "Thorn Guardian (hold ATTACK)";
             guardianObject.transform.SetParent(grove.transform, true);
             guardianObject.transform.position = grove.transform.position + new Vector3(0f, 1f, -0.35f);
             guardianObject.transform.localScale = new Vector3(1.35f, 1.15f, 1.35f);
             SetMaterialColor(guardianObject.GetComponent<Renderer>(), new Color(0.24f, 0.48f, 0.15f));
+            CreateVisualPrimitive("Thorn Guardian Crown", PrimitiveType.Sphere, guardianObject.transform.position + new Vector3(0f, 0.95f, 0f), new Vector3(1.25f, 0.18f, 1.25f), new Color(0.66f, 0.82f, 0.24f)).transform.SetParent(guardianObject.transform, true);
+            CreateVisualPrimitive("Thorn Guardian Heart", PrimitiveType.Sphere, guardianObject.transform.position + new Vector3(0f, 0.12f, 0.72f), new Vector3(0.34f, 0.42f, 0.12f), new Color(0.96f, 0.56f, 0.26f)).transform.SetParent(guardianObject.transform, true);
             EnemyCombatProfile guardianProfile = ThornGuardianRules.Profile;
             PrototypeEnemy guardian = guardianObject.AddComponent<PrototypeEnemy>();
             guardian.Configure(guardianObject.GetComponent<Renderer>(), guardianProfile);
@@ -571,15 +588,12 @@ namespace Wayroot.Core
 
         private static void SetMaterialColor(Renderer renderer, Color color)
         {
-            Material material = renderer.material;
-            if (material.HasProperty("_BaseColor"))
-            {
-                material.SetColor("_BaseColor", color);
-            }
-            else
-            {
-                material.color = color;
-            }
+            Material sourceMaterial = Resources.Load<Material>(color.b > color.r && color.b > color.g ? "Phase14/Water" : color.g > color.r ? "Phase14/Moss" : color.r > 0.8f ? "Phase14/Coral" : "Phase14/WarmGround");
+            if (sourceMaterial != null) renderer.sharedMaterial = sourceMaterial;
+            MaterialPropertyBlock properties = new();
+            renderer.GetPropertyBlock(properties);
+            properties.SetColor("_BaseColor", color);
+            renderer.SetPropertyBlock(properties);
         }
     }
 }

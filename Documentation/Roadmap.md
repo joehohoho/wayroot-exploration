@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-**Phase 13 — restored-grove Thorn Guardian encounter is implemented and desktop-validated. Phase 14 remains blocked pending explicit owner approval.**
+**Phase 14 — warm stylized magical-world art-direction pass is implemented and desktop-validated.**
 
 The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner play review; physical-iPhone evidence is an independent gate for the complete controlled slice.
 
@@ -24,6 +24,15 @@ The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner
 | 11 | Bounded persisted renewal return loop for the three existing gathering nodes | **Implemented; desktop-validated** |
 | 12 | Shelter rest and active return point | **Implemented; owner-confirmed** |
 | 13 | One Wayroot-gated restored-grove Thorn Guardian encounter | **Implemented; desktop-validated** |
+| 14 | Cohesive warm stylized magical-world art direction using original runtime geometry, URP materials, and lighting | **Implemented; desktop-validated** |
+
+## Phase 14 verification record
+
+- Unity **6000.5.4f1** batch compile: **passed** (exit 0).
+- EditMode: **33 passed, 0 failed, 0 skipped**. PlayMode: **11 passed, 0 failed, 0 skipped**, including the two new Phase 14 visual-composition/readability checks for the player, creature, enemy, creek, merchant, Wayroot, and compact world-label anchors.
+- Windows development review build: **passed** through `Wayroot.Editor.PhaseFourteenBuild.BuildWindowsReviewPlayer`; ignored output is `Builds/Phase14Review/WayrootPhase14.exe` (667,648-byte executable; 158 MB directory).
+- Timed Windows smoke: player remained running for the intended eight seconds (timeout 124); captured output had no application exception, missing-shader, or error text.
+- `Documentation/Phase14ManualTest.md` covers the visual pass and retained-loop regression route. This remains desktop evidence, not physical-iPhone validation.
 
 ## Phase 13 verification record
 
@@ -66,5 +75,5 @@ See `Documentation/Phase9ProductionReadiness.md` for scope, commands/results, re
 
 ## Next milestone gate
 
-1. Owner reviews the completed Phase 13 restored-grove encounter and explicitly selects or defers a bounded Phase 14 slice; do not begin it automatically.
+1. Owner reviews the completed Phase 14 art-direction pass and explicitly selects or defers the next bounded slice; do not begin Phase 15 automatically.
 2. Before a release-quality or mobile-ready claim, complete `Documentation/Phase9iPhoneBlockers.md` and the touch-only `Documentation/Phase9FullLoopPlaytest.md` on physical iPhone hardware.
