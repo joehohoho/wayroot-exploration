@@ -7,6 +7,7 @@ using Wayroot.Character;
 using Wayroot.Input;
 using Wayroot.Inventory;
 using Wayroot.Gathering;
+using Wayroot.Combat;
 using Wayroot.UI;
 
 namespace Wayroot.Core
@@ -36,6 +37,7 @@ namespace Wayroot.Core
             TopDownCameraController cameraController = CreateCamera(player.transform, input, out UnityEngine.Camera sceneCamera);
             CreateObstruction(sceneCamera, player.transform);
             PrototypeGatheringController gathering = CreateGathering(input, player);
+            CreateCombat(input, player);
             PauseController pause = new GameObject("Pause Controller").AddComponent<PauseController>();
             pause.Configure(player, cameraController);
             CreateRuntimeUi(input, player, cameraController, pause, gathering);
@@ -92,6 +94,17 @@ namespace Wayroot.Core
             tree.AddComponent<FadeableObstruction>();
             CameraObstructionFader fader = sourceCamera.gameObject.AddComponent<CameraObstructionFader>();
             fader.Configure(sourceCamera, target);
+        }
+
+        private static void CreateCombat(PrototypeInputReader input, PrototypePlayerController player)
+        {
+            GameObject enemyObject = GameObject.CreatePrimitive(PrimitiveType.Capsule);
+            enemyObject.name = "Practice Slime (hold SPACE)";
+            enemyObject.transform.position = new Vector3(5f, 1f, -1f);
+            SetMaterialColor(enemyObject.GetComponent<Renderer>(), new Color(0.85f, 0.25f, 0.3f));
+            PrototypeEnemy enemy = enemyObject.AddComponent<PrototypeEnemy>();
+            enemy.Configure(enemyObject.GetComponent<Renderer>());
+            new GameObject("Prototype Attack").AddComponent<PrototypeAttackController>().Configure(input, player, enemy);
         }
 
         private static PrototypeGatheringController CreateGathering(PrototypeInputReader input, PrototypePlayerController player)
