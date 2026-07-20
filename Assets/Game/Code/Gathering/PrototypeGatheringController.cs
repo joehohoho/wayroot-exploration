@@ -3,6 +3,7 @@ using Wayroot.Character;
 using Wayroot.Input;
 using Wayroot.Inventory;
 using UnityEngine;
+using UnityEngine.SceneManagement;
 
 namespace Wayroot.Gathering
 {
@@ -17,6 +18,11 @@ namespace Wayroot.Gathering
         private float _nextStepTime;
         public GatheringNode? CurrentTarget { get; private set; }
         public int GetCount(ResourceType resource) => _inventory.GetCount(resource);
+        public void ResetPrototype()
+        {
+            PrototypeGatheringSaveService.Reset();
+            SceneManager.LoadScene(SceneManager.GetActiveScene().name);
+        }
         public void Configure(PrototypeInputReader input, PrototypePlayerController player, InventoryState inventory, IEnumerable<GatheringNode> nodes)
         {
             _input = input; _player = player; _inventory = inventory; _nodes.AddRange(nodes); _save = PrototypeGatheringSaveService.Load();

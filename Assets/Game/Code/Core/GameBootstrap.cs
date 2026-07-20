@@ -143,6 +143,14 @@ namespace Wayroot.Core
             button.onClick.AddListener(pause.Toggle);
             CreateText("Pause Label", pauseButton, "PAUSE", 32, TextAnchor.MiddleCenter);
 
+            RectTransform resetButton = CreatePanel("Reset Prototype Button", safeArea, new Color(0.42f, 0.18f, 0.18f, 0.9f));
+            resetButton.sizeDelta = new Vector2(180f, 70f);
+            resetButton.anchorMin = resetButton.anchorMax = new Vector2(1f, 1f);
+            resetButton.pivot = new Vector2(1f, 1f);
+            resetButton.anchoredPosition = new Vector2(-56f, -176f);
+            resetButton.gameObject.AddComponent<Button>().onClick.AddListener(gathering.ResetPrototype);
+            CreateText("Reset Label", resetButton, "RESET", 22, TextAnchor.MiddleCenter);
+
             RectTransform gatherButton = CreatePanel("Gather Button", safeArea, new Color(0.2f, 0.5f, 0.25f, 0.9f));
             gatherButton.sizeDelta = new Vector2(180f, 105f);
             CreateText("Gather Label", gatherButton, "HOLD\nGATHER", 26, TextAnchor.MiddleCenter);

@@ -24,6 +24,11 @@ namespace Wayroot.Gathering
             try { return File.Exists(PathName) ? JsonUtility.FromJson<PrototypeGatheringSave>(File.ReadAllText(PathName)) ?? new PrototypeGatheringSave() : new PrototypeGatheringSave(); }
             catch { return new PrototypeGatheringSave(); }
         }
+        public static void Reset()
+        {
+            if (File.Exists(PathName)) File.Delete(PathName);
+        }
+
         public static void Save(PrototypeGatheringSave value)
         {
             string temporary = PathName + ".tmp";
