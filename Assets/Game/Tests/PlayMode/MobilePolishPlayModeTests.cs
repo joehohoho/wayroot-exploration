@@ -25,7 +25,7 @@ namespace Wayroot.Tests.PlayMode
             Assert.That(GameObject.Find("World Label: STONE OUTCROP STONE"), Is.Not.Null);
             Assert.That(GameObject.Find("World Label: MERCHANT IRON EDGE"), Is.Not.Null);
             Assert.That(GameObject.Find("World Label: SHELTER BUILD PLOT"), Is.Not.Null);
-            Assert.That(GameObject.Find("World Label: SHELTER HOME"), Is.Not.Null);
+            Assert.That(GameObject.Find("World Label: SHELTER BUILD PLOT").GetComponent<TextMesh>(), Is.Not.Null);
             Assert.That(GameObject.Find("World Label: MOSSling COMPANION"), Is.Not.Null);
             Assert.That(GameObject.Find("World Label: SLIME HOLD ATTACK"), Is.Not.Null);
         }

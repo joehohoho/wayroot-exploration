@@ -36,7 +36,7 @@ namespace Wayroot.Tests.EditMode
 
             PrototypeGatheringSaveMigration.Normalize(save, migrationTime);
 
-            Assert.That(save.version, Is.EqualTo(6));
+            Assert.That(save.version, Is.EqualTo(PrototypeGatheringSaveMigration.CurrentVersion));
             Assert.That(save.depletedNodeIds, Is.Empty);
             Assert.That(save.renewalNodes, Has.Count.EqualTo(2));
             Assert.That(save.renewalNodes[0].renewalDeadlineUtcTicks, Is.EqualTo(migrationTime.AddSeconds(20).Ticks));

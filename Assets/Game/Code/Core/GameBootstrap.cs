@@ -49,7 +49,7 @@ namespace Wayroot.Core
             CreateObstruction(sceneCamera, player.transform);
             PrototypeGatheringController gathering = CreateGathering(input, player, sceneCamera);
             PrototypeMerchantController merchant = CreateMerchant(input, player, gathering, sceneCamera);
-            PrototypeBuildController build = CreateBuildPlot(input, player, gathering, sceneCamera);
+            PrototypeBuildController build = CreateBuildPlot(input, player, playerHealth, gathering, sceneCamera);
             PrototypeWayrootController wayroot = CreateWayroot(input, player, gathering, sceneCamera);
             PrototypeCreatureController creature = CreateCreature(input, player, gathering, sceneCamera);
             PrototypeEnemy enemy = CreateCombat(input, player, playerHealth, gathering, sceneCamera, out PrototypeAttackController attack);
@@ -220,7 +220,7 @@ namespace Wayroot.Core
             return merchant;
         }
 
-        private static PrototypeBuildController CreateBuildPlot(PrototypeInputReader input, PrototypePlayerController player, PrototypeGatheringController gathering, UnityEngine.Camera sceneCamera)
+        private static PrototypeBuildController CreateBuildPlot(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeGatheringController gathering, UnityEngine.Camera sceneCamera)
         {
             GameObject plot = GameObject.CreatePrimitive(PrimitiveType.Cube);
             plot.name = "Shelter Build Plot (hold E)";
@@ -251,9 +251,9 @@ namespace Wayroot.Core
             shelter.SetActive(false);
 
             PrototypeBuildController build = plot.AddComponent<PrototypeBuildController>();
-            build.Configure(input, player, gathering, shelter, plotRenderer);
-            CreateWorldIdentifier("SHELTER\nBUILD PLOT", plot.transform, new Vector3(0f, 1.35f, 0f), sceneCamera, new Color(1f, 0.9f, 0.48f));
-            CreateWorldIdentifier("SHELTER\nHOME", shelter.transform, new Vector3(0f, 3.25f, 0f), sceneCamera, new Color(0.62f, 1f, 0.66f));
+            Vector3 shelterReturnPoint = shelter.transform.position + new Vector3(0f, 1f, -1.7f);
+            TextMesh shelterLabel = CreateWorldIdentifier("SHELTER\nBUILD PLOT", shelter.transform, new Vector3(0f, 3.25f, 0f), sceneCamera, new Color(0.62f, 1f, 0.66f));
+            build.Configure(input, player, gathering, playerHealth, shelter, plotRenderer, shelterLabel, shelterReturnPoint);
             return build;
         }
 

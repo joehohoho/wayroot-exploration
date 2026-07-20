@@ -40,7 +40,9 @@ namespace Wayroot.UI
                 : _merchant.IsInRange
                 ? $"HOLD E / GATHER: {_merchant.Status}"
                 : target == null ? "Move close to a resource or merchant" : $"HOLD E / GATHER: {target.name}  {target.Steps}/{target.RequiredSteps}";
-            string shelter = _gathering.ShelterBuilt ? "SHELTER BUILT" : "SHELTER 3 TIMBER + 3 STONE";
+            string shelter = !_gathering.ShelterBuilt
+                ? "SHELTER 3 TIMBER + 3 STONE"
+                : _gathering.HasActiveShelterReturnPoint ? "SHELTER ACTIVE HOME" : "SHELTER BUILT: REST TO ACTIVATE HOME";
             string creature = _gathering.CreatureBefriended ? "MOSSling befriended" : "MOSSling nearby";
             string wayroot = _gathering.WayrootRestored ? "WAYROOT RESTORED" : "WAYROOT: 3 PETAL + 3 TIMBER + 3 STONE + 1 CORE";
             _text.text = $"{prompt}\nPETAL {_gathering.GetCount(ResourceType.WildPetal)}  TIMBER {_gathering.GetCount(ResourceType.Timber)}  STONE {_gathering.GetCount(ResourceType.Stone)}  CORE {_gathering.GetCount(ResourceType.SlimeCore)}  WEAPON {_gathering.WeaponLevel}/1  ATK {_gathering.AttackDamage}\n{shelter}  |  {creature}  |  {wayroot}\n{_gathering.RenewalStatus}";

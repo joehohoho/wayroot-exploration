@@ -14,6 +14,8 @@ namespace Wayroot.Gathering
         public int slimeCores;
         public int weaponLevel;
         public bool shelterBuilt;
+        // Missing in Phase 0-11 saves defaults false through JsonUtility for backward compatibility.
+        public bool activeShelterReturnPoint;
         public bool creatureBefriended;
         // Missing in Phase 0-9 saves defaults false through JsonUtility for backward compatibility.
         public bool wayrootRestored;

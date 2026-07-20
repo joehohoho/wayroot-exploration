@@ -26,6 +26,7 @@ namespace Wayroot.Gathering
         public GatheringNode? CurrentTarget { get; private set; }
         public int WeaponLevel => _save.weaponLevel;
         public bool ShelterBuilt => _save.shelterBuilt;
+        public bool HasActiveShelterReturnPoint => _save.activeShelterReturnPoint;
         public bool CreatureBefriended => _save.creatureBefriended;
         public bool WayrootRestored => _save.wayrootRestored;
         public int AttackDamage => WeaponUpgradeRules.GetAttackDamage(WeaponLevel);
@@ -53,6 +54,20 @@ namespace Wayroot.Gathering
             _save.shelterBuilt = true;
             SaveInventory();
             status = "SHELTER built: home is ready.";
+            return true;
+        }
+
+        public bool TryRestAtShelter(out string status)
+        {
+            if (!ShelterRestRules.CanRest(ShelterBuilt))
+            {
+                status = "SHELTER must be built before resting.";
+                return false;
+            }
+
+            _save.activeShelterReturnPoint = true;
+            SaveInventory();
+            status = "SHELTER RESTED: HEALTH RESTORED — HOME ACTIVE.";
             return true;
         }
 

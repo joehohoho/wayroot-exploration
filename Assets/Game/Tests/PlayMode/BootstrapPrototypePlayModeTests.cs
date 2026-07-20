@@ -26,6 +26,48 @@ namespace Wayroot.Tests.PlayMode
         }
 
         [UnityTest]
+        public IEnumerator ShelterReturnPoint_PersistsAcrossRestartRespawnsAtShelterAndResetClearsIt()
+        {
+            PrototypeGatheringSaveService.Reset();
+            PrototypeGatheringSaveService.Save(new PrototypeGatheringSave { shelterBuilt = true, activeShelterReturnPoint = true });
+
+            AsyncOperation operation = SceneManager.LoadSceneAsync("Bootstrap", LoadSceneMode.Single);
+            yield return operation;
+            yield return null;
+
+            GameObject player = GameObject.Find("Prototype Player");
+            GameObject shelter = GameObject.Find("Built Shelter");
+            global::Wayroot.Combat.PrototypePlayerHealth health = player.GetComponent<global::Wayroot.Combat.PrototypePlayerHealth>();
+            Assert.That(shelter.activeSelf, Is.True);
+            Assert.That(health.HasActiveShelterReturnPoint, Is.True);
+
+            Vector3 expectedReturnPoint = shelter.transform.position + new Vector3(0f, 1f, -1.7f);
+            health.TakeDamage(10);
+            Assert.That(Vector3.Distance(player.transform.position, expectedReturnPoint), Is.LessThan(0.001f));
+            Assert.That(health.Health, Is.EqualTo(10));
+            Assert.That(GameObject.Find("World Label: SHELTER BUILD PLOT").GetComponent<TextMesh>().text, Is.EqualTo("SHELTER\nACTIVE HOME"));
+
+            PrototypeGatheringSaveService.Reset();
+            Assert.That(PrototypeGatheringSaveService.Load().activeShelterReturnPoint, Is.False);
+        }
+
+        [UnityTest]
+        public IEnumerator DefaultRespawn_RemainsAtInitialSpawnWithoutAnActiveShelterReturnPoint()
+        {
+            PrototypeGatheringSaveService.Reset();
+            AsyncOperation operation = SceneManager.LoadSceneAsync("Bootstrap", LoadSceneMode.Single);
+            yield return operation;
+            yield return null;
+
+            GameObject player = GameObject.Find("Prototype Player");
+            global::Wayroot.Combat.PrototypePlayerHealth health = player.GetComponent<global::Wayroot.Combat.PrototypePlayerHealth>();
+            health.TakeDamage(10);
+
+            Assert.That(health.HasActiveShelterReturnPoint, Is.False);
+            Assert.That(Vector3.Distance(player.transform.position, new Vector3(0f, 1f, 0f)), Is.LessThan(0.001f));
+        }
+
+        [UnityTest]
         public IEnumerator WayrootRestoration_PersistsItsClearingBloomAcrossSceneRestartAndResetClearsIt()
         {
             PrototypeGatheringSaveService.Reset();
