@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-**Phase 16 — cozy magical procedural soundscape is implemented and desktop-validated.**
+**Phase 17 — Moonlit Glade exploration extension is implemented and desktop-validated.**
 
 The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner play review; physical-iPhone evidence is an independent gate for the complete controlled slice.
 
@@ -27,6 +27,7 @@ The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner
 | 14 | Cohesive warm stylized magical-world art direction using original runtime geometry, URP materials, and lighting | **Implemented; desktop-validated** |
 | 15 | Befriended Mossling's non-combat nearest-resource guide with renewal fallback | **Implemented; desktop-validated** |
 | 16 | Cozy magical procedural ambient bed, event feedback, and persistent SOUND preference | **Implemented; desktop-validated** |
+| 17 | One persistent Moonlit Glade exploration pocket opened by the first Thorn Guardian victory | **Implemented; desktop-validated** |
 
 ## Phase 16 verification record
 
@@ -93,5 +94,5 @@ See `Documentation/Phase9ProductionReadiness.md` for scope, commands/results, re
 
 ## Next milestone gate
 
-1. Owner reviews the completed Phase 16 soundscape update and explicitly selects or defers the next bounded slice; do not begin Phase 17 automatically.
+1. Owner reviews the completed Phase 17 Moonlit Glade update and explicitly selects or defers the next bounded slice; do not begin Phase 18 automatically.
 2. Before a release-quality or mobile-ready claim, complete `Documentation/Phase9iPhoneBlockers.md` and the touch-only `Documentation/Phase9FullLoopPlaytest.md` on physical iPhone hardware.

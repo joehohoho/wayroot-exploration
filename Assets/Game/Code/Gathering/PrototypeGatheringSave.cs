@@ -21,6 +21,8 @@ namespace Wayroot.Gathering
         public bool soundEnabled = true;
         // Missing in Phase 0-9 saves defaults false through JsonUtility for backward compatibility.
         public bool wayrootRestored;
+        // A first Thorn Guardian victory opens the compact Phase 17 exploration pocket.
+        public bool moonlitGladeUnlocked;
         // Retained only to read Phase 0-10 JSON. Normalize migrates these IDs to renewalNodes.
         public List<string> depletedNodeIds = new();
         public List<RenewalNodeSave> renewalNodes = new();

@@ -15,6 +15,7 @@ using Wayroot.Progression;
 using Wayroot.UI;
 using Wayroot.Wayroot;
 using Wayroot.Audio;
+using Wayroot.Exploration;
 
 namespace Wayroot.Core
 {
@@ -54,7 +55,7 @@ namespace Wayroot.Core
             PrototypeWayrootController wayroot = CreateWayroot(input, player, gathering, sceneCamera);
             PrototypeCreatureController creature = CreateCreature(input, player, gathering, sceneCamera);
             PrototypeEnemy enemy = CreateCombat(input, player, playerHealth, sceneCamera, out PrototypeAttackController attack);
-            RestoredGroveController grove = CreateRestoredGrove(input, player, playerHealth, gathering, sceneCamera, attack, enemy);
+            RestoredGroveController grove = CreateRestoredGrove(input, player, playerHealth, gathering, sceneCamera, attack, enemy, out MoonlitGladeController moonlitGlade);
             PauseController pause = new GameObject("Pause Controller").AddComponent<PauseController>();
             pause.Configure(player, cameraController);
             ProceduralSoundscape soundscape = new GameObject("Procedural Cozy Soundscape").AddComponent<ProceduralSoundscape>();
@@ -70,6 +71,7 @@ namespace Wayroot.Core
             attack.SetSoundscape(soundscape);
             enemy.SetFeedback(feedback);
             grove.SetFeedback(feedback);
+            moonlitGlade.SetFeedback(feedback);
             playerHealth.SetFeedback(feedback);
             playerHealth.SetSoundscape(soundscape);
             pause.SetFeedback(feedback);
@@ -383,7 +385,7 @@ namespace Wayroot.Core
             return enemy;
         }
 
-        private static RestoredGroveController CreateRestoredGrove(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeGatheringController gathering, UnityEngine.Camera sceneCamera, PrototypeAttackController attack, PrototypeEnemy slime)
+        private static RestoredGroveController CreateRestoredGrove(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeGatheringController gathering, UnityEngine.Camera sceneCamera, PrototypeAttackController attack, PrototypeEnemy slime, out MoonlitGladeController moonlitGlade)
         {
             GameObject grove = new("Restored Grove Edge");
             grove.transform.position = new Vector3(-6.7f, 0f, 1.2f);
@@ -413,10 +415,63 @@ namespace Wayroot.Core
             CreateWorldIdentifier("RESTORED GROVE\nTHORN GUARDIAN", guardianObject.transform, new Vector3(0f, 2.45f, 0f), sceneCamera, new Color(0.82f, 1f, 0.48f));
 
             attack.Configure(input, player, gathering, slime, guardian);
+            moonlitGlade = CreateMoonlitGlade(grove.transform, gathering, guardian, sceneCamera);
             grove.SetActive(false);
             RestoredGroveController controller = new GameObject("Restored Grove Controller").AddComponent<RestoredGroveController>();
             controller.Configure(gathering, grove, guardian);
             return controller;
+        }
+
+        private static MoonlitGladeController CreateMoonlitGlade(Transform grove, PrototypeGatheringController gathering, PrototypeEnemy guardian, UnityEngine.Camera sceneCamera)
+        {
+            GameObject entrance = new("Moonlit Glade Passage");
+            entrance.transform.SetParent(grove, true);
+            GameObject sealedPath = new("Moonlit Glade Sealed Path");
+            sealedPath.transform.SetParent(entrance.transform, false);
+            sealedPath.transform.position = new Vector3(-7.35f, 0.45f, 3.65f);
+            CreateVisualPrimitive("Moonlit Thorn Seal", PrimitiveType.Cylinder, sealedPath.transform.position, new Vector3(1.1f, 0.45f, 1.1f), new Color(0.24f, 0.12f, 0.35f)).transform.SetParent(sealedPath.transform, true);
+            CreateVisualPrimitive("Moonlit Thorn Seal Glow", PrimitiveType.Sphere, sealedPath.transform.position + new Vector3(0f, 0.62f, 0f), new Vector3(0.55f, 0.55f, 0.55f), new Color(0.62f, 0.34f, 0.86f)).transform.SetParent(sealedPath.transform, true);
+            CreateWorldIdentifier("MOONLIT GLADE\nSEALED PATH", sealedPath.transform, new Vector3(0f, 1.45f, 0f), sceneCamera, new Color(0.82f, 0.64f, 1f));
+
+            GameObject glade = new("Moonlit Glade");
+            glade.transform.SetParent(entrance.transform, true);
+            CreateVisualPrimitive("Moonlit Violet Path", PrimitiveType.Cube, new Vector3(-7.7f, 0.045f, 4.15f), new Vector3(1.45f, 0.07f, 3.1f), new Color(0.34f, 0.25f, 0.56f)).transform.SetParent(glade.transform, true);
+            CreateVisualPrimitive("Moonlit Glade Clearing", PrimitiveType.Cylinder, new Vector3(-8.15f, 0.04f, 5.9f), new Vector3(2.45f, 0.04f, 2.2f), new Color(0.22f, 0.34f, 0.48f)).transform.SetParent(glade.transform, true);
+            CreateMoonlitLandmark(glade.transform, new Vector3(-8.15f, 0f, 6.15f), sceneCamera);
+
+            GatheringNode petal = CreateGatheringNode("moonlit-wildflower-01", "Moonlit Wild Petal (hold E)", PrimitiveType.Sphere, new Vector3(-9.65f, 0.5f, 5.25f), new Color(0.82f, 0.52f, 1f), ResourceType.WildPetal, 1);
+            GatheringNode timber = CreateGatheringNode("moonlit-sapling-01", "Moonlit Sapling (hold E)", PrimitiveType.Cylinder, new Vector3(-6.6f, 1f, 5.55f), new Color(0.30f, 0.42f, 0.68f), ResourceType.Timber, 3);
+            GatheringNode stone = CreateGatheringNode("moonlit-stone-01", "Moonlit Stone (hold E)", PrimitiveType.Cube, new Vector3(-8.9f, 0.65f, 7.45f), new Color(0.47f, 0.48f, 0.75f), ResourceType.Stone, 3);
+            petal.transform.SetParent(glade.transform, true);
+            timber.transform.SetParent(glade.transform, true);
+            stone.transform.SetParent(glade.transform, true);
+            petal.SetWorldLabel(CreateWorldIdentifier("MOON PETAL\nWILD PETAL", petal.transform, new Vector3(0f, 1.05f, 0f), sceneCamera, new Color(0.92f, 0.76f, 1f)), "MOON PETAL", "WILD PETAL");
+            timber.SetWorldLabel(CreateWorldIdentifier("MOON SAPLING\nTIMBER", timber.transform, new Vector3(0f, 2.35f, 0f), sceneCamera, new Color(0.72f, 0.82f, 1f)), "MOON SAPLING", "TIMBER");
+            stone.SetWorldLabel(CreateWorldIdentifier("MOON STONE\nSTONE", stone.transform, new Vector3(0f, 1.45f, 0f), sceneCamera, new Color(0.82f, 0.86f, 1f)), "MOON STONE", "STONE");
+            glade.SetActive(false);
+
+            MoonlitGladeController controller = new GameObject("Moonlit Glade Controller").AddComponent<MoonlitGladeController>();
+            controller.Configure(gathering, guardian, sealedPath, glade, new[] { petal, timber, stone });
+            return controller;
+        }
+
+        private static void CreateMoonlitLandmark(Transform parent, Vector3 position, UnityEngine.Camera sceneCamera)
+        {
+            GameObject landmark = new("Moonlit Bloomwell Discovery");
+            landmark.transform.SetParent(parent, true);
+            landmark.transform.position = position;
+            CreateVisualPrimitive("Bloomwell Basin", PrimitiveType.Cylinder, position + new Vector3(0f, 0.18f, 0f), new Vector3(0.9f, 0.18f, 0.9f), new Color(0.30f, 0.25f, 0.52f)).transform.SetParent(landmark.transform, true);
+            CreateVisualPrimitive("Bloomwell Moon", PrimitiveType.Sphere, position + new Vector3(0f, 0.92f, 0f), new Vector3(0.55f, 0.75f, 0.55f), new Color(0.72f, 0.72f, 1f)).transform.SetParent(landmark.transform, true);
+            CreateVisualPrimitive("Bloomwell Petal", PrimitiveType.Sphere, position + new Vector3(0.65f, 0.46f, 0f), new Vector3(0.28f, 0.14f, 0.55f), new Color(0.92f, 0.56f, 1f)).transform.SetParent(landmark.transform, true);
+            Light glow = landmark.AddComponent<Light>();
+            glow.type = LightType.Point;
+            glow.color = new Color(0.62f, 0.48f, 1f);
+            glow.intensity = 1.45f;
+            glow.range = 4.2f;
+            CreateVisualPrimitive("Bloomwell Mote One", PrimitiveType.Sphere, position + new Vector3(-0.42f, 1.22f, 0.15f), Vector3.one * 0.10f, new Color(0.82f, 0.72f, 1f)).transform.SetParent(landmark.transform, true);
+            CreateVisualPrimitive("Bloomwell Mote Two", PrimitiveType.Sphere, position + new Vector3(0.35f, 1.42f, -0.18f), Vector3.one * 0.07f, new Color(0.92f, 0.62f, 1f)).transform.SetParent(landmark.transform, true);
+            CreateVisualPrimitive("Bloomwell Mote Three", PrimitiveType.Sphere, position + new Vector3(0.08f, 1.65f, 0.32f), Vector3.one * 0.06f, new Color(0.70f, 0.82f, 1f)).transform.SetParent(landmark.transform, true);
+            CreateWorldIdentifier("MOONLIT GLADE\nBLOOMWELL DISCOVERED", landmark.transform, new Vector3(0f, 1.75f, 0f), sceneCamera, new Color(0.88f, 0.76f, 1f));
         }
 
         private static PrototypeGatheringController CreateGathering(PrototypeInputReader input, PrototypePlayerController player, UnityEngine.Camera sceneCamera)

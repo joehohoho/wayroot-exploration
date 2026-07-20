@@ -32,6 +32,7 @@ namespace Wayroot.Gathering
         public bool HasActiveShelterReturnPoint => _save.activeShelterReturnPoint;
         public bool CreatureBefriended => _save.creatureBefriended;
         public bool WayrootRestored => _save.wayrootRestored;
+        public bool MoonlitGladeUnlocked => _save.moonlitGladeUnlocked;
         public bool SoundEnabled => _save.soundEnabled;
         public int AttackDamage => WeaponUpgradeRules.GetAttackDamage(WeaponLevel);
         public int GetCount(ResourceType resource) => _inventory.GetCount(resource);
@@ -140,6 +141,28 @@ namespace Wayroot.Gathering
                 SaveInventory();
                 _feedback?.Show("SLIME DEFEATED: +1 CORE");
             }
+        }
+
+        public bool UnlockMoonlitGlade()
+        {
+            if (_save.moonlitGladeUnlocked) return false;
+            _save.moonlitGladeUnlocked = true;
+            SaveInventory();
+            return true;
+        }
+
+        public void RegisterNodes(IEnumerable<GatheringNode> nodes)
+        {
+            foreach (GatheringNode node in nodes)
+            {
+                if (_nodes.Contains(node)) continue;
+                _nodes.Add(node);
+                long deadline = GetRenewalDeadline(node.Id);
+                if (deadline > 0) node.RestoreDepleted(deadline);
+                node.Completed += OnNodeCompleted;
+            }
+
+            ResolveRenewals(DateTime.UtcNow);
         }
 
         public void ResetPrototype()
