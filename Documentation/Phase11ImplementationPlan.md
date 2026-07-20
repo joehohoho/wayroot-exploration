@@ -4,7 +4,7 @@
 
 ## Goal
 
-Make the existing finite gathering loop returnable without introducing a broad economy: after the first Wayroot is restored, depleted resource nodes renew on a deterministic, player-visible cadence so the clearing can support continued play.
+Make the existing finite gathering loop returnable without introducing a broad economy: depleted resource nodes renew automatically on a deterministic, player-visible cadence so the clearing can support continued play.
 
 ## Locked delivery
 

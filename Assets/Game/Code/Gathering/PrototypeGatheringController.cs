@@ -140,12 +140,14 @@ namespace Wayroot.Gathering
                 node.Completed += OnNodeCompleted;
             }
 
-            if (_save.wayrootRestored) ResolveRenewals(DateTime.UtcNow);
+            // Renewals are an always-on return loop: Wayroot restoration is a separate finite objective.
+            ResolveRenewals(DateTime.UtcNow);
         }
 
         private void Update()
         {
-            if (_save.wayrootRestored) ResolveRenewals(DateTime.UtcNow);
+            // Renewals are an always-on return loop: Wayroot restoration is a separate finite objective.
+            ResolveRenewals(DateTime.UtcNow);
             CurrentTarget = _player.IsPaused ? null : FindNearest();
             if (CurrentTarget == null || !_input.InteractHeld || Time.time < _nextStepTime) return;
             if (!CurrentTarget.TryGather()) return;
@@ -189,18 +191,10 @@ namespace Wayroot.Gathering
         private void OnNodeCompleted(GatheringNode node)
         {
             _inventory.TryAdd(node.Resource, 1, out _, out _);
-            if (_save.wayrootRestored)
-            {
-                long deadline = RenewalRules.CreateDeadlineUtcTicks(DateTime.UtcNow);
-                node.StartRenewal(deadline);
-                SetRenewalDeadline(node.Id, deadline);
-                _feedback?.Show($"GATHERED: +1 {node.Resource.ToString().ToUpperInvariant()} — RETURNS IN 0:20");
-            }
-            else
-            {
-                _save.depletedNodeIds.Add(node.Id);
-                _feedback?.Show($"GATHERED: +1 {node.Resource.ToString().ToUpperInvariant()}");
-            }
+            long deadline = RenewalRules.CreateDeadlineUtcTicks(DateTime.UtcNow);
+            node.StartRenewal(deadline);
+            SetRenewalDeadline(node.Id, deadline);
+            _feedback?.Show($"GATHERED: +1 {node.Resource.ToString().ToUpperInvariant()} — RETURNS IN 0:20");
 
             SaveInventory();
         }
@@ -243,7 +237,6 @@ namespace Wayroot.Gathering
 
         private string GetRenewalStatus(DateTime utcNow)
         {
-            if (!_save.wayrootRestored) return "RENEWAL: restore WAYROOT to begin returns";
             long nextDeadline = 0;
             int renewing = 0;
             foreach (RenewalNodeSave renewal in _save.renewalNodes)
@@ -253,9 +246,9 @@ namespace Wayroot.Gathering
                 if (nextDeadline == 0 || renewal.renewalDeadlineUtcTicks < nextDeadline) nextDeadline = renewal.renewalDeadlineUtcTicks;
             }
 
-            return renewing == 0
-                ? "RENEWAL: all nodes available"
-                : $"RENEWAL: {renewing} returning in {RenewalRules.FormatRemaining(nextDeadline, utcNow)}";
+            if (renewing == 0) return "RENEWAL: all nodes available";
+
+            return $"RENEWAL: {renewing} returning in {RenewalRules.FormatRemaining(nextDeadline, utcNow)}";
         }
 
         private void SaveInventory()

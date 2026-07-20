@@ -30,7 +30,8 @@ namespace Wayroot.UI
             }
 
             transform.position = target.position + localOffset;
-            transform.rotation = Quaternion.LookRotation(sceneCamera.transform.position - transform.position, Vector3.up);
+            // Match the camera's up vector so top-down labels remain screen-horizontal instead of rolling diagonally.
+            transform.rotation = Quaternion.LookRotation(-sceneCamera.transform.forward, sceneCamera.transform.up);
         }
     }
 }

@@ -3,7 +3,7 @@
 ## Scope and setup
 
 1. Open `Assets/Game/Scenes/Bootstrap.unity` with Unity **6000.5.4f1**, press **Play**, and use **RESET** before the first check.
-2. Complete the existing first Wayroot objective if it is not already restored. Renewal starts only after the persistent Wayroot restoration; it does not add resources, crafting, regions, or another quest.
+2. Gather any existing resource to start its renewal countdown. The Wayroot objective remains separate; it does not gate renewal.
 3. Use the established semantic interaction: **HOLD GATHER**, `E`, or gamepad south. The short prototype renewal interval is a fixed **20 seconds**.
 
 ## Renewal loop

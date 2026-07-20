@@ -375,7 +375,7 @@ namespace Wayroot.Core
             text.text = value;
             text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             text.fontSize = 44;
-            text.characterSize = 0.12f;
+            text.characterSize = 0.075f;
             text.anchor = TextAnchor.MiddleCenter;
             text.alignment = TextAlignment.Center;
             text.color = color;
@@ -422,8 +422,10 @@ namespace Wayroot.Core
             joystickArea.gameObject.AddComponent<VirtualJoystick>().Configure(input, joystickHandle);
 
             RectTransform pauseButton = CreatePanel("Pause Button", safeArea, new Color(0.16f, 0.22f, 0.34f, 0.85f));
-            pauseButton.sizeDelta = new Vector2(180f, 105f);
-            pauseButton.anchoredPosition = new Vector2(-56f, 56f);
+            pauseButton.sizeDelta = new Vector2(180f, 82f);
+            pauseButton.anchorMin = pauseButton.anchorMax = new Vector2(0f, 1f);
+            pauseButton.pivot = new Vector2(0f, 1f);
+            pauseButton.anchoredPosition = new Vector2(24f, -150f);
             Button button = pauseButton.gameObject.AddComponent<Button>();
             button.onClick.AddListener(pause.Toggle);
             CreateText("Pause Label", pauseButton, "PAUSE", 32, TextAnchor.MiddleCenter);
@@ -432,7 +434,7 @@ namespace Wayroot.Core
             resetButton.sizeDelta = new Vector2(180f, 70f);
             resetButton.anchorMin = resetButton.anchorMax = new Vector2(1f, 1f);
             resetButton.pivot = new Vector2(1f, 1f);
-            resetButton.anchoredPosition = new Vector2(-56f, -176f);
+            resetButton.anchoredPosition = new Vector2(-24f, -278f);
             resetButton.gameObject.AddComponent<Button>().onClick.AddListener(gathering.ResetPrototype);
             CreateText("Reset Label", resetButton, "RESET", 22, TextAnchor.MiddleCenter);
 
@@ -462,7 +464,8 @@ namespace Wayroot.Core
             inventoryText.rectTransform.anchorMin = inventoryText.rectTransform.anchorMax = new Vector2(1f, 1f);
             inventoryText.rectTransform.pivot = new Vector2(1f, 1f);
             inventoryText.rectTransform.anchoredPosition = new Vector2(-24f, -120f);
-            inventoryText.rectTransform.sizeDelta = new Vector2(700f, 90f);
+            inventoryText.rectTransform.sizeDelta = new Vector2(760f, 150f);
+            inventoryText.fontSize = 20;
             inventoryText.gameObject.AddComponent<GatheringHud>().Configure(inventoryText, gathering, merchant, build, wayroot, creature);
 
             Text combatText = CreateText("Combat Status", safeArea, string.Empty, 24, TextAnchor.UpperLeft);
