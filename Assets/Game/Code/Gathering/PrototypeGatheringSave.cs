@@ -23,6 +23,8 @@ namespace Wayroot.Gathering
         public bool wayrootRestored;
         // A first Thorn Guardian victory opens the compact Phase 17 exploration pocket.
         public bool moonlitGladeUnlocked;
+        // Missing in Phase 0-18 saves defaults false, preserving the one-time Phase 19 finale.
+        public bool bloomwellRestored;
         // Retained only to read Phase 0-10 JSON. Normalize migrates these IDs to renewalNodes.
         public List<string> depletedNodeIds = new();
         public List<RenewalNodeSave> renewalNodes = new();

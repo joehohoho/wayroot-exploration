@@ -29,7 +29,14 @@ namespace Wayroot.Creatures
         public bool IsBefriended => _gathering.CreatureBefriended;
         public string Status { get; private set; } = "MOSSling: hold E / GATHER to befriend.";
         public string GuideStatus => _resourceGuide?.Status ?? string.Empty;
+        public bool IsCelebratingFinale { get; private set; }
         public void SetFeedback(ActionFeedbackHud feedback) => _feedback = feedback;
+
+        public void SetFinaleCelebration(bool celebrating)
+        {
+            IsCelebratingFinale = celebrating;
+            if (celebrating) Status = "MOSSling celebrates the restored Bloomwell.";
+        }
         public void SetResourceGuide(MosslingResourceGuide resourceGuide) => _resourceGuide = resourceGuide;
         public void SetSoundscape(ProceduralSoundscape soundscape) => _soundscape = soundscape;
 
@@ -106,7 +113,7 @@ namespace Wayroot.Creatures
                 FollowStopDistance,
                 FollowSpeed,
                 Time.deltaTime);
-            Status = "MOSSling companion: following safely.";
+            Status = IsCelebratingFinale ? "MOSSling celebrates the restored Bloomwell." : "MOSSling companion: following safely.";
         }
     }
 }

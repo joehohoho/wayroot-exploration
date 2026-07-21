@@ -56,13 +56,16 @@ namespace Wayroot.Core
             PrototypeWayrootController wayroot = CreateWayroot(input, player, gathering, sceneCamera);
             PrototypeCreatureController creature = CreateCreature(input, player, gathering, sceneCamera);
             PrototypeEnemy enemy = CreateCombat(input, player, playerHealth, sceneCamera, out PrototypeAttackController attack);
-            RestoredGroveController grove = CreateRestoredGrove(input, player, playerHealth, gathering, sceneCamera, attack, enemy, out MoonlitGladeController moonlitGlade);
+            RestoredGroveController grove = CreateRestoredGrove(input, player, playerHealth, gathering, sceneCamera, attack, enemy, out MoonlitGladeController moonlitGlade, out BloomwellController bloomwell, out GameObject bloomwellRestoredVisual);
             PauseController pause = new GameObject("Pause Controller").AddComponent<PauseController>();
             pause.Configure(player, cameraController);
             ProceduralSoundscape soundscape = new GameObject("Procedural Cozy Soundscape").AddComponent<ProceduralSoundscape>();
             soundscape.Configure(gathering);
             CreatePhaseEighteenArtMotion(player, creature, enemy, grove, gathering);
-            ActionFeedbackHud feedback = CreateRuntimeUi(input, player, playerHealth, enemy, grove, cameraController, pause, gathering, merchant, build, wayroot, creature, soundscape);
+            GameObject sunmeadowFinaleMotif = CreateSunmeadowFinaleMotif();
+            BloomwellFinalePresentation finalePresentation = new GameObject("Bloomwell Finale Presentation").AddComponent<BloomwellFinalePresentation>();
+            finalePresentation.Configure(gathering, creature, bloomwell, bloomwellRestoredVisual, sunmeadowFinaleMotif, GameObject.Find("Sunmeadow Sun").GetComponent<Light>());
+            ActionFeedbackHud feedback = CreateRuntimeUi(input, player, playerHealth, enemy, grove, cameraController, pause, gathering, merchant, build, wayroot, creature, bloomwell, soundscape);
             gathering.SetFeedback(feedback);
             gathering.SetSoundscape(soundscape);
             merchant.SetFeedback(feedback);
@@ -74,6 +77,8 @@ namespace Wayroot.Core
             enemy.SetFeedback(feedback);
             grove.SetFeedback(feedback);
             moonlitGlade.SetFeedback(feedback);
+            bloomwell.SetFeedback(feedback);
+            bloomwell.SetSoundscape(soundscape);
             playerHealth.SetFeedback(feedback);
             playerHealth.SetSoundscape(soundscape);
             pause.SetFeedback(feedback);
@@ -387,7 +392,7 @@ namespace Wayroot.Core
             return enemy;
         }
 
-        private static RestoredGroveController CreateRestoredGrove(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeGatheringController gathering, UnityEngine.Camera sceneCamera, PrototypeAttackController attack, PrototypeEnemy slime, out MoonlitGladeController moonlitGlade)
+        private static RestoredGroveController CreateRestoredGrove(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeGatheringController gathering, UnityEngine.Camera sceneCamera, PrototypeAttackController attack, PrototypeEnemy slime, out MoonlitGladeController moonlitGlade, out BloomwellController bloomwell, out GameObject bloomwellRestoredVisual)
         {
             GameObject grove = new("Restored Grove Edge");
             grove.transform.position = new Vector3(-6.7f, 0f, 1.2f);
@@ -417,7 +422,7 @@ namespace Wayroot.Core
             CreateWorldIdentifier("RESTORED GROVE\nTHORN GUARDIAN", guardianObject.transform, new Vector3(0f, 2.45f, 0f), sceneCamera, new Color(0.82f, 1f, 0.48f));
 
             attack.Configure(input, player, gathering, slime, guardian);
-            moonlitGlade = CreateMoonlitGlade(grove.transform, gathering, guardian, sceneCamera);
+            moonlitGlade = CreateMoonlitGlade(grove.transform, input, player, gathering, guardian, sceneCamera, out bloomwell, out bloomwellRestoredVisual);
             grove.SetActive(false);
             RestoredGroveController controller = new GameObject("Restored Grove Controller").AddComponent<RestoredGroveController>();
             controller.Configure(gathering, grove, guardian);
@@ -482,7 +487,7 @@ namespace Wayroot.Core
             owner.AddComponent<ProceduralStylizedAnimator>().Configure(style, parts, player, mossling, enemy, gathering);
         }
 
-        private static MoonlitGladeController CreateMoonlitGlade(Transform grove, PrototypeGatheringController gathering, PrototypeEnemy guardian, UnityEngine.Camera sceneCamera)
+        private static MoonlitGladeController CreateMoonlitGlade(Transform grove, PrototypeInputReader input, PrototypePlayerController player, PrototypeGatheringController gathering, PrototypeEnemy guardian, UnityEngine.Camera sceneCamera, out BloomwellController bloomwell, out GameObject bloomwellRestoredVisual)
         {
             GameObject entrance = new("Moonlit Glade Passage");
             entrance.transform.SetParent(grove, true);
@@ -497,7 +502,7 @@ namespace Wayroot.Core
             glade.transform.SetParent(entrance.transform, true);
             CreateVisualPrimitive("Moonlit Violet Path", PrimitiveType.Cube, new Vector3(-7.7f, 0.045f, 4.15f), new Vector3(1.45f, 0.07f, 3.1f), new Color(0.34f, 0.25f, 0.56f)).transform.SetParent(glade.transform, true);
             CreateVisualPrimitive("Moonlit Glade Clearing", PrimitiveType.Cylinder, new Vector3(-8.15f, 0.04f, 5.9f), new Vector3(2.45f, 0.04f, 2.2f), new Color(0.22f, 0.34f, 0.48f)).transform.SetParent(glade.transform, true);
-            CreateMoonlitLandmark(glade.transform, new Vector3(-8.15f, 0f, 6.15f), sceneCamera);
+            bloomwell = CreateMoonlitLandmark(glade.transform, new Vector3(-8.15f, 0f, 6.15f), sceneCamera, input, player, gathering, out bloomwellRestoredVisual);
 
             GatheringNode petal = CreateGatheringNode("moonlit-wildflower-01", "Moonlit Wild Petal (hold E)", PrimitiveType.Sphere, new Vector3(-9.65f, 0.5f, 5.25f), new Color(0.82f, 0.52f, 1f), ResourceType.WildPetal, 1);
             GatheringNode timber = CreateGatheringNode("moonlit-sapling-01", "Moonlit Sapling (hold E)", PrimitiveType.Cylinder, new Vector3(-6.6f, 1f, 5.55f), new Color(0.30f, 0.42f, 0.68f), ResourceType.Timber, 3);
@@ -515,7 +520,7 @@ namespace Wayroot.Core
             return controller;
         }
 
-        private static void CreateMoonlitLandmark(Transform parent, Vector3 position, UnityEngine.Camera sceneCamera)
+        private static BloomwellController CreateMoonlitLandmark(Transform parent, Vector3 position, UnityEngine.Camera sceneCamera, PrototypeInputReader input, PrototypePlayerController player, PrototypeGatheringController gathering, out GameObject restoredVisual)
         {
             GameObject landmark = new("Moonlit Bloomwell Discovery");
             landmark.transform.SetParent(parent, true);
@@ -531,7 +536,21 @@ namespace Wayroot.Core
             CreateVisualPrimitive("Bloomwell Mote One", PrimitiveType.Sphere, position + new Vector3(-0.42f, 1.22f, 0.15f), Vector3.one * 0.10f, new Color(0.82f, 0.72f, 1f)).transform.SetParent(landmark.transform, true);
             CreateVisualPrimitive("Bloomwell Mote Two", PrimitiveType.Sphere, position + new Vector3(0.35f, 1.42f, -0.18f), Vector3.one * 0.07f, new Color(0.92f, 0.62f, 1f)).transform.SetParent(landmark.transform, true);
             CreateVisualPrimitive("Bloomwell Mote Three", PrimitiveType.Sphere, position + new Vector3(0.08f, 1.65f, 0.32f), Vector3.one * 0.06f, new Color(0.70f, 0.82f, 1f)).transform.SetParent(landmark.transform, true);
-            CreateWorldIdentifier("MOONLIT GLADE\nBLOOMWELL DISCOVERED", landmark.transform, new Vector3(0f, 1.75f, 0f), sceneCamera, new Color(0.88f, 0.76f, 1f));
+            restoredVisual = new GameObject("Bloomwell Restored Finale Bloom");
+            restoredVisual.transform.SetParent(landmark.transform, true);
+            CreateVisualPrimitive("Bloomwell Restored Heart", PrimitiveType.Sphere, position + new Vector3(0f, 1.22f, 0f), new Vector3(0.78f, 1.05f, 0.78f), new Color(0.48f, 1f, 0.82f)).transform.SetParent(restoredVisual.transform, true);
+            CreateVisualPrimitive("Bloomwell Restored Petal Left", PrimitiveType.Sphere, position + new Vector3(-0.7f, 0.72f, 0f), new Vector3(0.34f, 0.18f, 0.66f), new Color(1f, 0.72f, 0.96f)).transform.SetParent(restoredVisual.transform, true);
+            CreateVisualPrimitive("Bloomwell Restored Petal Right", PrimitiveType.Sphere, position + new Vector3(0.7f, 0.72f, 0f), new Vector3(0.34f, 0.18f, 0.66f), new Color(0.72f, 0.86f, 1f)).transform.SetParent(restoredVisual.transform, true);
+            Light finaleGlow = restoredVisual.AddComponent<Light>();
+            finaleGlow.type = LightType.Point;
+            finaleGlow.color = new Color(0.56f, 1f, 0.86f);
+            finaleGlow.intensity = 2.25f;
+            finaleGlow.range = 5.5f;
+            restoredVisual.SetActive(false);
+            TextMesh label = CreateWorldIdentifier("BLOOMWELL\nHOLD GATHER", landmark.transform, new Vector3(0f, 1.92f, 0f), sceneCamera, new Color(0.88f, 0.76f, 1f));
+            BloomwellController controller = landmark.AddComponent<BloomwellController>();
+            controller.Configure(input, player, gathering, restoredVisual, landmark.transform.Find("Bloomwell Basin").GetComponent<Renderer>(), label);
+            return controller;
         }
 
         private static PrototypeGatheringController CreateGathering(PrototypeInputReader input, PrototypePlayerController player, UnityEngine.Camera sceneCamera)
@@ -574,7 +593,22 @@ namespace Wayroot.Core
             return node;
         }
 
-        private static ActionFeedbackHud CreateRuntimeUi(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeEnemy enemy, RestoredGroveController grove, TopDownCameraController cameraController, PauseController pause, PrototypeGatheringController gathering, PrototypeMerchantController merchant, PrototypeBuildController build, PrototypeWayrootController wayroot, PrototypeCreatureController creature, ProceduralSoundscape soundscape)
+        private static GameObject CreateSunmeadowFinaleMotif()
+        {
+            GameObject motif = new("Sunmeadow Bloomwell Finale Motif");
+            CreateVisualPrimitive("Sunmeadow Finale Bloom One", PrimitiveType.Sphere, new Vector3(-1.75f, 0.42f, -4.1f), new Vector3(0.52f, 0.22f, 0.52f), new Color(0.76f, 0.56f, 1f)).transform.SetParent(motif.transform, true);
+            CreateVisualPrimitive("Sunmeadow Finale Bloom Two", PrimitiveType.Sphere, new Vector3(-0.7f, 0.38f, -4.45f), new Vector3(0.42f, 0.18f, 0.42f), new Color(0.48f, 0.92f, 0.84f)).transform.SetParent(motif.transform, true);
+            CreateVisualPrimitive("Sunmeadow Finale Bloom Three", PrimitiveType.Sphere, new Vector3(0.35f, 0.40f, -4.0f), new Vector3(0.48f, 0.20f, 0.48f), new Color(1f, 0.72f, 0.92f)).transform.SetParent(motif.transform, true);
+            Light glow = motif.AddComponent<Light>();
+            glow.type = LightType.Point;
+            glow.color = new Color(0.66f, 0.76f, 1f);
+            glow.intensity = 1.4f;
+            glow.range = 4f;
+            motif.SetActive(false);
+            return motif;
+        }
+
+        private static ActionFeedbackHud CreateRuntimeUi(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeEnemy enemy, RestoredGroveController grove, TopDownCameraController cameraController, PauseController pause, PrototypeGatheringController gathering, PrototypeMerchantController merchant, PrototypeBuildController build, PrototypeWayrootController wayroot, PrototypeCreatureController creature, BloomwellController bloomwell, ProceduralSoundscape soundscape)
         {
             Canvas canvas = new GameObject("Prototype HUD").AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -653,9 +687,9 @@ namespace Wayroot.Core
             inventoryText.rectTransform.anchorMin = inventoryText.rectTransform.anchorMax = new Vector2(1f, 1f);
             inventoryText.rectTransform.pivot = new Vector2(1f, 1f);
             inventoryText.rectTransform.anchoredPosition = new Vector2(-24f, -120f);
-            inventoryText.rectTransform.sizeDelta = new Vector2(760f, 150f);
-            inventoryText.fontSize = 20;
-            inventoryText.gameObject.AddComponent<GatheringHud>().Configure(inventoryText, gathering, merchant, build, wayroot, creature);
+            inventoryText.rectTransform.sizeDelta = new Vector2(760f, 188f);
+            inventoryText.fontSize = 19;
+            inventoryText.gameObject.AddComponent<GatheringHud>().Configure(inventoryText, gathering, merchant, build, wayroot, creature, bloomwell);
 
             Text combatText = CreateText("Combat Status", safeArea, string.Empty, 24, TextAnchor.UpperLeft);
             combatText.rectTransform.anchorMin = combatText.rectTransform.anchorMax = new Vector2(0f, 1f);

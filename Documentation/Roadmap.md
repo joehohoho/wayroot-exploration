@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-**Phase 18 — Major stylized art and procedural-animation pass is implemented and desktop-validated.**
+**Phase 19 — Bloomwell restoration finale is implemented and desktop-validated.**
 
 The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner play review; physical-iPhone evidence is an independent gate for the complete controlled slice.
 
@@ -29,6 +29,7 @@ The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner
 | 16 | Cozy magical procedural ambient bed, event feedback, and persistent SOUND preference | **Implemented; desktop-validated** |
 | 17 | One persistent Moonlit Glade exploration pocket opened by the first Thorn Guardian victory | **Implemented; desktop-validated** |
 | 18 | Major original runtime-composed stylized graphics and procedural animation pass | **Implemented; desktop-validated** |
+| 19 | Guardian-gated Moonlit Bloomwell restoration finale using existing renewable resources | **Implemented; desktop-validated** |
 
 ## Phase 18 verification record
 
@@ -103,5 +104,5 @@ See `Documentation/Phase9ProductionReadiness.md` for scope, commands/results, re
 
 ## Next milestone gate
 
-1. Phase 18 is published for owner review. **Do not begin Phase 19 without explicit owner approval.**
+1. Phase 19 is published for owner review. **Do not begin Phase 20 without explicit owner approval.**
 2. Before a release-quality or mobile-ready claim, complete `Documentation/Phase9iPhoneBlockers.md` and the touch-only `Documentation/Phase9FullLoopPlaytest.md` on physical iPhone hardware.

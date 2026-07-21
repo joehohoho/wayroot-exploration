@@ -34,6 +34,7 @@ namespace Wayroot.Gathering
         public bool CreatureBefriended => _save.creatureBefriended;
         public bool WayrootRestored => _save.wayrootRestored;
         public bool MoonlitGladeUnlocked => _save.moonlitGladeUnlocked;
+        public bool BloomwellRestored => _save.bloomwellRestored;
         public bool SoundEnabled => _save.soundEnabled;
         public int AttackDamage => WeaponUpgradeRules.GetAttackDamage(WeaponLevel);
         public int GetCount(ResourceType resource) => _inventory.GetCount(resource);
@@ -149,6 +150,20 @@ namespace Wayroot.Gathering
             if (_save.moonlitGladeUnlocked) return false;
             _save.moonlitGladeUnlocked = true;
             SaveInventory();
+            return true;
+        }
+
+        public bool TryRestoreBloomwell(out string status)
+        {
+            if (!global::Wayroot.Exploration.BloomwellRestorationRules.TryRestore(MoonlitGladeUnlocked, BloomwellRestored, _inventory))
+            {
+                status = global::Wayroot.Exploration.BloomwellRestorationRules.GetRequirementStatus(MoonlitGladeUnlocked, BloomwellRestored, _inventory);
+                return false;
+            }
+
+            _save.bloomwellRestored = true;
+            SaveInventory();
+            status = global::Wayroot.Exploration.BloomwellRestorationRules.CompleteStatus;
             return true;
         }
 
