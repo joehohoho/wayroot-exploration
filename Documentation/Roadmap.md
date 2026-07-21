@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-**Phase 21 — Dodge and combat-readability pass is implemented and desktop-validated.**
+**Phase 22 — Alpha visual, camera, and HUD overhaul is implemented and desktop-validated.**
 
 The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner play review; physical-iPhone evidence is an independent gate for the complete controlled slice.
 

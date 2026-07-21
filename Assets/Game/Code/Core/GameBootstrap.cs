@@ -307,15 +307,8 @@ namespace Wayroot.Core
             CreateWayrootPiece("Wayroot Bloom Right", restoredVisual.transform, new Vector3(0.85f, 0.55f, 0f), new Vector3(0.45f, 0.5f, 0.45f), new Color(0.52f, 0.96f, 0.54f));
             restoredVisual.SetActive(false);
 
-            GameObject labelObject = new("Wayroot World Label");
-            TextMesh label = labelObject.AddComponent<TextMesh>();
-            label.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            label.fontSize = 44;
-            label.characterSize = 0.12f;
-            label.anchor = TextAnchor.MiddleCenter;
-            label.alignment = TextAlignment.Center;
-            label.color = new Color(0.76f, 0.65f, 1f);
-            labelObject.AddComponent<WorldIdentifier>().Configure(wayroot.transform, new Vector3(0f, 2.15f, 0f), sceneCamera);
+            TextMesh label = CreateWorldIdentifier("WAYROOT", wayroot.transform, new Vector3(0f, 2.15f, 0f), sceneCamera, new Color(0.76f, 0.65f, 1f));
+            label.gameObject.name = "Wayroot World Label";
 
             PrototypeWayrootController controller = wayroot.AddComponent<PrototypeWayrootController>();
             controller.Configure(input, player, gathering, restoredVisual, dormantRenderer, label);
@@ -575,12 +568,13 @@ namespace Wayroot.Core
 
         private static TextMesh CreateWorldIdentifier(string value, Transform target, Vector3 offset, UnityEngine.Camera sceneCamera, Color color)
         {
+            string compactValue = value.Split('\n')[0].ToUpperInvariant();
             GameObject label = new($"World Label: {value.Replace("\n", " ")}");
             TextMesh text = label.AddComponent<TextMesh>();
-            text.text = value;
+            text.text = compactValue;
             text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
-            text.fontSize = 44;
-            text.characterSize = 0.075f;
+            text.fontSize = 32;
+            text.characterSize = 0.035f;
             text.anchor = TextAnchor.MiddleCenter;
             text.alignment = TextAlignment.Center;
             text.color = color;
@@ -626,12 +620,12 @@ namespace Wayroot.Core
 
             RectTransform safeArea = CreatePanel("Safe Area", canvas.transform, new Color(0f, 0f, 0f, 0f));
             Stretch(safeArea);
-            RectTransform titleCard = CreatePanel("Wayroot Title Card", safeArea, new Color(0.04f, 0.11f, 0.12f, 0.82f));
-            titleCard.sizeDelta = new Vector2(420f, 68f);
+            RectTransform titleCard = CreatePanel("Wayroot Title Card", safeArea, new Color(0.05f, 0.13f, 0.14f, 0.90f));
+            titleCard.sizeDelta = new Vector2(350f, 52f);
             titleCard.anchorMin = titleCard.anchorMax = new Vector2(0.5f, 1f);
             titleCard.pivot = new Vector2(0.5f, 1f);
-            titleCard.anchoredPosition = new Vector2(0f, -20f);
-            CreateText("Wayroot Title", titleCard, "WAYROOT  |  SUNMEADOW", 24, TextAnchor.MiddleCenter);
+            titleCard.anchoredPosition = new Vector2(0f, -18f);
+            CreateText("Wayroot Title", titleCard, "WAYROOT  •  SUNMEADOW", 18, TextAnchor.MiddleCenter);
             RectTransform joystickArea = CreatePanel("Movement Joystick", safeArea, new Color(0f, 0f, 0f, 0.28f));
             joystickArea.sizeDelta = new Vector2(230f, 230f);
             joystickArea.anchoredPosition = new Vector2(56f, 56f);
@@ -645,7 +639,7 @@ namespace Wayroot.Core
             pauseButton.sizeDelta = new Vector2(180f, 82f);
             pauseButton.anchorMin = pauseButton.anchorMax = new Vector2(0f, 1f);
             pauseButton.pivot = new Vector2(0f, 1f);
-            pauseButton.anchoredPosition = new Vector2(24f, -150f);
+            pauseButton.anchoredPosition = new Vector2(24f, -178f);
             Button button = pauseButton.gameObject.AddComponent<Button>();
             button.onClick.AddListener(() => { soundscape.Play(SoundscapeCue.Ui); pause.Toggle(); });
             CreateText("Pause Label", pauseButton, "PAUSE", 32, TextAnchor.MiddleCenter);
@@ -654,7 +648,7 @@ namespace Wayroot.Core
             soundButton.sizeDelta = new Vector2(180f, 62f);
             soundButton.anchorMin = soundButton.anchorMax = new Vector2(0f, 1f);
             soundButton.pivot = new Vector2(0f, 1f);
-            soundButton.anchoredPosition = new Vector2(24f, -244f);
+            soundButton.anchoredPosition = new Vector2(24f, -272f);
             Text soundLabel = CreateText("Sound Toggle Label", soundButton, string.Empty, 20, TextAnchor.MiddleCenter);
             soundButton.gameObject.AddComponent<Button>();
             soundButton.gameObject.AddComponent<SoundToggleButton>().Configure(soundLabel, soundscape);
@@ -689,49 +683,54 @@ namespace Wayroot.Core
             dodgeButton.gameObject.AddComponent<VirtualDodgeButton>().Configure(input);
             dodgeButton.gameObject.AddComponent<DodgeCooldownHud>().Configure(dodgeLabel, player);
 
-            RectTransform developmentText = CreateText("Development Overlay", safeArea, string.Empty, 18, TextAnchor.UpperLeft).rectTransform;
-            developmentText.anchorMin = new Vector2(0f, 1f);
-            developmentText.anchorMax = new Vector2(1f, 1f);
-            developmentText.pivot = new Vector2(0.5f, 1f);
-            developmentText.anchoredPosition = new Vector2(24f, -96f);
-            developmentText.sizeDelta = new Vector2(570f, 36f);
-            DevelopmentOverlay overlay = developmentText.gameObject.AddComponent<DevelopmentOverlay>();
-            overlay.Configure(developmentText.GetComponent<Text>(), player, cameraController, pause);
+            // Three non-overlapping top cards reserve the center of the play field and omit development telemetry.
+            RectTransform combatCard = CreatePanel("Combat Status Card", safeArea, new Color(0.08f, 0.16f, 0.18f, 0.90f));
+            combatCard.sizeDelta = new Vector2(310f, 86f);
+            combatCard.anchorMin = combatCard.anchorMax = new Vector2(0f, 1f);
+            combatCard.pivot = new Vector2(0f, 1f);
+            combatCard.anchoredPosition = new Vector2(24f, -18f);
+            Text combatText = CreateText("Combat Status", combatCard, string.Empty, 18, TextAnchor.MiddleLeft);
+            combatText.rectTransform.offsetMin = new Vector2(18f, 0f);
+            combatText.rectTransform.offsetMax = new Vector2(-12f, 0f);
+            combatText.gameObject.AddComponent<CombatHud>().Configure(combatText, playerHealth, enemy, grove);
 
-            Text inventoryText = CreateText("Gathering Inventory", safeArea, string.Empty, 24, TextAnchor.UpperRight);
-            inventoryText.rectTransform.anchorMin = inventoryText.rectTransform.anchorMax = new Vector2(1f, 1f);
-            inventoryText.rectTransform.pivot = new Vector2(1f, 1f);
-            inventoryText.rectTransform.anchoredPosition = new Vector2(-24f, -120f);
-            inventoryText.rectTransform.sizeDelta = new Vector2(760f, 188f);
-            inventoryText.fontSize = 19;
+            RectTransform resourceCard = CreatePanel("Resource Progression Card", safeArea, new Color(0.10f, 0.16f, 0.13f, 0.90f));
+            resourceCard.sizeDelta = new Vector2(330f, 110f);
+            resourceCard.anchorMin = resourceCard.anchorMax = new Vector2(1f, 1f);
+            resourceCard.pivot = new Vector2(1f, 1f);
+            resourceCard.anchoredPosition = new Vector2(-24f, -18f);
+            Text inventoryText = CreateText("Gathering Inventory", resourceCard, string.Empty, 16, TextAnchor.MiddleLeft);
+            inventoryText.rectTransform.offsetMin = new Vector2(18f, 0f);
+            inventoryText.rectTransform.offsetMax = new Vector2(-12f, 0f);
             inventoryText.gameObject.AddComponent<GatheringHud>().Configure(inventoryText, gathering, merchant, build, wayroot, creature, bloomwell);
 
-            RectTransform journeyCard = CreatePanel("Journey Guidance Card", safeArea, new Color(0.10f, 0.19f, 0.28f, 0.88f));
-            journeyCard.sizeDelta = new Vector2(560f, 58f);
+            RectTransform journeyCard = CreatePanel("Journey Guidance Card", safeArea, new Color(0.10f, 0.19f, 0.28f, 0.91f));
+            journeyCard.sizeDelta = new Vector2(460f, 52f);
             journeyCard.anchorMin = journeyCard.anchorMax = new Vector2(0.5f, 1f);
             journeyCard.pivot = new Vector2(0.5f, 1f);
-            journeyCard.anchoredPosition = new Vector2(0f, -102f);
-            Text journeyText = CreateText("Journey Guidance", journeyCard, string.Empty, 18, TextAnchor.MiddleCenter);
+            journeyCard.anchoredPosition = new Vector2(0f, -82f);
+            Text journeyText = CreateText("Journey Guidance", journeyCard, string.Empty, 16, TextAnchor.MiddleCenter);
             journeyText.color = new Color(1f, 0.88f, 0.60f);
 
             RectTransform journeyPointer = CreatePanel("Journey Firefly Pointer", safeArea, new Color(0.70f, 0.92f, 0.58f, 0.92f));
-            journeyPointer.sizeDelta = new Vector2(54f, 54f);
-            Text pointerGlyph = CreateText("Journey Firefly Glyph", journeyPointer, "✦", 34, TextAnchor.MiddleCenter);
+            journeyPointer.sizeDelta = new Vector2(44f, 44f);
+            Text pointerGlyph = CreateText("Journey Firefly Glyph", journeyPointer, "✦", 28, TextAnchor.MiddleCenter);
             pointerGlyph.color = new Color(0.18f, 0.30f, 0.16f);
             journeyCard.gameObject.AddComponent<JourneyGuidanceController>().Configure(player, sceneCamera, journeyText, journeyPointer, resourceTarget, merchantTarget, shelterTarget, wayrootTarget, guardianTarget, bloomwellTarget);
 
-            Text combatText = CreateText("Combat Status", safeArea, string.Empty, 24, TextAnchor.UpperLeft);
-            combatText.rectTransform.anchorMin = combatText.rectTransform.anchorMax = new Vector2(0f, 1f);
-            combatText.rectTransform.pivot = new Vector2(0f, 1f);
-            combatText.rectTransform.anchoredPosition = new Vector2(24f, -120f);
-            combatText.rectTransform.sizeDelta = new Vector2(650f, 48f);
-            combatText.gameObject.AddComponent<CombatHud>().Configure(combatText, playerHealth, enemy, grove);
+            RectTransform promptCard = CreatePanel("Contextual Action Prompt", safeArea, new Color(0.05f, 0.11f, 0.13f, 0.90f));
+            promptCard.sizeDelta = new Vector2(460f, 54f);
+            promptCard.anchorMin = promptCard.anchorMax = new Vector2(0.5f, 0f);
+            promptCard.pivot = new Vector2(0.5f, 0f);
+            promptCard.anchoredPosition = new Vector2(0f, 202f);
+            Text promptText = CreateText("Contextual Prompt Text", promptCard, string.Empty, 17, TextAnchor.MiddleCenter);
+            promptText.gameObject.AddComponent<ContextualPromptHud>().Configure(promptText, gathering, merchant, build, wayroot, creature, bloomwell);
 
             RectTransform feedbackCard = CreatePanel("Action Feedback Card", safeArea, new Color(0.04f, 0.10f, 0.14f, 0.9f));
             feedbackCard.sizeDelta = new Vector2(540f, 62f);
             feedbackCard.anchorMin = feedbackCard.anchorMax = new Vector2(0.5f, 0f);
             feedbackCard.pivot = new Vector2(0.5f, 0f);
-            feedbackCard.anchoredPosition = new Vector2(0f, 34f);
+            feedbackCard.anchoredPosition = new Vector2(0f, 270f);
             Text feedbackText = CreateText("Action Feedback", feedbackCard, string.Empty, 24, TextAnchor.MiddleCenter);
             ActionFeedbackHud feedback = feedbackText.gameObject.AddComponent<ActionFeedbackHud>();
             feedback.Configure(feedbackText);

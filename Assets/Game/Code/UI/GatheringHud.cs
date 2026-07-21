@@ -1,15 +1,15 @@
+using Wayroot.Building;
+using Wayroot.Exploration;
 using Wayroot.Gathering;
 using Wayroot.Inventory;
 using Wayroot.Progression;
-using Wayroot.Building;
-using Wayroot.Creatures;
 using Wayroot.Wayroot;
-using Wayroot.Exploration;
 using UnityEngine;
 using UnityEngine.UI;
 
 namespace Wayroot.UI
 {
+    /// <summary>Restrained top-right resource and progression card; interaction instructions live elsewhere.</summary>
     public sealed class GatheringHud : MonoBehaviour
     {
         private Text _text = null!;
@@ -17,42 +17,26 @@ namespace Wayroot.UI
         private PrototypeMerchantController _merchant = null!;
         private PrototypeBuildController _build = null!;
         private PrototypeWayrootController _wayroot = null!;
-        private PrototypeCreatureController _creature = null!;
         private BloomwellController _bloomwell = null!;
 
-        public void Configure(Text text, PrototypeGatheringController gathering, PrototypeMerchantController merchant, PrototypeBuildController build, PrototypeWayrootController wayroot, PrototypeCreatureController creature, BloomwellController bloomwell)
+        public void Configure(Text text, PrototypeGatheringController gathering, PrototypeMerchantController merchant, PrototypeBuildController build, PrototypeWayrootController wayroot, global::Wayroot.Creatures.PrototypeCreatureController creature, BloomwellController bloomwell)
         {
             _text = text;
             _gathering = gathering;
             _merchant = merchant;
             _build = build;
             _wayroot = wayroot;
-            _creature = creature;
             _bloomwell = bloomwell;
         }
 
         private void Update()
         {
-            GatheringNode? target = _gathering.CurrentTarget;
-            string prompt = _bloomwell.IsInRange
-                ? $"HOLD E / GATHER: {_bloomwell.Status}"
-                : _creature.IsInRange
-                ? $"HOLD E / GATHER: {_creature.Status}"
-                : _wayroot.IsInRange
-                ? $"HOLD E / GATHER: {_wayroot.Status}"
-                : _build.IsInRange
-                ? $"HOLD E / GATHER: {_build.Status}"
-                : _merchant.IsInRange
-                ? $"HOLD E / GATHER: {_merchant.Status}"
-                : target == null ? "Move close to a resource or merchant" : $"HOLD E / GATHER: {target.name}  {target.Steps}/{target.RequiredSteps}";
-            string shelter = !_gathering.ShelterBuilt
-                ? "SHELTER 3 TIMBER + 3 STONE"
-                : _gathering.HasActiveShelterReturnPoint ? "SHELTER ACTIVE HOME" : "SHELTER BUILT: REST TO ACTIVATE HOME";
-            string creature = _gathering.CreatureBefriended ? "MOSSling befriended" : "MOSSling nearby";
-            string guide = _gathering.CreatureBefriended ? _creature.GuideStatus : string.Empty;
-            string wayroot = _gathering.WayrootRestored ? "WAYROOT RESTORED" : "WAYROOT: 3 PETAL + 3 TIMBER + 3 STONE + 1 CORE";
-            string finale = _gathering.BloomwellRestored ? "FINALE COMPLETE: SUNMEADOW BLOOMS" : _gathering.MoonlitGladeUnlocked ? "BLOOMWELL: 2 PETAL + 2 TIMBER + 2 STONE + 1 CORE" : "OBJECTIVE: RESTORE WAYROOT, DEFEAT GUARDIAN";
-            _text.text = $"{prompt}\nPETAL {_gathering.GetCount(ResourceType.WildPetal)}  TIMBER {_gathering.GetCount(ResourceType.Timber)}  STONE {_gathering.GetCount(ResourceType.Stone)}  CORE {_gathering.GetCount(ResourceType.SlimeCore)}  WEAPON {_gathering.WeaponLevel}/1  ATK {_gathering.AttackDamage}\n{shelter}  |  {creature}  |  {wayroot}\n{finale}\n{(string.IsNullOrEmpty(guide) ? _gathering.RenewalStatus : guide)}";
+            string milestone = _gathering.BloomwellRestored ? "BLOOMWELL RESTORED"
+                : _gathering.WayrootRestored ? "WAYROOT RESTORED"
+                : _gathering.WeaponLevel == 0 ? "IRON EDGE AWAITS"
+                : !_gathering.ShelterBuilt ? "SHELTER AWAITS"
+                : "WAYROOT AWAITS";
+            _text.text = $"PACK\nPETAL  {_gathering.GetCount(ResourceType.WildPetal)}    TIMBER  {_gathering.GetCount(ResourceType.Timber)}\nSTONE  {_gathering.GetCount(ResourceType.Stone)}    CORE  {_gathering.GetCount(ResourceType.SlimeCore)}\n{milestone}";
         }
     }
 }

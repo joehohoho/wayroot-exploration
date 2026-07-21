@@ -34,7 +34,7 @@ namespace Wayroot.Tests.PlayMode
             TextMesh label = GameObject.Find("World Label: WILDFLOWER PETAL").GetComponent<TextMesh>();
             Assert.That(label.characterSize, Is.LessThanOrEqualTo(0.075f));
             Assert.That(label.fontSize, Is.LessThanOrEqualTo(44));
-            Assert.That(label.text, Is.EqualTo("WILDFLOWER\nPETAL"));
+            Assert.That(label.text, Is.EqualTo("WILDFLOWER  •  PETAL"));
         }
     }
 }

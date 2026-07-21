@@ -4,6 +4,7 @@ using UnityEngine.UI;
 
 namespace Wayroot.UI
 {
+    /// <summary>Compact, player-facing vitality card with no debug or raw progression strings.</summary>
     public sealed class CombatHud : MonoBehaviour
     {
         private Text _text = null!;
@@ -21,10 +22,9 @@ namespace Wayroot.UI
 
         private void Update()
         {
-            string returnPoint = _player.HasActiveShelterReturnPoint ? "RETURN SHELTER" : "RETURN DEFAULT";
-            string slime = _slime.IsDefeated ? "SLIME DEFEATED" : $"SLIME {_slime.Health}/{_slime.MaxHealth}";
-            string grove = _grove.IsOpen ? "GROVE OPEN: GUARDIAN 8 HP / 2 DMG" : "GROVE LOCKED: RESTORE WAYROOT";
-            _text.text = $"HEALTH {_player.Health}/10   {slime}   {returnPoint}\n{grove}";
+            string threat = _slime.IsDefeated ? "MEADOW CLEAR" : $"SLIME {_slime.Health}/{_slime.MaxHealth}";
+            string returnPoint = _player.HasActiveShelterReturnPoint ? "HOME SET" : "HOME: MEADOW";
+            _text.text = $"HEALTH  {_player.Health}/10\n{threat}  •  {returnPoint}";
         }
     }
 }

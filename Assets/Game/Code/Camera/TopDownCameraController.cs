@@ -9,12 +9,13 @@ namespace Wayroot.Camera
     {
         [SerializeField] private Transform target = null!;
         [SerializeField] private PrototypeInputReader inputReader = null!;
-        [SerializeField] private float followSmoothTime = 0.12f;
-        [SerializeField] private float minimumZoom = 7f;
-        [SerializeField] private float maximumZoom = 15f;
-        [SerializeField] private float startingZoom = 10f;
-        [SerializeField] private float zoomSpeed = 0.01f;
-        [SerializeField] private Vector3 viewDirection = new(0f, 8f, -7f);
+        [SerializeField] private float followSmoothTime = 0.16f;
+        [SerializeField] private float minimumZoom = 8.5f;
+        [SerializeField] private float maximumZoom = 13.5f;
+        [SerializeField] private float startingZoom = 10.5f;
+        [SerializeField] private float zoomSpeed = 0.008f;
+        [SerializeField] private Vector3 viewDirection = new(0f, 9.5f, -8.5f);
+        [SerializeField] private Vector3 focusOffset = new(0f, 1.15f, 0.85f);
         private Vector3 _velocity;
         private float _zoom;
         private bool _isPaused;
@@ -39,7 +40,7 @@ namespace Wayroot.Camera
             _zoom = CameraZoomRules.Clamp(_zoom - ((inputReader.ZoomDelta + pinchDelta) * zoomSpeed), minimumZoom, maximumZoom);
             inputReader.ClearVirtualZoom();
             Vector3 offset = viewDirection.normalized * _zoom;
-            Vector3 desiredPosition = target.position + offset;
+            Vector3 desiredPosition = target.position + focusOffset + offset;
             transform.position = Vector3.SmoothDamp(transform.position, desiredPosition, ref _velocity, followSmoothTime);
         }
 

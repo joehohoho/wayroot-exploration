@@ -46,7 +46,7 @@ namespace Wayroot.Tests.PlayMode
             health.TakeDamage(10);
             Assert.That(Vector3.Distance(player.transform.position, expectedReturnPoint), Is.LessThan(0.001f));
             Assert.That(health.Health, Is.EqualTo(10));
-            Assert.That(GameObject.Find("World Label: SHELTER BUILD PLOT").GetComponent<TextMesh>().text, Is.EqualTo("SHELTER\nACTIVE HOME"));
+            Assert.That(GameObject.Find("World Label: SHELTER BUILD PLOT").GetComponent<TextMesh>().text, Is.EqualTo("SHELTER  •  ACTIVE HOME"));
 
             PrototypeGatheringSaveService.Reset();
             Assert.That(PrototypeGatheringSaveService.Load().activeShelterReturnPoint, Is.False);
@@ -83,7 +83,7 @@ namespace Wayroot.Tests.PlayMode
             Assert.That(wayroot, Is.Not.Null);
             Assert.That(bloom, Is.Not.Null);
             Assert.That(bloom.activeSelf, Is.True);
-            Assert.That(GameObject.Find("Wayroot World Label").GetComponent<TextMesh>().text, Is.EqualTo("WAYROOT\nRESTORED"));
+            Assert.That(GameObject.Find("Wayroot World Label").GetComponent<TextMesh>().text, Is.EqualTo("WAYROOT  •  RESTORED"));
 
             PrototypeGatheringSaveService.Reset();
             Assert.That(PrototypeGatheringSaveService.Load().wayrootRestored, Is.False);
@@ -133,7 +133,7 @@ namespace Wayroot.Tests.PlayMode
 
             GatheringNode flower = GameObject.Find("Wildflower (hold E)").GetComponent<GatheringNode>();
             Assert.That(flower.IsAvailable, Is.True);
-            Assert.That(GameObject.Find("World Label: WILDFLOWER PETAL").GetComponent<TextMesh>().text, Is.EqualTo("WILDFLOWER\nPETAL"));
+            Assert.That(GameObject.Find("World Label: WILDFLOWER PETAL").GetComponent<TextMesh>().text, Is.EqualTo("WILDFLOWER  •  PETAL"));
 
             PrototypeGatheringSaveService.Reset();
             Assert.That(PrototypeGatheringSaveService.Load().renewalNodes, Is.Empty);

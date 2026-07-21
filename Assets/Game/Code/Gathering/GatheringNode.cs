@@ -88,11 +88,12 @@ namespace Wayroot.Gathering
         public void RefreshVisual(DateTime utcNow)
         {
             if (_worldLabel == null) return;
+            // World markers are intentionally one compact line; detailed requirements stay in the contextual HUD.
             _worldLabel.text = IsRenewing
-                ? $"{_displayName}\nRENEWING {RenewalRules.FormatRemaining(_renewalDeadlineUtcTicks, utcNow)}"
+                ? $"{_displayName}  •  {RenewalRules.FormatRemaining(_renewalDeadlineUtcTicks, utcNow)}"
                 : IsAvailable
-                    ? $"{_displayName}\n{_resourceName}"
-                    : $"{_displayName}\nDEPLETED";
+                    ? $"{_displayName}  •  {_resourceName}"
+                    : $"{_displayName}  •  GONE";
         }
     }
 }

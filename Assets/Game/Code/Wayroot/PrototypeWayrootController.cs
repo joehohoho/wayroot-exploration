@@ -58,7 +58,7 @@ namespace Wayroot.Wayroot
         private void ApplyRestoredVisual(bool restored)
         {
             _restoredVisual.SetActive(restored);
-            _label.text = restored ? "WAYROOT\nRESTORED" : "DORMANT WAYROOT\nHOLD GATHER";
+            _label.text = restored ? "WAYROOT  •  RESTORED" : "WAYROOT  •  DORMANT";
             Material material = _dormantRenderer.material;
             Color color = restored ? new Color(0.22f, 0.72f, 0.50f) : new Color(0.24f, 0.16f, 0.38f);
             if (material.HasProperty("_BaseColor"))

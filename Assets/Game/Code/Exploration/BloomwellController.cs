@@ -65,7 +65,7 @@ namespace Wayroot.Exploration
         {
             _restoredVisual.SetActive(restored);
             Status = restored ? BloomwellRestorationRules.CompleteStatus : "BLOOMWELL: gather its restoration.";
-            _label.text = restored ? "BLOOMWELL\nRESTORED" : "BLOOMWELL\nHOLD GATHER";
+            _label.text = restored ? "BLOOMWELL  •  RESTORED" : "BLOOMWELL";
             Material material = _dormantRenderer.material;
             Color color = restored ? new Color(0.52f, 0.92f, 0.84f) : new Color(0.30f, 0.25f, 0.52f);
             if (material.HasProperty("_BaseColor")) material.SetColor("_BaseColor", color);

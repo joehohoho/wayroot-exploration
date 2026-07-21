@@ -53,7 +53,7 @@ namespace Wayroot.Tests.PlayMode
             yield return null;
 
             Assert.That(collider.enabled, Is.True);
-            Assert.That(GameObject.Find("World Label: WILDFLOWER PETAL").GetComponent<TextMesh>().text, Is.EqualTo("WILDFLOWER\nPETAL"));
+            Assert.That(GameObject.Find("World Label: WILDFLOWER PETAL").GetComponent<TextMesh>().text, Is.EqualTo("WILDFLOWER  •  PETAL"));
             Assert.That(GameObject.Find("Prototype Player").GetComponents<ProceduralStylizedAnimator>(), Has.Length.EqualTo(1));
         }
     }
