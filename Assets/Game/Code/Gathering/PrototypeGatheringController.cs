@@ -23,7 +23,10 @@ namespace Wayroot.Gathering
         private InventoryState _inventory = null!;
         private PrototypeGatheringSave _save = null!;
         private float _nextStepTime;
+        private float _lastGatheredAt = float.NegativeInfinity;
         private ActionFeedbackHud? _feedback;
+
+        public float GatherElapsed => Time.time - _lastGatheredAt;
         private ProceduralSoundscape? _soundscape;
 
         public GatheringNode? CurrentTarget { get; private set; }
@@ -257,6 +260,7 @@ namespace Wayroot.Gathering
 
         private void OnNodeCompleted(GatheringNode node)
         {
+            _lastGatheredAt = Time.time;
             _inventory.TryAdd(node.Resource, 1, out _, out _);
             long deadline = RenewalRules.CreateDeadlineUtcTicks(DateTime.UtcNow);
             node.StartRenewal(deadline);

@@ -12,12 +12,17 @@ namespace Wayroot.Combat
         private Collider _collider = null!;
         private Vector3 _home;
         private float _respawnAt;
+        private float _lastHitAt = float.NegativeInfinity;
+        private float _lastRespawnAt = float.NegativeInfinity;
+        private bool _hidePrimitiveVisual;
         private ActionFeedbackHud? _feedback;
 
         public bool IsDefeated => _health <= 0;
         public int Health => _health;
         public int MaxHealth => _profile.MaxHealth;
         public string DisplayName => _profile.DisplayName;
+        public float HitElapsed => Time.time - _lastHitAt;
+        public float RespawnElapsed => Time.time - _lastRespawnAt;
         public event System.Action? Defeated;
 
         private void Awake()
@@ -42,9 +47,16 @@ namespace Wayroot.Combat
 
         public void SetFeedback(ActionFeedbackHud feedback) => _feedback = feedback;
 
+        public void HidePrimitiveVisual()
+        {
+            _hidePrimitiveVisual = true;
+            body.enabled = false;
+        }
+
         public void TakeDamage(int damage)
         {
             if (IsDefeated) return;
+            _lastHitAt = Time.time;
             _health = CombatRules.ApplyDamage(_health, damage, out bool defeated);
             GetComponent<ProceduralStylizedAnimator>()?.Emphasize(defeated ? 0.48f : 0.22f);
             if (!defeated) return;
@@ -57,9 +69,10 @@ namespace Wayroot.Combat
 
         private void Respawn()
         {
+            _lastRespawnAt = Time.time;
             transform.position = _home;
             _health = _profile.MaxHealth;
-            body.enabled = true;
+            body.enabled = !_hidePrimitiveVisual;
             _collider.enabled = true;
             _feedback?.Show($"{DisplayName} RESPAWNED");
         }

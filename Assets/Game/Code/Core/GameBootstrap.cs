@@ -18,6 +18,7 @@ using Wayroot.Audio;
 using Wayroot.Exploration;
 using Wayroot.Art;
 using Wayroot.Guidance;
+using Wayroot.Presentation;
 
 namespace Wayroot.Core
 {
@@ -64,6 +65,7 @@ namespace Wayroot.Core
             ProceduralSoundscape soundscape = new GameObject("Procedural Cozy Soundscape").AddComponent<ProceduralSoundscape>();
             soundscape.Configure(gathering);
             CreatePhaseEighteenArtMotion(player, creature, enemy, grove, gathering);
+            CreatePhaseTwentyThreeSpritePresentation(player, playerHealth, attack, gathering, enemy, guardian, sceneCamera);
             GameObject sunmeadowFinaleMotif = CreateSunmeadowFinaleMotif();
             BloomwellFinalePresentation finalePresentation = new GameObject("Bloomwell Finale Presentation").AddComponent<BloomwellFinalePresentation>();
             finalePresentation.Configure(gathering, creature, bloomwell, bloomwellRestoredVisual, sunmeadowFinaleMotif, GameObject.Find("Sunmeadow Sun").GetComponent<Light>());
@@ -424,6 +426,31 @@ namespace Wayroot.Core
             RestoredGroveController controller = new GameObject("Restored Grove Controller").AddComponent<RestoredGroveController>();
             controller.Configure(gathering, grove, guardian);
             return controller;
+        }
+
+        private static void CreatePhaseTwentyThreeSpritePresentation(PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeAttackController attack,
+            PrototypeGatheringController gathering, PrototypeEnemy slime, PrototypeEnemy guardian, UnityEngine.Camera sceneCamera)
+        {
+            Renderer playerPrimitive = player.GetComponent<Renderer>();
+            if (playerPrimitive != null) playerPrimitive.enabled = false;
+            CreateActorSpriteRig("Blue Cloak Explorer Sprite Rig", player.transform, new Vector3(0f, -0.18f, 0f))
+                .ConfigurePlayer(player, playerHealth, attack, gathering, sceneCamera);
+
+            slime.HidePrimitiveVisual();
+            CreateActorSpriteRig("Practice Slime Sprite Rig", slime.transform, new Vector3(0f, -0.32f, 0f))
+                .ConfigureEnemy(slime, slime.GetComponent<PrototypeEnemyChase>(), false, sceneCamera);
+
+            guardian.HidePrimitiveVisual();
+            CreateActorSpriteRig("Thorn Guardian Sprite Rig", guardian.transform, new Vector3(0f, -0.38f, 0f))
+                .ConfigureEnemy(guardian, guardian.GetComponent<PrototypeEnemyChase>(), true, sceneCamera);
+        }
+
+        private static ActorSpritePresentation CreateActorSpriteRig(string name, Transform root, Vector3 localPosition)
+        {
+            GameObject rig = new(name);
+            rig.transform.SetParent(root, false);
+            rig.transform.localPosition = localPosition;
+            return rig.AddComponent<ActorSpritePresentation>();
         }
 
         private static void CreatePhaseEighteenArtMotion(PrototypePlayerController player, PrototypeCreatureController mossling, PrototypeEnemy slime, RestoredGroveController grove, PrototypeGatheringController gathering)

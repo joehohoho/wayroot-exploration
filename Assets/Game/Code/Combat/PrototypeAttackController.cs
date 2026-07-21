@@ -19,6 +19,8 @@ namespace Wayroot.Combat
         private PrototypeGatheringController _inventory = null!;
         private float _lastAttack = -100f;
         private ActionFeedbackHud? _feedback;
+
+        public float AttackElapsed => Time.time - _lastAttack;
         private ProceduralSoundscape? _soundscape;
 
         public void SetFeedback(ActionFeedbackHud feedback) => _feedback = feedback;

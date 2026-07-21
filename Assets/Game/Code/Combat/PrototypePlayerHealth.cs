@@ -15,8 +15,10 @@ namespace Wayroot.Combat
         private ActionFeedbackHud? _feedback;
         private ProceduralSoundscape? _soundscape;
         private float _dodgeInvulnerableUntil = float.NegativeInfinity;
+        private float _lastRespawnAt = float.NegativeInfinity;
 
         public int Health => _health;
+        public float RespawnElapsed => Time.time - _lastRespawnAt;
         public bool HasActiveShelterReturnPoint => _hasActiveShelterReturnPoint;
 
         private void Awake() { _health = maxHealth; _home = transform.position; }
@@ -43,6 +45,7 @@ namespace Wayroot.Combat
             if (!defeated) return;
 
             bool shelterReturn = ShelterRestRules.GetRespawnDestination(_hasActiveShelterReturnPoint) == RespawnDestination.ActiveShelter;
+            _lastRespawnAt = Time.time;
             transform.position = shelterReturn ? _activeShelterReturnPoint : _home;
             _health = maxHealth;
             _soundscape?.Play(SoundscapeCue.Defeat);
