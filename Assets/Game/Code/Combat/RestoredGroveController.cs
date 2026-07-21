@@ -14,6 +14,7 @@ namespace Wayroot.Combat
         private bool _wasOpen;
 
         public bool IsOpen { get; private set; }
+        public PrototypeEnemy Guardian => _guardian;
 
         public void Configure(PrototypeGatheringController gathering, GameObject grove, PrototypeEnemy guardian)
         {

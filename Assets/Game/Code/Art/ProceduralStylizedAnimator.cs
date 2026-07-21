@@ -79,8 +79,15 @@ namespace Wayroot.Art
                     case MotionStyle.Player:
                         float stride = moving ? Mathf.Sin(time * 10f) : 0f;
                         float breath = moving ? 0.035f * Mathf.Abs(stride) : 0.035f * wave;
+                        bool dodging = player != null && player.IsDodging;
                         part.localPosition += new Vector3(index == 1 ? 0.035f * stride : 0f, breath, index == 0 ? -0.035f * stride : 0f);
                         part.localRotation *= Quaternion.Euler(index == 0 ? 3f * stride : 0f, 0f, index == 1 ? 12f * stride : 5f * wave);
+                        if (index >= 5)
+                        {
+                            part.localPosition += Vector3.back * (dodging ? 0.70f : 0.25f);
+                            part.localScale *= dodging ? 1f : 0.01f;
+                        }
+                        if (dodging) part.localScale = Vector3.Scale(part.localScale, new Vector3(1.12f, 0.82f, 1.24f));
                         if (emphasis > 0f) part.localScale *= 1f + 0.16f * Mathf.Sin(emphasis * Mathf.PI);
                         break;
                     case MotionStyle.Mossling:
@@ -92,8 +99,11 @@ namespace Wayroot.Art
                     case MotionStyle.Slime:
                     case MotionStyle.Guardian:
                         float squash = defeated ? -0.25f : 0.11f * wave;
+                        bool anticipating = enemy != null && enemy.GetComponent<PrototypeEnemyChase>()?.IsAnticipating == true;
+                        if (anticipating) squash = 0.23f;
                         part.localPosition += Vector3.up * (0.06f + 0.04f * wave);
                         part.localScale = Vector3.Scale(_baseScales[index], new Vector3(1f - squash * 0.55f, 1f + squash, 1f - squash * 0.55f));
+                        if (anticipating) part.localPosition += transform.forward * 0.08f;
                         if (emphasis > 0f) part.localScale *= 1f + 0.18f * Mathf.Sin(emphasis * Mathf.PI);
                         break;
                     case MotionStyle.Foliage:

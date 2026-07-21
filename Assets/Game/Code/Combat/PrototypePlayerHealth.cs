@@ -14,6 +14,7 @@ namespace Wayroot.Combat
         private bool _hasActiveShelterReturnPoint;
         private ActionFeedbackHud? _feedback;
         private ProceduralSoundscape? _soundscape;
+        private float _dodgeInvulnerableUntil = float.NegativeInfinity;
 
         public int Health => _health;
         public bool HasActiveShelterReturnPoint => _hasActiveShelterReturnPoint;
@@ -21,6 +22,12 @@ namespace Wayroot.Combat
         private void Awake() { _health = maxHealth; _home = transform.position; }
         public void SetFeedback(ActionFeedbackHud feedback) => _feedback = feedback;
         public void SetSoundscape(ProceduralSoundscape soundscape) => _soundscape = soundscape;
+        public bool IsDodgeInvulnerable => Time.time < _dodgeInvulnerableUntil;
+
+        public void BeginDodge(float startedAt, float immunitySeconds)
+        {
+            _dodgeInvulnerableUntil = startedAt + immunitySeconds;
+        }
 
         public void ActivateShelterReturnPoint(Vector3 returnPoint)
         {
@@ -31,6 +38,7 @@ namespace Wayroot.Combat
 
         public void TakeDamage(int damage)
         {
+            if (IsDodgeInvulnerable) return;
             _health = CombatRules.ApplyDamage(_health, damage, out bool defeated);
             if (!defeated) return;
 

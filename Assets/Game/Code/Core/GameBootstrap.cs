@@ -49,6 +49,7 @@ namespace Wayroot.Core
             PrototypeInputReader input = new GameObject("Prototype Input").AddComponent<PrototypeInputReader>();
             PrototypePlayerController player = CreatePlayer(input);
             PrototypePlayerHealth playerHealth = player.gameObject.AddComponent<PrototypePlayerHealth>();
+            player.Configure(input, playerHealth);
             TopDownCameraController cameraController = CreateCamera(player.transform, input, out UnityEngine.Camera sceneCamera);
             CreateObstruction(sceneCamera, player.transform);
             PrototypeGatheringController gathering = CreateGathering(input, player, sceneCamera);
@@ -82,10 +83,13 @@ namespace Wayroot.Core
             bloomwell.SetSoundscape(soundscape);
             playerHealth.SetFeedback(feedback);
             playerHealth.SetSoundscape(soundscape);
+            player.SetSoundscape(soundscape);
             pause.SetFeedback(feedback);
             build.SetSoundscape(soundscape);
             wayroot.SetSoundscape(soundscape);
             creature.SetSoundscape(soundscape);
+            enemy.GetComponent<PrototypeEnemyChase>().SetSoundscape(soundscape);
+            guardian.GetComponent<PrototypeEnemyChase>().SetSoundscape(soundscape);
         }
 
         private static void CreateLight()
@@ -197,7 +201,6 @@ namespace Wayroot.Core
             CreateVisualPrimitive("Player Lantern", PrimitiveType.Sphere, playerObject.transform.position + new Vector3(0.48f, 0.35f, 0.2f), new Vector3(0.18f, 0.24f, 0.18f), new Color(1f, 0.78f, 0.30f)).transform.SetParent(playerObject.transform, true);
             CreateVisualPrimitive("Player Hair", PrimitiveType.Sphere, playerObject.transform.position + new Vector3(0f, 0.72f, 0.04f), new Vector3(0.58f, 0.26f, 0.52f), new Color(0.25f, 0.12f, 0.08f)).transform.SetParent(playerObject.transform, true);
             PrototypePlayerController player = playerObject.AddComponent<PrototypePlayerController>();
-            player.Configure(input);
             return player;
         }
 
@@ -435,8 +438,10 @@ namespace Wayroot.Core
             Transform playerRoot = player.transform;
             CreateVisualPrimitive("Player Warm Scarf", PrimitiveType.Sphere, playerRoot.position + new Vector3(0f, 0.28f, -0.34f), new Vector3(0.78f, 0.16f, 0.24f), new Color(0.94f, 0.34f, 0.22f)).transform.SetParent(playerRoot, true);
             CreateVisualPrimitive("Player Lantern Glow", PrimitiveType.Sphere, playerRoot.position + new Vector3(0.48f, 0.35f, 0.2f), Vector3.one * 0.32f, new Color(1f, 0.76f, 0.30f)).transform.SetParent(playerRoot, true);
+            CreateVisualPrimitive("Player Dodge Trail", PrimitiveType.Sphere, playerRoot.position + new Vector3(0f, 0.18f, -0.54f), new Vector3(0.74f, 0.18f, 0.90f), new Color(0.58f, 0.84f, 1f)).transform.SetParent(playerRoot, true);
+            CreateVisualPrimitive("Player Dodge Trail Glow", PrimitiveType.Sphere, playerRoot.position + new Vector3(0f, 0.28f, -0.82f), new Vector3(0.32f, 0.10f, 0.52f), new Color(0.96f, 0.80f, 0.38f)).transform.SetParent(playerRoot, true);
             ConfigureMotion(playerRoot.gameObject, ProceduralStylizedAnimator.MotionStyle.Player, player, null, null, gathering,
-                playerRoot.Find("Player Cloak"), playerRoot.Find("Player Lantern"), playerRoot.Find("Player Hair"), playerRoot.Find("Player Warm Scarf"), playerRoot.Find("Player Lantern Glow"));
+                playerRoot.Find("Player Cloak"), playerRoot.Find("Player Lantern"), playerRoot.Find("Player Hair"), playerRoot.Find("Player Warm Scarf"), playerRoot.Find("Player Lantern Glow"), playerRoot.Find("Player Dodge Trail"), playerRoot.Find("Player Dodge Trail Glow"));
 
             Transform mosslingRoot = mossling.transform;
             CreateVisualPrimitive("Mossling Leaf Cap", PrimitiveType.Sphere, mosslingRoot.position + new Vector3(0f, 0.7f, 0f), new Vector3(0.8f, 0.18f, 0.7f), new Color(0.16f, 0.50f, 0.28f)).transform.SetParent(mosslingRoot, true);
@@ -445,7 +450,7 @@ namespace Wayroot.Core
                 mosslingRoot.Find("Mossling Left Ear"), mosslingRoot.Find("Mossling Right Ear"), mosslingRoot.Find("Mossling Tail"), mosslingRoot.Find("Mossling Leaf Cap"), mosslingRoot.Find("Mossling Glow Cheek"));
 
             CreateAnimatedEnemyShell(slime.transform, "Slime", new Color(0.96f, 0.32f, 0.38f), ProceduralStylizedAnimator.MotionStyle.Slime, slime, gathering);
-            PrototypeEnemy guardian = grove.GetComponentInChildren<PrototypeEnemy>(true);
+            PrototypeEnemy guardian = grove.Guardian;
             if (guardian != null) CreateAnimatedEnemyShell(guardian.transform, "Guardian", new Color(0.42f, 0.80f, 0.20f), ProceduralStylizedAnimator.MotionStyle.Guardian, guardian, gathering);
 
             GameObject creek = GameObject.Find("Sunmeadow Creek");
@@ -674,6 +679,15 @@ namespace Wayroot.Core
             attackButton.anchoredPosition = new Vector2(-260f, 56f);
             CreateText("Attack Label", attackButton, "HOLD\nATTACK", 26, TextAnchor.MiddleCenter);
             attackButton.gameObject.AddComponent<VirtualAttackButton>().Configure(input);
+
+            RectTransform dodgeButton = CreatePanel("Dodge Button", safeArea, new Color(0.22f, 0.40f, 0.72f, 0.94f));
+            dodgeButton.sizeDelta = new Vector2(180f, 86f);
+            dodgeButton.anchorMin = dodgeButton.anchorMax = new Vector2(1f, 0f);
+            dodgeButton.pivot = new Vector2(1f, 0f);
+            dodgeButton.anchoredPosition = new Vector2(-56f, 186f);
+            Text dodgeLabel = CreateText("Dodge Label", dodgeButton, string.Empty, 22, TextAnchor.MiddleCenter);
+            dodgeButton.gameObject.AddComponent<VirtualDodgeButton>().Configure(input);
+            dodgeButton.gameObject.AddComponent<DodgeCooldownHud>().Configure(dodgeLabel, player);
 
             RectTransform developmentText = CreateText("Development Overlay", safeArea, string.Empty, 18, TextAnchor.UpperLeft).rectTransform;
             developmentText.anchorMin = new Vector2(0f, 1f);
