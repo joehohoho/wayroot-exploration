@@ -17,6 +17,7 @@ using Wayroot.Wayroot;
 using Wayroot.Audio;
 using Wayroot.Exploration;
 using Wayroot.Art;
+using Wayroot.Guidance;
 
 namespace Wayroot.Core
 {
@@ -56,7 +57,7 @@ namespace Wayroot.Core
             PrototypeWayrootController wayroot = CreateWayroot(input, player, gathering, sceneCamera);
             PrototypeCreatureController creature = CreateCreature(input, player, gathering, sceneCamera);
             PrototypeEnemy enemy = CreateCombat(input, player, playerHealth, sceneCamera, out PrototypeAttackController attack);
-            RestoredGroveController grove = CreateRestoredGrove(input, player, playerHealth, gathering, sceneCamera, attack, enemy, out MoonlitGladeController moonlitGlade, out BloomwellController bloomwell, out GameObject bloomwellRestoredVisual);
+            RestoredGroveController grove = CreateRestoredGrove(input, player, playerHealth, gathering, sceneCamera, attack, enemy, out PrototypeEnemy guardian, out MoonlitGladeController moonlitGlade, out BloomwellController bloomwell, out GameObject bloomwellRestoredVisual);
             PauseController pause = new GameObject("Pause Controller").AddComponent<PauseController>();
             pause.Configure(player, cameraController);
             ProceduralSoundscape soundscape = new GameObject("Procedural Cozy Soundscape").AddComponent<ProceduralSoundscape>();
@@ -65,7 +66,7 @@ namespace Wayroot.Core
             GameObject sunmeadowFinaleMotif = CreateSunmeadowFinaleMotif();
             BloomwellFinalePresentation finalePresentation = new GameObject("Bloomwell Finale Presentation").AddComponent<BloomwellFinalePresentation>();
             finalePresentation.Configure(gathering, creature, bloomwell, bloomwellRestoredVisual, sunmeadowFinaleMotif, GameObject.Find("Sunmeadow Sun").GetComponent<Light>());
-            ActionFeedbackHud feedback = CreateRuntimeUi(input, player, playerHealth, enemy, grove, cameraController, pause, gathering, merchant, build, wayroot, creature, bloomwell, soundscape);
+            ActionFeedbackHud feedback = CreateRuntimeUi(input, player, playerHealth, enemy, grove, cameraController, pause, gathering, merchant, build, wayroot, creature, bloomwell, soundscape, sceneCamera, gathering.Nodes[0].transform, merchant.transform, build.transform, wayroot.transform, guardian.transform, bloomwell.transform);
             gathering.SetFeedback(feedback);
             gathering.SetSoundscape(soundscape);
             merchant.SetFeedback(feedback);
@@ -392,7 +393,7 @@ namespace Wayroot.Core
             return enemy;
         }
 
-        private static RestoredGroveController CreateRestoredGrove(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeGatheringController gathering, UnityEngine.Camera sceneCamera, PrototypeAttackController attack, PrototypeEnemy slime, out MoonlitGladeController moonlitGlade, out BloomwellController bloomwell, out GameObject bloomwellRestoredVisual)
+        private static RestoredGroveController CreateRestoredGrove(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeGatheringController gathering, UnityEngine.Camera sceneCamera, PrototypeAttackController attack, PrototypeEnemy slime, out PrototypeEnemy guardian, out MoonlitGladeController moonlitGlade, out BloomwellController bloomwell, out GameObject bloomwellRestoredVisual)
         {
             GameObject grove = new("Restored Grove Edge");
             grove.transform.position = new Vector3(-6.7f, 0f, 1.2f);
@@ -409,7 +410,7 @@ namespace Wayroot.Core
             CreateVisualPrimitive("Thorn Guardian Crown", PrimitiveType.Sphere, guardianObject.transform.position + new Vector3(0f, 0.95f, 0f), new Vector3(1.25f, 0.18f, 1.25f), new Color(0.66f, 0.82f, 0.24f)).transform.SetParent(guardianObject.transform, true);
             CreateVisualPrimitive("Thorn Guardian Heart", PrimitiveType.Sphere, guardianObject.transform.position + new Vector3(0f, 0.12f, 0.72f), new Vector3(0.34f, 0.42f, 0.12f), new Color(0.96f, 0.56f, 0.26f)).transform.SetParent(guardianObject.transform, true);
             EnemyCombatProfile guardianProfile = ThornGuardianRules.Profile;
-            PrototypeEnemy guardian = guardianObject.AddComponent<PrototypeEnemy>();
+            guardian = guardianObject.AddComponent<PrototypeEnemy>();
             guardian.Configure(guardianObject.GetComponent<Renderer>(), guardianProfile);
             guardianObject.AddComponent<PrototypeEnemyChase>().Configure(player.transform, playerHealth, guardianProfile);
             GameObject healthBar = GameObject.CreatePrimitive(PrimitiveType.Cube);
@@ -608,7 +609,7 @@ namespace Wayroot.Core
             return motif;
         }
 
-        private static ActionFeedbackHud CreateRuntimeUi(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeEnemy enemy, RestoredGroveController grove, TopDownCameraController cameraController, PauseController pause, PrototypeGatheringController gathering, PrototypeMerchantController merchant, PrototypeBuildController build, PrototypeWayrootController wayroot, PrototypeCreatureController creature, BloomwellController bloomwell, ProceduralSoundscape soundscape)
+        private static ActionFeedbackHud CreateRuntimeUi(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeEnemy enemy, RestoredGroveController grove, TopDownCameraController cameraController, PauseController pause, PrototypeGatheringController gathering, PrototypeMerchantController merchant, PrototypeBuildController build, PrototypeWayrootController wayroot, PrototypeCreatureController creature, BloomwellController bloomwell, ProceduralSoundscape soundscape, UnityEngine.Camera sceneCamera, Transform resourceTarget, Transform merchantTarget, Transform shelterTarget, Transform wayrootTarget, Transform guardianTarget, Transform bloomwellTarget)
         {
             Canvas canvas = new GameObject("Prototype HUD").AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -690,6 +691,20 @@ namespace Wayroot.Core
             inventoryText.rectTransform.sizeDelta = new Vector2(760f, 188f);
             inventoryText.fontSize = 19;
             inventoryText.gameObject.AddComponent<GatheringHud>().Configure(inventoryText, gathering, merchant, build, wayroot, creature, bloomwell);
+
+            RectTransform journeyCard = CreatePanel("Journey Guidance Card", safeArea, new Color(0.10f, 0.19f, 0.28f, 0.88f));
+            journeyCard.sizeDelta = new Vector2(560f, 58f);
+            journeyCard.anchorMin = journeyCard.anchorMax = new Vector2(0.5f, 1f);
+            journeyCard.pivot = new Vector2(0.5f, 1f);
+            journeyCard.anchoredPosition = new Vector2(0f, -102f);
+            Text journeyText = CreateText("Journey Guidance", journeyCard, string.Empty, 18, TextAnchor.MiddleCenter);
+            journeyText.color = new Color(1f, 0.88f, 0.60f);
+
+            RectTransform journeyPointer = CreatePanel("Journey Firefly Pointer", safeArea, new Color(0.70f, 0.92f, 0.58f, 0.92f));
+            journeyPointer.sizeDelta = new Vector2(54f, 54f);
+            Text pointerGlyph = CreateText("Journey Firefly Glyph", journeyPointer, "✦", 34, TextAnchor.MiddleCenter);
+            pointerGlyph.color = new Color(0.18f, 0.30f, 0.16f);
+            journeyCard.gameObject.AddComponent<JourneyGuidanceController>().Configure(player, sceneCamera, journeyText, journeyPointer, resourceTarget, merchantTarget, shelterTarget, wayrootTarget, guardianTarget, bloomwellTarget);
 
             Text combatText = CreateText("Combat Status", safeArea, string.Empty, 24, TextAnchor.UpperLeft);
             combatText.rectTransform.anchorMin = combatText.rectTransform.anchorMax = new Vector2(0f, 1f);

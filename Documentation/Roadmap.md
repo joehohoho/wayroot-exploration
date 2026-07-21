@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-**Phase 19 — Bloomwell restoration finale is implemented and desktop-validated.**
+**Phase 20 — Gentle Journey Guidance is implemented and desktop-validated.**
 
 The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner play review; physical-iPhone evidence is an independent gate for the complete controlled slice.
 
@@ -30,6 +30,15 @@ The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner
 | 17 | One persistent Moonlit Glade exploration pocket opened by the first Thorn Guardian victory | **Implemented; desktop-validated** |
 | 18 | Major original runtime-composed stylized graphics and procedural animation pass | **Implemented; desktop-validated** |
 | 19 | Guardian-gated Moonlit Bloomwell restoration finale using existing renewable resources | **Implemented; desktop-validated** |
+| 20 | Compact save-derived Journey status and off-screen firefly guide for the existing route | **Implemented; desktop-validated** |
+
+## Phase 20 verification record
+
+- Unity **6000.5.4f1** batch compile: **passed** (exit 0).
+- EditMode: **49 passed, 0 failed, 0 skipped**, including pure fresh/merchant/later-milestone/completed selection rules.
+- PlayMode: **22 passed, 0 failed, 0 skipped**, including saved-state target progression across Bootstrap restarts, completed no-pointer behavior, and RESET returning to the fresh guide.
+- Windows development review build: **passed** through `Wayroot.Editor.PhaseTwentyBuild.BuildWindowsReviewPlayer`; ignored output is `Builds/Phase20Review/WayrootPhase20.exe`.
+- `Documentation/Phase20ManualTest.md` covers the safe-area Journey card, off-screen firefly behavior, retained route, persistence, and RESET. This remains desktop evidence, not physical-iPhone validation.
 
 ## Phase 18 verification record
 
@@ -104,5 +113,5 @@ See `Documentation/Phase9ProductionReadiness.md` for scope, commands/results, re
 
 ## Next milestone gate
 
-1. Phase 19 is published for owner review. **Do not begin Phase 20 without explicit owner approval.**
+1. Phase 20 is published for owner review. **Do not begin Phase 21 without explicit owner approval.**
 2. Before a release-quality or mobile-ready claim, complete `Documentation/Phase9iPhoneBlockers.md` and the touch-only `Documentation/Phase9FullLoopPlaytest.md` on physical iPhone hardware.
