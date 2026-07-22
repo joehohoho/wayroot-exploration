@@ -13,6 +13,7 @@ namespace Wayroot.UI
     public sealed class ContextualPromptHud : MonoBehaviour
     {
         private Text _text = null!;
+        private Image _background = null!;
         private PrototypeGatheringController _gathering = null!;
         private PrototypeMerchantController _merchant = null!;
         private PrototypeBuildController _build = null!;
@@ -23,6 +24,7 @@ namespace Wayroot.UI
         public void Configure(Text text, PrototypeGatheringController gathering, PrototypeMerchantController merchant, PrototypeBuildController build, PrototypeWayrootController wayroot, PrototypeCreatureController creature, BloomwellController bloomwell)
         {
             _text = text;
+            _background = text.GetComponentInParent<Image>();
             _gathering = gathering;
             _merchant = merchant;
             _build = build;
@@ -40,8 +42,10 @@ namespace Wayroot.UI
                 : _merchant.IsInRange ? _merchant.Status
                 : _gathering.CurrentTarget == null ? string.Empty
                 : $"Gather {_gathering.CurrentTarget.DisplayName}  {_gathering.CurrentTarget.Steps}/{_gathering.CurrentTarget.RequiredSteps}";
-            _text.text = string.IsNullOrEmpty(prompt) ? string.Empty : $"HOLD GATHER  •  {prompt}";
-            _text.enabled = !string.IsNullOrEmpty(prompt);
+            bool hasPrompt = !string.IsNullOrEmpty(prompt);
+            _text.text = hasPrompt ? $"HOLD GATHER  •  {prompt}" : string.Empty;
+            _text.enabled = hasPrompt;
+            _background.enabled = hasPrompt;
         }
     }
 }

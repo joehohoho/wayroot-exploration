@@ -20,7 +20,6 @@ namespace Wayroot.Tests.PlayMode
             Assert.That(GameObject.Find("Prototype Player"), Is.Not.Null);
             Assert.That(GameObject.Find("Prototype Camera"), Is.Not.Null);
             Assert.That(GameObject.Find("Prototype HUD"), Is.Not.Null);
-            Assert.That(GameObject.Find("Fadeable Test Tree"), Is.Not.Null);
             Assert.That(GameObject.Find("Iron Edge Merchant Station (hold E)"), Is.Not.Null);
             Assert.That(GameObject.Find("Shelter Build Plot (hold E)"), Is.Not.Null);
             Assert.That(GameObject.Find("Friendly Mossling (hold E)"), Is.Not.Null);

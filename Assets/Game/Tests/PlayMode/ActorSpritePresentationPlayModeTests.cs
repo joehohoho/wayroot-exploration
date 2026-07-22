@@ -26,6 +26,9 @@ namespace Wayroot.Tests.PlayMode
             Assert.That(playerRig, Is.Not.Null);
             Assert.That(slimeRig, Is.Not.Null);
             Assert.That(guardianRig, Is.Not.Null);
+            AssertRigPolish(playerRig, GameObject.Find("Prototype Player").transform);
+            AssertRigPolish(slimeRig, GameObject.Find("Practice Slime (hold SPACE)").transform);
+            AssertRigPolish(guardianRig, guardianRig.transform.parent);
             Assert.That(playerRig.GetComponent<SpriteRenderer>().sprite, Is.Not.Null);
             Assert.That(slimeRig.GetComponent<SpriteRenderer>().sprite, Is.Not.Null);
             Assert.That(guardianRig.GetComponent<SpriteRenderer>().sprite, Is.Not.Null);
@@ -54,6 +57,19 @@ namespace Wayroot.Tests.PlayMode
             yield return null;
             Assert.That(GameObject.Find("Practice Slime Sprite Rig").GetComponent<ActorSpritePresentation>().CurrentActionName, Is.EqualTo("Hit"));
         }
+        private static void AssertRigPolish(ActorSpritePresentation rig, Transform actorRoot)
+        {
+            SpriteRenderer renderer = rig.GetComponent<SpriteRenderer>();
+            Assert.That(renderer.enabled, Is.True);
+            Assert.That(renderer.sharedMaterial, Is.Not.Null, "Actor sprites require the source-controlled transparent URP material in player builds.");
+            Assert.That(renderer.sharedMaterial.mainTexture, Is.Not.Null);
+            Assert.That(renderer.sprite.texture.GetPixel(0, 0).a, Is.EqualTo(0f), "The sprite's clear pixels must remain transparent.");
+            Assert.That(renderer.color.a, Is.EqualTo(1f));
+            Assert.That(rig.transform.localScale.x, Is.GreaterThan(0.8f).And.LessThan(1.4f));
+            Assert.That(renderer.sortingOrder, Is.GreaterThanOrEqualTo(28));
+            Assert.That(ActorSpriteVisualMasker.CountVisibleActorBodyRenderers(actorRoot), Is.GreaterThanOrEqualTo(1), "Actor keeps a readable fallback silhouette while the sprite presentation is active.");
+        }
+
         private static ActorSpritePresentation FindRig(string name)
         {
             foreach (ActorSpritePresentation rig in Object.FindObjectsByType<ActorSpritePresentation>(FindObjectsInactive.Include, FindObjectsSortMode.None))

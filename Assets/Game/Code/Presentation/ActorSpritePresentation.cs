@@ -11,6 +11,7 @@ namespace Wayroot.Presentation
     public sealed class ActorSpritePresentation : MonoBehaviour
     {
         private SpriteRenderer _renderer = null!;
+        private Material _spriteMaterial = null!;
         private UnityEngine.Camera _camera = null!;
         private PrototypePlayerController? _player;
         private PrototypePlayerHealth? _playerHealth;
@@ -35,7 +36,12 @@ namespace Wayroot.Presentation
             _playerHealth = health;
             _attack = attack;
             _gathering = gathering;
-            ConfigureRenderer(1.12f);
+            ConfigureRenderer(1.04f);
+            Sprite initialSprite = ActorSpriteFrameFactory.CreatePlayer(PlayerSpriteAction.Idle, false);
+            _playerFrames.Add(PlayerSpriteAction.Idle, initialSprite);
+            SetSprite(initialSprite);
+            CurrentActionName = PlayerSpriteAction.Idle.ToString();
+            ActorSpriteVisualMasker.LogRendererInventory(transform.parent, _renderer);
         }
 
         public void ConfigureEnemy(PrototypeEnemy enemy, PrototypeEnemyChase chase, bool guardian, UnityEngine.Camera sceneCamera)
@@ -45,18 +51,34 @@ namespace Wayroot.Presentation
             _enemy = enemy;
             _chase = chase;
             _guardian = guardian;
-            ConfigureRenderer(guardian ? 1.48f : 1.20f);
+            ConfigureRenderer(guardian ? 1.30f : 1.10f);
             Sprite initialSprite = ActorSpriteFrameFactory.CreateEnemy(guardian, EnemySpriteAction.Idle, false);
             _enemyFrames.Add(EnemySpriteAction.Idle, initialSprite);
-            _renderer.sprite = initialSprite;
+            SetSprite(initialSprite);
             CurrentActionName = EnemySpriteAction.Idle.ToString();
+            ActorSpriteVisualMasker.LogRendererInventory(transform.parent, _renderer);
         }
 
         private void ConfigureRenderer(float size)
         {
-            _renderer.sortingOrder = 20;
+            Material template = Resources.Load<Material>("ActorSpriteUnlit");
+            if (template == null) throw new System.InvalidOperationException("ActorSpriteUnlit material asset is missing.");
+            _spriteMaterial = new Material(template) { name = "Actor Sprite Instance Material" };
+            _renderer.sharedMaterial = _spriteMaterial;
+            _renderer.color = Color.white;
+            _renderer.sortingLayerName = "Default";
+            _renderer.sortingOrder = 28;
             transform.localScale = Vector3.one * size;
             _lastRootPosition = transform.parent.position;
+            ActorSpriteVisualMasker.HideLegacyActorBodyRenderers(transform.parent, _renderer);
+        }
+
+
+        private void SetSprite(Sprite sprite)
+        {
+            _renderer.sprite = sprite;
+            _spriteMaterial.SetTexture("_BaseMap", sprite.texture);
+            _spriteMaterial.SetColor("_BaseColor", Color.white);
         }
 
         private void LateUpdate()
@@ -76,7 +98,7 @@ namespace Wayroot.Presentation
                 sprite = ActorSpriteFrameFactory.CreatePlayer(action, facingLeft);
                 _playerFrames.Add(action, sprite);
             }
-            _renderer.sprite = sprite;
+            SetSprite(sprite);
             CurrentActionName = action.ToString();
         }
 
@@ -91,7 +113,7 @@ namespace Wayroot.Presentation
                 sprite = ActorSpriteFrameFactory.CreateEnemy(_guardian, action, facingLeft);
                 _enemyFrames.Add(action, sprite);
             }
-            _renderer.sprite = sprite;
+            SetSprite(sprite);
             _renderer.enabled = transform.parent.gameObject.activeInHierarchy;
             CurrentActionName = action.ToString();
         }

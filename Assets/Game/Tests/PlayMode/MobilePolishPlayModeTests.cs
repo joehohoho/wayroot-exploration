@@ -3,6 +3,7 @@ using NUnit.Framework;
 using UnityEngine;
 using UnityEngine.SceneManagement;
 using UnityEngine.TestTools;
+using UnityEngine.UI;
 
 namespace Wayroot.Tests.PlayMode
 {
@@ -20,6 +21,7 @@ namespace Wayroot.Tests.PlayMode
             Assert.That(GameObject.Find("Gather Button"), Is.Not.Null);
             Assert.That(GameObject.Find("Attack Button"), Is.Not.Null);
             Assert.That(GameObject.Find("Action Feedback Card"), Is.Not.Null);
+            Assert.That(GameObject.Find("Contextual Action Prompt").GetComponent<Image>().enabled, Is.False, "An empty prompt must not obscure the spawn-point actor.");
             Assert.That(GameObject.Find("World Label: WILDFLOWER PETAL"), Is.Not.Null);
             Assert.That(GameObject.Find("World Label: YOUNG TREE TIMBER"), Is.Not.Null);
             Assert.That(GameObject.Find("World Label: STONE OUTCROP STONE"), Is.Not.Null);

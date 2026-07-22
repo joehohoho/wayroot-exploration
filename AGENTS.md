@@ -1,8 +1,8 @@
 # Wayroot Exploration — Agent Instructions
 
 ## Current scope
-- **Current milestone:** Phase 23 animated sprite character pass is owner-approved and underway. Do not begin Phase 24 without approval.
-- Unity **6000.5.4f1** is owner-approved and pinned for Phases 0–23. Do not change `ProjectSettings/ProjectVersion.txt` without owner approval.
+- **Current milestone:** Phase 24 sprite rig cleanup and alpha actor polish is complete. Phase 25 is owner-authorized, but its scope must be documented before implementation.
+- Unity **6000.5.4f1** is owner-approved and pinned for Phases 0–24. Do not change `ProjectSettings/ProjectVersion.txt` without owner approval.
 - Use C#, URP, Unity Input System, TextMeshPro, and Unity Test Framework. The legacy Input Manager is prohibited.
 - iPhone/landscape/touch is primary; desktop is development-only.
 - No networking, Addressables, accounts, cloud save, analytics, purchases, backend, paid package, or Android adaptation during prototype work unless explicitly scheduled.

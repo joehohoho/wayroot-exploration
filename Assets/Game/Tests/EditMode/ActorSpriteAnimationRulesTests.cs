@@ -1,10 +1,28 @@
+using System;
 using NUnit.Framework;
+using UnityEngine;
 using Wayroot.Presentation;
 
 namespace Wayroot.Tests.EditMode
 {
     public sealed class ActorSpriteAnimationRulesTests
     {
+        [Test]
+        public void EveryProceduralSpriteFrame_HasFullyTransparentClearCorners()
+        {
+            foreach (PlayerSpriteAction action in Enum.GetValues(typeof(PlayerSpriteAction)))
+            {
+                AssertClearCorners(ActorSpriteFrameFactory.CreatePlayer(action, false));
+                AssertClearCorners(ActorSpriteFrameFactory.CreatePlayer(action, true));
+            }
+
+            foreach (EnemySpriteAction action in Enum.GetValues(typeof(EnemySpriteAction)))
+            {
+                AssertClearCorners(ActorSpriteFrameFactory.CreateEnemy(false, action, false));
+                AssertClearCorners(ActorSpriteFrameFactory.CreateEnemy(true, action, true));
+            }
+        }
+
         [Test]
         public void PlayerSelection_PrioritizesSafeDefeatAndSemanticActionsOverWalking()
         {
@@ -30,6 +48,17 @@ namespace Wayroot.Tests.EditMode
             Assert.That(ActorSpriteAnimationRules.SelectEnemy(false, inactive, inactive, 0.1f, inactive), Is.EqualTo(EnemySpriteAction.Windup));
             Assert.That(ActorSpriteAnimationRules.SelectEnemy(false, 0.1f, inactive, inactive, inactive), Is.EqualTo(EnemySpriteAction.Chase));
             Assert.That(ActorSpriteAnimationRules.SelectEnemy(false, inactive, inactive, inactive, inactive), Is.EqualTo(EnemySpriteAction.Idle));
+        }
+
+        private static void AssertClearCorners(Sprite sprite)
+        {
+            Texture2D texture = sprite.texture;
+            Assert.That(texture.GetPixel(0, 0).a, Is.EqualTo(0f), sprite.name);
+            Assert.That(texture.GetPixel(63, 0).a, Is.EqualTo(0f), sprite.name);
+            Assert.That(texture.GetPixel(0, 63).a, Is.EqualTo(0f), sprite.name);
+            Assert.That(texture.GetPixel(63, 63).a, Is.EqualTo(0f), sprite.name);
+            UnityEngine.Object.DestroyImmediate(sprite.texture);
+            UnityEngine.Object.DestroyImmediate(sprite);
         }
     }
 }

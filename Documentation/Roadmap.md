@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-**Phase 23 — Animated sprite character presentation is implemented and desktop-validated.**
+**Phase 24 — Actor presentation cleanup is implemented and desktop-validated; Phase 25 is owner-authorized for planning.**
 
 The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner play review; physical-iPhone evidence is an independent gate for the complete controlled slice.
 
@@ -31,6 +31,11 @@ The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner
 | 18 | Major original runtime-composed stylized graphics and procedural animation pass | **Implemented; desktop-validated** |
 | 19 | Guardian-gated Moonlit Bloomwell restoration finale using existing renewable resources | **Implemented; desktop-validated** |
 | 20 | Compact save-derived Journey status and off-screen firefly guide for the existing route | **Implemented; desktop-validated** |
+| 21 | Dodge and combat readability | **Implemented; desktop-validated** |
+| 22 | Alpha visual, camera, and HUD overhaul | **Implemented; desktop-validated** |
+| 23 | Animated original sprite character presentation | **Implemented; desktop-validated** |
+| 24 | Actor presentation cleanup, readable fallback silhouettes, and player-build sprite-material reliability | **Implemented; desktop-validated; owner-confirmed** |
+| 25 | Next milestone | **Owner-authorized; scope to be defined before implementation** |
 
 ## Phase 20 verification record
 

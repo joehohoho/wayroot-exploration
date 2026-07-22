@@ -52,7 +52,6 @@ namespace Wayroot.Core
             PrototypePlayerHealth playerHealth = player.gameObject.AddComponent<PrototypePlayerHealth>();
             player.Configure(input, playerHealth);
             TopDownCameraController cameraController = CreateCamera(player.transform, input, out UnityEngine.Camera sceneCamera);
-            CreateObstruction(sceneCamera, player.transform);
             PrototypeGatheringController gathering = CreateGathering(input, player, sceneCamera);
             PrototypeMerchantController merchant = CreateMerchant(input, player, gathering, sceneCamera);
             PrototypeBuildController build = CreateBuildPlot(input, player, playerHealth, gathering, sceneCamera);
@@ -223,7 +222,8 @@ namespace Wayroot.Core
         {
             GameObject tree = GameObject.CreatePrimitive(PrimitiveType.Cylinder);
             tree.name = "Fadeable Test Tree";
-            tree.transform.SetPositionAndRotation(new Vector3(0f, 2f, -3f), Quaternion.identity);
+            // Keep the camera-fade sample beside, rather than directly over, the spawn-point sprite.
+            tree.transform.SetPositionAndRotation(new Vector3(-2.5f, 2f, -3f), Quaternion.identity);
             tree.transform.localScale = new Vector3(1.2f, 2f, 1.2f);
             SetMaterialColor(tree.GetComponent<Renderer>(), TreeColor);
             tree.AddComponent<FadeableObstruction>();
@@ -431,17 +431,13 @@ namespace Wayroot.Core
         private static void CreatePhaseTwentyThreeSpritePresentation(PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeAttackController attack,
             PrototypeGatheringController gathering, PrototypeEnemy slime, PrototypeEnemy guardian, UnityEngine.Camera sceneCamera)
         {
-            Renderer playerPrimitive = player.GetComponent<Renderer>();
-            if (playerPrimitive != null) playerPrimitive.enabled = false;
-            CreateActorSpriteRig("Blue Cloak Explorer Sprite Rig", player.transform, new Vector3(0f, -0.18f, 0f))
+            CreateActorSpriteRig("Blue Cloak Explorer Sprite Rig", player.transform, new Vector3(0f, -0.10f, 0f))
                 .ConfigurePlayer(player, playerHealth, attack, gathering, sceneCamera);
 
-            slime.HidePrimitiveVisual();
-            CreateActorSpriteRig("Practice Slime Sprite Rig", slime.transform, new Vector3(0f, -0.32f, 0f))
+            CreateActorSpriteRig("Practice Slime Sprite Rig", slime.transform, new Vector3(0f, -0.12f, 0f))
                 .ConfigureEnemy(slime, slime.GetComponent<PrototypeEnemyChase>(), false, sceneCamera);
 
-            guardian.HidePrimitiveVisual();
-            CreateActorSpriteRig("Thorn Guardian Sprite Rig", guardian.transform, new Vector3(0f, -0.38f, 0f))
+            CreateActorSpriteRig("Thorn Guardian Sprite Rig", guardian.transform, new Vector3(0f, -0.10f, 0f))
                 .ConfigureEnemy(guardian, guardian.GetComponent<PrototypeEnemyChase>(), true, sceneCamera);
         }
 
@@ -583,7 +579,8 @@ namespace Wayroot.Core
         {
             InventoryState inventory = new();
             GatheringNode flower = CreateGatheringNode("wildflower-01", "Wildflower (hold E)", PrimitiveType.Sphere, new Vector3(-2f, 0.5f, 2f), new Color(0.95f, 0.35f, 0.65f), ResourceType.WildPetal, 1);
-            GatheringNode tree = CreateGatheringNode("young-tree-01", "Young Tree (hold E)", PrimitiveType.Cylinder, new Vector3(3f, 1f, 2f), new Color(0.32f, 0.6f, 0.2f), ResourceType.Timber, 3);
+            GatheringNode tree = CreateGatheringNode("young-tree-01", "Young Tree (hold E)", PrimitiveType.Cylinder, new Vector3(3f, 1f, 2f), TrunkColor, ResourceType.Timber, 3);
+            CreateVisualPrimitive("Young Tree Canopy", PrimitiveType.Sphere, tree.transform.position + new Vector3(0f, 0.92f, 0f), new Vector3(1.05f, 0.55f, 1.05f), LeafColor).transform.SetParent(tree.transform, true);
             GatheringNode rock = CreateGatheringNode("stone-outcrop-01", "Stone Outcrop (hold E)", PrimitiveType.Cube, new Vector3(-3f, 0.65f, -2f), new Color(0.45f, 0.48f, 0.55f), ResourceType.Stone, 3);
             PrototypeGatheringController controller = new GameObject("Prototype Gathering").AddComponent<PrototypeGatheringController>();
             controller.Configure(input, player, inventory, new[] { flower, tree, rock });
