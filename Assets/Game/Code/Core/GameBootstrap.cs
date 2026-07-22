@@ -151,6 +151,7 @@ namespace Wayroot.Core
             CreateFlowerCluster(flowerCluster, new Vector3(1.2f, 0f, 5.7f), new Color(0.72f, 0.45f, 0.94f));
             CreateFlowerCluster(flowerCluster, new Vector3(2.5f, 0f, -5.7f), new Color(0.98f, 0.42f, 0.55f));
             CreateFlowerCluster(flowerCluster, new Vector3(4.4f, 0f, 3.8f), new Color(1f, 0.82f, 0.24f));
+            CreatePhaseTwentyFiveSunmeadowComposition();
         }
 
         private static GameObject CreateVisualPrimitive(string name, PrimitiveType primitive, Vector3 position, Vector3 scale, Color color)
@@ -188,6 +189,21 @@ namespace Wayroot.Core
                 CreateVisualPrimitive("Sunmeadow Flower Stem", PrimitiveType.Cylinder, position + new Vector3(0f, 0.22f, 0f), new Vector3(0.05f, 0.22f, 0.05f), new Color(0.16f, 0.42f, 0.17f)).transform.SetParent(parent, true);
                 CreateVisualPrimitive("Sunmeadow Flower", PrimitiveType.Sphere, position + new Vector3(0f, 0.5f, 0f), new Vector3(0.3f, 0.15f, 0.3f), petalColor).transform.SetParent(parent, true);
             }
+        }
+
+        private static void CreatePhaseTwentyFiveSunmeadowComposition()
+        {
+            RegionCompositionProfile profile = ExplorationCompositionRules.GetProfile(ExplorationRegion.Sunmeadow);
+            Transform dressing = new GameObject("Phase 25 Sunmeadow Warm Edge Dressing").transform;
+            foreach (Vector3 position in ExplorationCompositionRules.SunmeadowDressingPositions)
+            {
+                CreateVisualPrimitive("Sunmeadow Golden Meadow Edge", PrimitiveType.Sphere, position + new Vector3(0f, 0.16f, 0f), new Vector3(1.25f, 0.28f, 0.82f), profile.PrimaryColor).transform.SetParent(dressing, true);
+                CreateFlowerCluster(dressing, position + new Vector3(0.28f, 0f, 0.18f), profile.AccentColor);
+            }
+
+            CreateVisualPrimitive("Sunmeadow Creek Crossing Stone A", PrimitiveType.Sphere, new Vector3(5.82f, 0.09f, -2.0f), new Vector3(0.46f, 0.12f, 0.46f), profile.AccentColor).transform.SetParent(dressing, true);
+            CreateVisualPrimitive("Sunmeadow Creek Crossing Stone B", PrimitiveType.Sphere, new Vector3(6.42f, 0.09f, -1.48f), new Vector3(0.42f, 0.12f, 0.42f), profile.AccentColor).transform.SetParent(dressing, true);
+            CreateVisualPrimitive("Sunmeadow Creek Crossing Stone C", PrimitiveType.Sphere, new Vector3(6.92f, 0.09f, -0.94f), new Vector3(0.38f, 0.12f, 0.38f), profile.AccentColor).transform.SetParent(dressing, true);
         }
 
         private static PrototypePlayerController CreatePlayer(PrototypeInputReader input)
@@ -398,6 +414,7 @@ namespace Wayroot.Core
             CreateVisualPrimitive("Restored Grove Clearing", PrimitiveType.Cylinder, grove.transform.position + new Vector3(0f, 0.04f, 0f), new Vector3(2.8f, 0.04f, 2.8f), new Color(0.36f, 0.72f, 0.34f)).transform.SetParent(grove.transform, true);
             CreateVisualPrimitive("Restored Grove Thorn Arch", PrimitiveType.Cube, grove.transform.position + new Vector3(0f, 1.3f, 1.8f), new Vector3(3.4f, 2.5f, 0.35f), new Color(0.20f, 0.38f, 0.14f)).transform.SetParent(grove.transform, true);
             CreateVisualPrimitive("Restored Grove Bloom", PrimitiveType.Sphere, grove.transform.position + new Vector3(-1.45f, 0.7f, -0.8f), new Vector3(0.7f, 1.4f, 0.7f), new Color(0.7f, 0.94f, 0.30f)).transform.SetParent(grove.transform, true);
+            CreatePhaseTwentyFiveGroveComposition(grove.transform);
 
             GameObject guardianObject = GameObject.CreatePrimitive(PrimitiveType.Sphere);
             guardianObject.name = "Thorn Guardian (hold ATTACK)";
@@ -426,6 +443,20 @@ namespace Wayroot.Core
             RestoredGroveController controller = new GameObject("Restored Grove Controller").AddComponent<RestoredGroveController>();
             controller.Configure(gathering, grove, guardian);
             return controller;
+        }
+
+        private static void CreatePhaseTwentyFiveGroveComposition(Transform grove)
+        {
+            RegionCompositionProfile profile = ExplorationCompositionRules.GetProfile(ExplorationRegion.RestoredGrove);
+            Transform dressing = new GameObject("Phase 25 Restored Grove Shelter Dressing").transform;
+            dressing.SetParent(grove, false);
+            foreach (Vector3 localPosition in ExplorationCompositionRules.GroveDressingPositions)
+            {
+                CreateVisualPrimitive("Restored Grove Thorn Stone", PrimitiveType.Sphere, grove.position + localPosition + new Vector3(0f, 0.36f, 0f), new Vector3(0.62f, 0.72f, 0.54f), profile.PrimaryColor).transform.SetParent(dressing, true);
+                CreateVisualPrimitive("Restored Grove Fern Light", PrimitiveType.Sphere, grove.position + localPosition + new Vector3(0.18f, 0.82f, 0.08f), new Vector3(0.28f, 0.16f, 0.28f), profile.AccentColor).transform.SetParent(dressing, true);
+            }
+
+            CreateVisualPrimitive("Restored Grove Guardian Ring", PrimitiveType.Cylinder, grove.position + new Vector3(0f, 0.025f, -0.35f), new Vector3(1.78f, 0.025f, 1.78f), new Color(0.20f, 0.34f, 0.18f)).transform.SetParent(dressing, true);
         }
 
         private static void CreatePhaseTwentyThreeSpritePresentation(PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeAttackController attack,
@@ -524,6 +555,7 @@ namespace Wayroot.Core
             glade.transform.SetParent(entrance.transform, true);
             CreateVisualPrimitive("Moonlit Violet Path", PrimitiveType.Cube, new Vector3(-7.7f, 0.045f, 4.15f), new Vector3(1.45f, 0.07f, 3.1f), new Color(0.34f, 0.25f, 0.56f)).transform.SetParent(glade.transform, true);
             CreateVisualPrimitive("Moonlit Glade Clearing", PrimitiveType.Cylinder, new Vector3(-8.15f, 0.04f, 5.9f), new Vector3(2.45f, 0.04f, 2.2f), new Color(0.22f, 0.34f, 0.48f)).transform.SetParent(glade.transform, true);
+            CreatePhaseTwentyFiveGladeComposition(glade.transform, new Vector3(-8.15f, 0f, 5.9f));
             bloomwell = CreateMoonlitLandmark(glade.transform, new Vector3(-8.15f, 0f, 6.15f), sceneCamera, input, player, gathering, out bloomwellRestoredVisual);
 
             GatheringNode petal = CreateGatheringNode("moonlit-wildflower-01", "Moonlit Wild Petal (hold E)", PrimitiveType.Sphere, new Vector3(-9.65f, 0.5f, 5.25f), new Color(0.82f, 0.52f, 1f), ResourceType.WildPetal, 1);
@@ -542,6 +574,22 @@ namespace Wayroot.Core
             return controller;
         }
 
+        private static void CreatePhaseTwentyFiveGladeComposition(Transform glade, Vector3 clearingCenter)
+        {
+            RegionCompositionProfile profile = ExplorationCompositionRules.GetProfile(ExplorationRegion.MoonlitGlade);
+            Transform dressing = new GameObject("Phase 25 Moonlit Canopy Dressing").transform;
+            dressing.SetParent(glade, true);
+            foreach (Vector3 localPosition in ExplorationCompositionRules.GladeDressingPositions)
+            {
+                Vector3 position = clearingCenter + localPosition;
+                CreateVisualPrimitive("Moonlit Canopy Cluster", PrimitiveType.Sphere, position + new Vector3(0f, 1.62f, 0f), new Vector3(0.88f, 0.52f, 0.88f), profile.PrimaryColor).transform.SetParent(dressing, true);
+                CreateVisualPrimitive("Moonlit Gathering Mote", PrimitiveType.Sphere, position + new Vector3(0.16f, 0.62f, 0.08f), Vector3.one * 0.12f, profile.AccentColor).transform.SetParent(dressing, true);
+            }
+
+            CreateVisualPrimitive("Moonlit Route Pebble A", PrimitiveType.Sphere, new Vector3(-7.45f, 0.10f, 4.55f), new Vector3(0.28f, 0.08f, 0.34f), profile.AccentColor).transform.SetParent(dressing, true);
+            CreateVisualPrimitive("Moonlit Route Pebble B", PrimitiveType.Sphere, new Vector3(-7.85f, 0.10f, 5.02f), new Vector3(0.24f, 0.08f, 0.30f), profile.AccentColor).transform.SetParent(dressing, true);
+        }
+
         private static BloomwellController CreateMoonlitLandmark(Transform parent, Vector3 position, UnityEngine.Camera sceneCamera, PrototypeInputReader input, PrototypePlayerController player, PrototypeGatheringController gathering, out GameObject restoredVisual)
         {
             GameObject landmark = new("Moonlit Bloomwell Discovery");
@@ -558,6 +606,7 @@ namespace Wayroot.Core
             CreateVisualPrimitive("Bloomwell Mote One", PrimitiveType.Sphere, position + new Vector3(-0.42f, 1.22f, 0.15f), Vector3.one * 0.10f, new Color(0.82f, 0.72f, 1f)).transform.SetParent(landmark.transform, true);
             CreateVisualPrimitive("Bloomwell Mote Two", PrimitiveType.Sphere, position + new Vector3(0.35f, 1.42f, -0.18f), Vector3.one * 0.07f, new Color(0.92f, 0.62f, 1f)).transform.SetParent(landmark.transform, true);
             CreateVisualPrimitive("Bloomwell Mote Three", PrimitiveType.Sphere, position + new Vector3(0.08f, 1.65f, 0.32f), Vector3.one * 0.06f, new Color(0.70f, 0.82f, 1f)).transform.SetParent(landmark.transform, true);
+            CreatePhaseTwentyFiveBloomwellComposition(landmark.transform, position);
             restoredVisual = new GameObject("Bloomwell Restored Finale Bloom");
             restoredVisual.transform.SetParent(landmark.transform, true);
             CreateVisualPrimitive("Bloomwell Restored Heart", PrimitiveType.Sphere, position + new Vector3(0f, 1.22f, 0f), new Vector3(0.78f, 1.05f, 0.78f), new Color(0.48f, 1f, 0.82f)).transform.SetParent(restoredVisual.transform, true);
@@ -573,6 +622,16 @@ namespace Wayroot.Core
             BloomwellController controller = landmark.AddComponent<BloomwellController>();
             controller.Configure(input, player, gathering, restoredVisual, landmark.transform.Find("Bloomwell Basin").GetComponent<Renderer>(), label);
             return controller;
+        }
+
+        private static void CreatePhaseTwentyFiveBloomwellComposition(Transform landmark, Vector3 position)
+        {
+            RegionCompositionProfile profile = ExplorationCompositionRules.GetProfile(ExplorationRegion.Bloomwell);
+            Transform dressing = new GameObject("Phase 25 Bloomwell Landmark Silhouette").transform;
+            dressing.SetParent(landmark, true);
+            CreateVisualPrimitive("Bloomwell Crescent Silhouette", PrimitiveType.Sphere, position + new Vector3(0f, 2.04f, 0.24f), new Vector3(1.26f, 0.16f, 0.42f), profile.PrimaryColor).transform.SetParent(dressing, true);
+            CreateVisualPrimitive("Bloomwell Left Halo", PrimitiveType.Sphere, position + new Vector3(-1.02f, 0.88f, 0.08f), new Vector3(0.18f, 0.48f, 0.18f), profile.AccentColor).transform.SetParent(dressing, true);
+            CreateVisualPrimitive("Bloomwell Right Halo", PrimitiveType.Sphere, position + new Vector3(1.02f, 0.88f, 0.08f), new Vector3(0.18f, 0.48f, 0.18f), profile.AccentColor).transform.SetParent(dressing, true);
         }
 
         private static PrototypeGatheringController CreateGathering(PrototypeInputReader input, PrototypePlayerController player, UnityEngine.Camera sceneCamera)
