@@ -4,18 +4,16 @@ Read this file before resuming after a quota reset/session loss, then update it 
 
 ## 2026-07-22 status
 
-- **Phase 25 Exploration Art and Mobile Composition is complete and desktop-validated.** Do not begin Phase 26 without explicit owner approval.
+- **Phase 26 Combat Encounter Polish is complete and owner-confirmed.** Do not begin Phase 27 without explicit owner approval.
 - **Repository:** `Wayroot Exploration` / `wayroot-exploration`, branch `main`.
-- **Pinned editor:** Unity **6000.5.4f1** (`d550df8bd089`). Do not change the project pin without owner approval.
-- **Implementation:** `ExplorationCompositionRules` defines original region palettes, landmark names, safe dressing positions, and focal-zone protection. `GameBootstrap` uses these profiles to enrich existing Sunmeadow, Restored Grove, Moonlit Glade, and Bloomwell visual composition using only runtime geometry and existing route gates.
-- **Scope preserved:** no new region, map, fast travel, NPC, quest, resources, currency, crafting, combat values, unlock requirements, or save-schema changes. Existing actor presentation, HUD, touch controls, gathering/renewal, Mossling, Wayroot/Guardian/Bloomwell gates, restart, and RESET remain intact.
-- **Validation:** Unity batch compile passed; EditMode **62 passed, 0 failed**; PlayMode **29 passed, 0 failed**; `Wayroot.Editor.PhaseTwentyFiveBuild.BuildWindowsReviewPlayer` passed with `Build Finished, Result: Success.` The ignored review output is `Builds/Phase25ExplorationArtReview/WayrootPhase25.exe`.
-- **Manual review:** `Documentation/Phase25ManualTest.md`. Desktop evidence remains distinct from physical-iPhone validation.
-- **Do not stage:** `Logs/`, `TestResults/`, `Builds/`, `Library/`, screenshot captures, or Unity-generated `ProjectSettings` whitespace churn.
+- **Pinned editor:** Unity **6000.5.4f1** (`d550df8bd089`).
+- **Implementation:** Existing attack semantics now drive compact player swing, impact, and contact-marker presentation. Existing Slime/Guardian chase and health semantics drive distinct anticipation, hit, defeat, and respawn cues. The Guardian arena gains lightweight boundary/threat-focus dressing. No combat values, rewards, controls, saves, or unlock logic changed.
+- **Validation:** compile passed; EditMode **64 passed, 0 failed**; PlayMode **31 passed, 0 failed**; Phase 26 Windows review build passed. Owner observed the additional fighting animations.
+- **Manual review:** `Documentation/Phase26ManualTest.md`. Do not stage Logs/TestResults/Builds/screenshot captures/Unity-generated ProjectSettings churn.
 
-## First actions when Phase 26 is approved
+## First actions when Phase 27 is approved
 
 1. Inspect `git status --short --branch`, `git diff --check`, Roadmap, OpenQuestions, and this handoff.
-2. Define the new scope and acceptance criteria in `Documentation/Phase26ImplementationPlan.md` before implementation.
-3. Preserve the existing route and original-art-only constraint unless the approved plan says otherwise.
-4. Validate compile, EditMode, relevant PlayMode, Windows review build/smoke, and actual player review before publishing.
+2. Create and approve `Documentation/Phase27ImplementationPlan.md` before feature code.
+3. Preserve the established combat values, mobile semantic controls, progression route, and original-art-only constraint unless the plan explicitly changes them.
+4. Validate compile, EditMode, PlayMode, Windows review build/smoke, and actual player review before publishing.

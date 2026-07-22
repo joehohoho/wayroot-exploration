@@ -65,6 +65,7 @@ namespace Wayroot.Core
             soundscape.Configure(gathering);
             CreatePhaseEighteenArtMotion(player, creature, enemy, grove, gathering);
             CreatePhaseTwentyThreeSpritePresentation(player, playerHealth, attack, gathering, enemy, guardian, sceneCamera);
+            CreatePhaseTwentySixCombatPresentation(player, attack, enemy, guardian, grove.transform);
             GameObject sunmeadowFinaleMotif = CreateSunmeadowFinaleMotif();
             BloomwellFinalePresentation finalePresentation = new GameObject("Bloomwell Finale Presentation").AddComponent<BloomwellFinalePresentation>();
             finalePresentation.Configure(gathering, creature, bloomwell, bloomwellRestoredVisual, sunmeadowFinaleMotif, GameObject.Find("Sunmeadow Sun").GetComponent<Light>());
@@ -457,6 +458,24 @@ namespace Wayroot.Core
             }
 
             CreateVisualPrimitive("Restored Grove Guardian Ring", PrimitiveType.Cylinder, grove.position + new Vector3(0f, 0.025f, -0.35f), new Vector3(1.78f, 0.025f, 1.78f), new Color(0.20f, 0.34f, 0.18f)).transform.SetParent(dressing, true);
+        }
+
+        private static void CreatePhaseTwentySixCombatPresentation(PrototypePlayerController player, PrototypeAttackController attack, PrototypeEnemy slime, PrototypeEnemy guardian, Transform grove)
+        {
+            PlayerAttackPresentation playerPresentation = player.gameObject.AddComponent<PlayerAttackPresentation>();
+            playerPresentation.Configure();
+            attack.SetPresentation(playerPresentation);
+
+            slime.gameObject.AddComponent<EnemyEncounterPresentation>().Configure(slime, slime.GetComponent<PrototypeEnemyChase>(), false);
+            guardian.gameObject.AddComponent<EnemyEncounterPresentation>().Configure(guardian, guardian.GetComponent<PrototypeEnemyChase>(), true);
+
+            Transform arenaFocus = new GameObject("Phase 26 Thorn Guardian Arena Focus").transform;
+            arenaFocus.SetParent(grove, true);
+            CreateVisualPrimitive("Guardian Arena Boundary North", PrimitiveType.Cube, grove.position + new Vector3(0f, 0.06f, 1.52f), new Vector3(2.85f, 0.05f, 0.10f), new Color(0.68f, 0.92f, 0.26f)).transform.SetParent(arenaFocus, true);
+            CreateVisualPrimitive("Guardian Arena Boundary South", PrimitiveType.Cube, grove.position + new Vector3(0f, 0.06f, -2.22f), new Vector3(2.85f, 0.05f, 0.10f), new Color(0.68f, 0.92f, 0.26f)).transform.SetParent(arenaFocus, true);
+            CreateVisualPrimitive("Guardian Arena Boundary West", PrimitiveType.Cube, grove.position + new Vector3(-2.25f, 0.06f, -0.35f), new Vector3(0.10f, 0.05f, 2.15f), new Color(0.68f, 0.92f, 0.26f)).transform.SetParent(arenaFocus, true);
+            CreateVisualPrimitive("Guardian Arena Boundary East", PrimitiveType.Cube, grove.position + new Vector3(2.25f, 0.06f, -0.35f), new Vector3(0.10f, 0.05f, 2.15f), new Color(0.68f, 0.92f, 0.26f)).transform.SetParent(arenaFocus, true);
+            CreateVisualPrimitive("Guardian Threat Focus", PrimitiveType.Cylinder, guardian.transform.position + new Vector3(0f, -0.92f, 0f), new Vector3(1.95f, 0.018f, 1.95f), new Color(0.34f, 0.72f, 0.22f)).transform.SetParent(arenaFocus, true);
         }
 
         private static void CreatePhaseTwentyThreeSpritePresentation(PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeAttackController attack,
