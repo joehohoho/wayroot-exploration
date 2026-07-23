@@ -361,6 +361,8 @@ namespace Wayroot.Core
             MosslingResourceGuide guide = creature.AddComponent<MosslingResourceGuide>();
             guide.Configure(player, gathering);
             controller.SetResourceGuide(guide);
+            MosslingPresencePresentation presence = creature.AddComponent<MosslingPresencePresentation>();
+            presence.Configure(controller, guide, player);
             CreateWorldIdentifier("MOSSling\nCOMPANION", creature.transform, new Vector3(0f, 1.55f, 0f), sceneCamera, new Color(0.8f, 1f, 0.72f));
             return controller;
         }

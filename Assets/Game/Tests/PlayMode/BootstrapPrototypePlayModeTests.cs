@@ -169,6 +169,14 @@ namespace Wayroot.Tests.PlayMode
             GameObject creature = GameObject.Find("Friendly Mossling (hold E)");
             global::Wayroot.Creatures.MosslingResourceGuide guide = creature.GetComponent<global::Wayroot.Creatures.MosslingResourceGuide>();
             GameObject marker = GameObject.Find("Mossling Guide Available Marker");
+            global::Wayroot.Creatures.MosslingPresencePresentation presence = creature.GetComponent<global::Wayroot.Creatures.MosslingPresencePresentation>();
+            GameObject presenceRoot = GameObject.Find("Mossling Presence Visual Root");
+            Assert.That(presence, Is.Not.Null);
+            Assert.That(presenceRoot, Is.Not.Null);
+            Assert.That(presenceRoot.transform.parent, Is.EqualTo(creature.transform));
+            Assert.That(presenceRoot.transform.lossyScale.x, Is.EqualTo(1f).Within(0.01f));
+            Assert.That(GameObject.Find("Mossling Guide Pointer").GetComponent<Collider>(), Is.Null);
+            Assert.That(GameObject.Find("Mossling Guide Pointer").GetComponent<Renderer>().sharedMaterial.name, Does.Contain("ActorSpriteUnlit"));
             Assert.That(guide.Selection.Kind, Is.EqualTo(global::Wayroot.Creatures.MosslingGuideKind.Available));
             Assert.That(marker.activeSelf, Is.True);
             Assert.That(guide.Status, Does.Contain("GUIDE"));

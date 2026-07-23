@@ -64,5 +64,21 @@ namespace Wayroot.Tests.EditMode
 
             Assert.That(selection.NodeName, Is.EqualTo("Wildflower"));
         }
+
+        [TestCase(false, MosslingGuideKind.None, 0f, MosslingPresenceState.Idle)]
+        [TestCase(true, MosslingGuideKind.Renewing, 6f, MosslingPresenceState.Renewal)]
+        [TestCase(true, MosslingGuideKind.Available, 6f, MosslingPresenceState.Guide)]
+        [TestCase(true, MosslingGuideKind.Available, 1f, MosslingPresenceState.Arrival)]
+        [TestCase(true, MosslingGuideKind.None, 0f, MosslingPresenceState.Follow)]
+        [TestCase(true, MosslingGuideKind.None, 3f, MosslingPresenceState.Idle)]
+        public void Presence_SelectsOnlyVisualStateFromExistingCompanionAndGuideFacts(bool befriended, MosslingGuideKind guideKind, float targetDistance, MosslingPresenceState expected)
+        {
+            MosslingGuideSelection selection = new(guideKind, "Wildflower", new Vector3(targetDistance, 0f, 0f), 0);
+            Vector3 mosslingPosition = expected == MosslingPresenceState.Follow ? new Vector3(3f, 0f, 0f) : Vector3.zero;
+
+            MosslingPresenceState state = MosslingPresenceRules.Select(befriended, selection, Vector3.zero, mosslingPosition);
+
+            Assert.That(state, Is.EqualTo(expected));
+        }
     }
 }

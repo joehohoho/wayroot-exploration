@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-**Phase 29 — First-session onboarding and pacing pass is implemented and desktop-validated.**
+**Phase 30 — Mossling companion presence pass is implemented and desktop-validated.**
 
 The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner play review; physical-iPhone evidence is an independent gate for the complete controlled slice.
 
@@ -37,6 +37,10 @@ The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner
 | 24 | Actor presentation cleanup, readable fallback silhouettes, and player-build sprite-material reliability | **Implemented; desktop-validated; owner-confirmed** |
 | 25 | Exploration art and mobile composition pass for existing Sunmeadow, Grove, Glade, and Bloomwell route | **Implemented; desktop-validated** |
 | 26 | Combat encounter polish for the existing Practice Slime and Thorn Guardian | **Implemented; desktop-validated** |
+| 27 | Shelter homestead cozy visual pass | **Implemented; desktop-validated** |
+| 28 | Bloomwell finale presentation polish | **Implemented; desktop-validated** |
+| 29 | First-session onboarding and pacing pass | **Implemented; desktop-validated** |
+| 30 | Mossling companion presence pass using existing guide state | **Implemented; desktop-validated** |
 
 ## Phase 20 verification record
 
@@ -119,5 +123,5 @@ See `Documentation/Phase9ProductionReadiness.md` for scope, commands/results, re
 
 ## Next milestone gate
 
-1. Phase 20 is published for owner review. **Do not begin Phase 21 without explicit owner approval.**
+1. Phase 30 is published for owner review. **Do not begin Phase 31 without explicit owner approval.**
 2. Before a release-quality or mobile-ready claim, complete `Documentation/Phase9iPhoneBlockers.md` and the touch-only `Documentation/Phase9FullLoopPlaytest.md` on physical iPhone hardware.

@@ -1,7 +1,7 @@
 # Wayroot Exploration — Agent Instructions
 
 ## Current scope
-- **Current milestone:** Phase 29 first-session onboarding and pacing pass is implemented and desktop-validated. Do not begin Phase 30 without approval.
+- **Current milestone:** Phase 30 Mossling companion presence pass is owner-approved and underway. Do not begin Phase 31 without approval.
 - Unity **6000.5.4f1** is owner-approved and pinned for Phases 0–24. Do not change `ProjectSettings/ProjectVersion.txt` without owner approval.
 - Use C#, URP, Unity Input System, TextMeshPro, and Unity Test Framework. The legacy Input Manager is prohibited.
 - iPhone/landscape/touch is primary; desktop is development-only.
