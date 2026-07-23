@@ -69,7 +69,7 @@ namespace Wayroot.Core
             GameObject sunmeadowFinaleMotif = CreateSunmeadowFinaleMotif();
             BloomwellFinalePresentation finalePresentation = new GameObject("Bloomwell Finale Presentation").AddComponent<BloomwellFinalePresentation>();
             finalePresentation.Configure(gathering, creature, bloomwell, bloomwell.transform, bloomwellRestoredVisual, sunmeadowFinaleMotif, GameObject.Find("Sunmeadow Sun").GetComponent<Light>(), bloomwell.GetComponent<Light>(), bloomwellRestoredVisual.GetComponent<Light>());
-            ActionFeedbackHud feedback = CreateRuntimeUi(input, player, playerHealth, enemy, grove, cameraController, pause, gathering, merchant, build, wayroot, creature, bloomwell, soundscape, sceneCamera, gathering.Nodes[0].transform, merchant.transform, build.transform, wayroot.transform, guardian.transform, bloomwell.transform);
+            ActionFeedbackHud feedback = CreateRuntimeUi(input, player, playerHealth, enemy, grove, cameraController, pause, gathering, merchant, build, wayroot, creature, bloomwell, soundscape, sceneCamera, gathering.Nodes[0].transform, gathering.Nodes[1].transform, gathering.Nodes[2].transform, enemy.transform, merchant.transform, build.transform, wayroot.transform, guardian.transform, bloomwell.transform);
             gathering.SetFeedback(feedback);
             gathering.SetSoundscape(soundscape);
             merchant.SetFeedback(feedback);
@@ -718,7 +718,7 @@ namespace Wayroot.Core
             return motif;
         }
 
-        private static ActionFeedbackHud CreateRuntimeUi(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeEnemy enemy, RestoredGroveController grove, TopDownCameraController cameraController, PauseController pause, PrototypeGatheringController gathering, PrototypeMerchantController merchant, PrototypeBuildController build, PrototypeWayrootController wayroot, PrototypeCreatureController creature, BloomwellController bloomwell, ProceduralSoundscape soundscape, UnityEngine.Camera sceneCamera, Transform resourceTarget, Transform merchantTarget, Transform shelterTarget, Transform wayrootTarget, Transform guardianTarget, Transform bloomwellTarget)
+        private static ActionFeedbackHud CreateRuntimeUi(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeEnemy enemy, RestoredGroveController grove, TopDownCameraController cameraController, PauseController pause, PrototypeGatheringController gathering, PrototypeMerchantController merchant, PrototypeBuildController build, PrototypeWayrootController wayroot, PrototypeCreatureController creature, BloomwellController bloomwell, ProceduralSoundscape soundscape, UnityEngine.Camera sceneCamera, Transform wildflowerTarget, Transform youngTreeTarget, Transform stoneOutcropTarget, Transform practiceSlimeTarget, Transform merchantTarget, Transform shelterTarget, Transform wayrootTarget, Transform guardianTarget, Transform bloomwellTarget)
         {
             Canvas canvas = new GameObject("Prototype HUD").AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -826,7 +826,9 @@ namespace Wayroot.Core
             journeyPointer.sizeDelta = new Vector2(44f, 44f);
             Text pointerGlyph = CreateText("Journey Firefly Glyph", journeyPointer, "✦", 28, TextAnchor.MiddleCenter);
             pointerGlyph.color = new Color(0.18f, 0.30f, 0.16f);
-            journeyCard.gameObject.AddComponent<JourneyGuidanceController>().Configure(player, sceneCamera, journeyText, journeyPointer, resourceTarget, merchantTarget, shelterTarget, wayrootTarget, guardianTarget, bloomwellTarget);
+            JourneyLandmarkEmphasis landmarkEmphasis = new GameObject("Journey Landmark Emphasis").AddComponent<JourneyLandmarkEmphasis>();
+            landmarkEmphasis.Configure();
+            journeyCard.gameObject.AddComponent<JourneyGuidanceController>().Configure(player, sceneCamera, journeyText, journeyPointer, landmarkEmphasis, wildflowerTarget, youngTreeTarget, stoneOutcropTarget, practiceSlimeTarget, merchantTarget, shelterTarget, wayrootTarget, guardianTarget, bloomwellTarget);
 
             RectTransform promptCard = CreatePanel("Contextual Action Prompt", safeArea, new Color(0.05f, 0.11f, 0.13f, 0.90f));
             promptCard.sizeDelta = new Vector2(460f, 54f);

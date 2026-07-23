@@ -17,6 +17,7 @@ namespace Wayroot.Guidance
         private UnityEngine.Camera _camera = null!;
         private Text _statusText = null!;
         private RectTransform _pointer = null!;
+        private JourneyLandmarkEmphasis _landmarkEmphasis = null!;
         private float _nextRefreshTime;
 
         public JourneyGuidanceState CurrentState { get; private set; }
@@ -26,7 +27,11 @@ namespace Wayroot.Guidance
             UnityEngine.Camera sceneCamera,
             Text statusText,
             RectTransform pointer,
-            Transform resource,
+            JourneyLandmarkEmphasis landmarkEmphasis,
+            Transform wildflower,
+            Transform youngTree,
+            Transform stoneOutcrop,
+            Transform practiceSlime,
             Transform merchant,
             Transform shelter,
             Transform wayroot,
@@ -37,7 +42,11 @@ namespace Wayroot.Guidance
             _camera = sceneCamera;
             _statusText = statusText;
             _pointer = pointer;
-            _targets[JourneyTarget.Resource] = resource;
+            _landmarkEmphasis = landmarkEmphasis;
+            _targets[JourneyTarget.Wildflower] = wildflower;
+            _targets[JourneyTarget.YoungTree] = youngTree;
+            _targets[JourneyTarget.StoneOutcrop] = stoneOutcrop;
+            _targets[JourneyTarget.PracticeSlime] = practiceSlime;
             _targets[JourneyTarget.Merchant] = merchant;
             _targets[JourneyTarget.Shelter] = shelter;
             _targets[JourneyTarget.Wayroot] = wayroot;
@@ -50,6 +59,7 @@ namespace Wayroot.Guidance
         {
             CurrentState = JourneyGuidanceRules.Select(PrototypeGatheringSaveService.Load());
             _statusText.text = CurrentState.Status;
+            _landmarkEmphasis.SetTarget(CurrentState.HasPointer && _targets.TryGetValue(CurrentState.Target, out Transform target) ? target : null);
             UpdatePointer();
         }
 
