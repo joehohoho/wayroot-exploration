@@ -301,10 +301,13 @@ namespace Wayroot.Core
             SetMaterialColor(roof.GetComponent<Renderer>(), new Color(0.72f, 0.18f, 0.13f));
             shelter.SetActive(false);
 
+            ShelterCozyPresentation cozyPresentation = new GameObject("Shelter Cozy Presentation").AddComponent<ShelterCozyPresentation>();
+            cozyPresentation.Configure(plot.transform, shelter);
+
             PrototypeBuildController build = plot.AddComponent<PrototypeBuildController>();
             Vector3 shelterReturnPoint = shelter.transform.position + new Vector3(0f, 1f, -1.7f);
             TextMesh shelterLabel = CreateWorldIdentifier("SHELTER\nBUILD PLOT", shelter.transform, new Vector3(0f, 3.25f, 0f), sceneCamera, new Color(0.62f, 1f, 0.66f));
-            build.Configure(input, player, gathering, playerHealth, shelter, plotRenderer, shelterLabel, shelterReturnPoint);
+            build.Configure(input, player, gathering, playerHealth, shelter, plotRenderer, shelterLabel, shelterReturnPoint, cozyPresentation);
             return build;
         }
 
@@ -380,7 +383,12 @@ namespace Wayroot.Core
             piece.transform.SetParent(parent, false);
             piece.transform.localPosition = localPosition;
             piece.transform.localScale = localScale;
-            SetMaterialColor(piece.GetComponent<Renderer>(), color);
+            Renderer renderer = piece.GetComponent<Renderer>();
+            // Pin the shelter's persistent body to the source-controlled URP material as well.
+            // This prevents built-only walls/roof from using stripped fallback primitive shaders.
+            Material? shelterMaterial = Resources.Load<Material>("ActorSpriteUnlit");
+            if (shelterMaterial != null) renderer.sharedMaterial = shelterMaterial;
+            SetMaterialColor(renderer, color);
         }
 
         private static PrototypeEnemy CreateCombat(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, UnityEngine.Camera sceneCamera, out PrototypeAttackController attack)

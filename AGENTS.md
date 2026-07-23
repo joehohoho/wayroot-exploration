@@ -1,7 +1,7 @@
 # Wayroot Exploration — Agent Instructions
 
 ## Current scope
-- **Current milestone:** Phase 26 combat encounter polish is implemented and desktop-validated. Do not begin Phase 27 without approval.
+- **Current milestone:** Phase 27 shelter and homestead cozy-art pass is implemented and desktop-validated. Do not begin Phase 28 without approval.
 - Unity **6000.5.4f1** is owner-approved and pinned for Phases 0–24. Do not change `ProjectSettings/ProjectVersion.txt` without owner approval.
 - Use C#, URP, Unity Input System, TextMeshPro, and Unity Test Framework. The legacy Input Manager is prohibited.
 - iPhone/landscape/touch is primary; desktop is development-only.

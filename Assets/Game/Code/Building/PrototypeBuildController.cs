@@ -19,6 +19,7 @@ namespace Wayroot.Building
         private GameObject _shelter = null!;
         private Renderer _plotRenderer = null!;
         private TextMesh _shelterLabel = null!;
+        private ShelterCozyPresentation _cozyPresentation = null!;
         private Vector3 _shelterReturnPoint;
         private bool _wasInteracting;
         private ActionFeedbackHud? _feedback;
@@ -35,7 +36,7 @@ namespace Wayroot.Building
 
         public void SetSoundscape(ProceduralSoundscape soundscape) => _soundscape = soundscape;
 
-        public void Configure(PrototypeInputReader input, PrototypePlayerController player, PrototypeGatheringController gathering, PrototypePlayerHealth playerHealth, GameObject shelter, Renderer plotRenderer, TextMesh shelterLabel, Vector3 shelterReturnPoint)
+        public void Configure(PrototypeInputReader input, PrototypePlayerController player, PrototypeGatheringController gathering, PrototypePlayerHealth playerHealth, GameObject shelter, Renderer plotRenderer, TextMesh shelterLabel, Vector3 shelterReturnPoint, ShelterCozyPresentation cozyPresentation)
         {
             _input = input;
             _player = player;
@@ -45,6 +46,7 @@ namespace Wayroot.Building
             _plotRenderer = plotRenderer;
             _shelterLabel = shelterLabel;
             _shelterReturnPoint = shelterReturnPoint;
+            _cozyPresentation = cozyPresentation;
             if (_gathering.HasActiveShelterReturnPoint) _playerHealth.ActivateShelterReturnPoint(_shelterReturnPoint);
             ApplyBuiltVisual(_gathering.ShelterBuilt);
             if (_gathering.ShelterBuilt)
@@ -65,6 +67,7 @@ namespace Wayroot.Building
                     _gathering.TryRestAtShelter(out string status);
                     if (_gathering.HasActiveShelterReturnPoint) _playerHealth.ActivateShelterReturnPoint(_shelterReturnPoint);
                     Status = status;
+                    _cozyPresentation.PlayRestFeedback();
                 }
                 else
                 {
@@ -83,17 +86,16 @@ namespace Wayroot.Building
         private void ApplyBuiltVisual(bool built)
         {
             _shelter.SetActive(built);
-            _shelterLabel.text = !built
-                ? "SHELTER\nBUILD PLOT"
-                : _gathering.HasActiveShelterReturnPoint ? "SHELTER\nACTIVE HOME" : "SHELTER\nREST HERE";
+            _cozyPresentation.ApplyState(built);
+            _shelterLabel.text = ShelterCozyArtRules.GetStateLabel(built, _gathering.HasActiveShelterReturnPoint);
             Material material = _plotRenderer.material;
             if (material.HasProperty("_BaseColor"))
             {
-                material.SetColor("_BaseColor", built ? new Color(0.3f, 0.62f, 0.35f) : new Color(0.77f, 0.58f, 0.22f));
+                material.SetColor("_BaseColor", ShelterCozyArtRules.GetPlotColor(built));
             }
             else
             {
-                material.color = built ? new Color(0.3f, 0.62f, 0.35f) : new Color(0.77f, 0.58f, 0.22f);
+                material.color = ShelterCozyArtRules.GetPlotColor(built);
             }
         }
     }
