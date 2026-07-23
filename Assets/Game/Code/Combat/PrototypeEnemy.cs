@@ -1,6 +1,7 @@
 using UnityEngine;
 using Wayroot.Art;
 using Wayroot.UI;
+using Wayroot.Audio;
 
 namespace Wayroot.Combat
 {
@@ -16,6 +17,7 @@ namespace Wayroot.Combat
         private float _lastRespawnAt = float.NegativeInfinity;
         private bool _hidePrimitiveVisual;
         private ActionFeedbackHud? _feedback;
+        private ProceduralSoundscape? _soundscape;
 
         public bool IsDefeated => _health <= 0;
         public int Health => _health;
@@ -46,6 +48,7 @@ namespace Wayroot.Combat
         }
 
         public void SetFeedback(ActionFeedbackHud feedback) => _feedback = feedback;
+        public void SetSoundscape(ProceduralSoundscape soundscape) => _soundscape = soundscape;
 
         public void HidePrimitiveVisual()
         {
@@ -74,6 +77,7 @@ namespace Wayroot.Combat
             _health = _profile.MaxHealth;
             body.enabled = !_hidePrimitiveVisual;
             _collider.enabled = true;
+            _soundscape?.Play(SoundscapeCue.EnemyRespawn);
             _feedback?.Show($"{DisplayName} RESPAWNED");
         }
     }

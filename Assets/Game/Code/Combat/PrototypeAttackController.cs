@@ -20,6 +20,7 @@ namespace Wayroot.Combat
         private float _lastAttack = -100f;
         private ActionFeedbackHud? _feedback;
         private PlayerAttackPresentation? _presentation;
+        private readonly OptionalHapticFeedback _haptics = new();
 
         public float AttackElapsed => Time.time - _lastAttack;
         private ProceduralSoundscape? _soundscape;
@@ -50,7 +51,9 @@ namespace Wayroot.Combat
             target.TakeDamage(_inventory.AttackDamage);
             _presentation?.PlayContact(target.transform.position, target.IsDefeated);
             _player.GetComponent<ProceduralStylizedAnimator>()?.Emphasize();
-            _soundscape?.Play(target.IsDefeated ? SoundscapeCue.Defeat : SoundscapeCue.CombatHit);
+            bool defeated = target.IsDefeated;
+            _soundscape?.Play(defeated ? SoundscapeCue.Defeat : SoundscapeCue.AttackContact);
+            _haptics.Pulse(defeated ? CombatHapticCue.EnemyDefeated : CombatHapticCue.AttackContact);
             _feedback?.Show(target.IsDefeated
                 ? $"{target.DisplayName} DEFEATED: +1 CORE"
                 : $"HIT: {target.DisplayName} {target.Health}/{target.MaxHealth}");

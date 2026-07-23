@@ -12,7 +12,11 @@ namespace Wayroot.Audio
         MosslingGuide,
         BloomwellRestore,
         Dodge,
-        EnemyAnticipate
+        EnemyAnticipate,
+        AttackContact,
+        PlayerDamaged,
+        PlayerRespawn,
+        EnemyRespawn
     }
 
     public readonly struct SoundscapeProfile
@@ -54,6 +58,10 @@ namespace Wayroot.Audio
                 SoundscapeCue.BloomwellRestore => new SoundscapeProfile(523f, 0.65f, 0.32f, 784f),
                 SoundscapeCue.Dodge => new SoundscapeProfile(659f, 0.16f, 0.18f, 880f),
                 SoundscapeCue.EnemyAnticipate => new SoundscapeProfile(174f, 0.24f, 0.18f, 220f),
+                SoundscapeCue.AttackContact => new SoundscapeProfile(220f, 0.10f, 0.20f, 330f),
+                SoundscapeCue.PlayerDamaged => new SoundscapeProfile(148f, 0.16f, 0.24f, 185f),
+                SoundscapeCue.PlayerRespawn => new SoundscapeProfile(392f, 0.32f, 0.22f, 523f),
+                SoundscapeCue.EnemyRespawn => new SoundscapeProfile(247f, 0.20f, 0.18f, 294f),
                 _ => new SoundscapeProfile(392f, 0.10f, 0.16f)
             };
         }

@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-**Phase 30 — Mossling companion presence pass is implemented and desktop-validated.**
+**Phase 31 — Combat feel and environmental ambience pass is implemented and desktop-validated.**
 
 The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner play review; physical-iPhone evidence is an independent gate for the complete controlled slice.
 
@@ -41,6 +41,7 @@ The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner
 | 28 | Bloomwell finale presentation polish | **Implemented; desktop-validated** |
 | 29 | First-session onboarding and pacing pass | **Implemented; desktop-validated** |
 | 30 | Mossling companion presence pass using existing guide state | **Implemented; desktop-validated** |
+| 31 | Combat feel and environmental ambience using original procedural audio, optional haptic seam, and runtime URP presentation | **Implemented; desktop-validated** |
 
 ## Phase 20 verification record
 

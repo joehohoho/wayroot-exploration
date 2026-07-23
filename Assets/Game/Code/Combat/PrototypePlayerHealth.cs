@@ -14,6 +14,7 @@ namespace Wayroot.Combat
         private bool _hasActiveShelterReturnPoint;
         private ActionFeedbackHud? _feedback;
         private ProceduralSoundscape? _soundscape;
+        private readonly OptionalHapticFeedback _haptics = new();
         private float _dodgeInvulnerableUntil = float.NegativeInfinity;
         private float _lastRespawnAt = float.NegativeInfinity;
 
@@ -42,13 +43,19 @@ namespace Wayroot.Combat
         {
             if (IsDodgeInvulnerable) return;
             _health = CombatRules.ApplyDamage(_health, damage, out bool defeated);
-            if (!defeated) return;
+            if (!defeated)
+            {
+                _soundscape?.Play(SoundscapeCue.PlayerDamaged);
+                _haptics.Pulse(CombatHapticCue.PlayerDamaged);
+                return;
+            }
 
             bool shelterReturn = ShelterRestRules.GetRespawnDestination(_hasActiveShelterReturnPoint) == RespawnDestination.ActiveShelter;
             _lastRespawnAt = Time.time;
             transform.position = shelterReturn ? _activeShelterReturnPoint : _home;
             _health = maxHealth;
-            _soundscape?.Play(SoundscapeCue.Defeat);
+            _soundscape?.Play(SoundscapeCue.PlayerRespawn);
+            _haptics.Pulse(CombatHapticCue.PlayerRespawn);
             _feedback?.Show(shelterReturn ? "RESPAWNED AT ACTIVE SHELTER: HEALTH RESTORED" : "RESPAWNED AT DEFAULT SPAWN: HEALTH RESTORED");
         }
     }

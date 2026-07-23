@@ -79,6 +79,8 @@ namespace Wayroot.Core
             attack.SetFeedback(feedback);
             attack.SetSoundscape(soundscape);
             enemy.SetFeedback(feedback);
+            enemy.SetSoundscape(soundscape);
+            guardian.SetSoundscape(soundscape);
             grove.SetFeedback(feedback);
             moonlitGlade.SetFeedback(feedback);
             bloomwell.SetFeedback(feedback);
@@ -92,6 +94,7 @@ namespace Wayroot.Core
             creature.SetSoundscape(soundscape);
             enemy.GetComponent<PrototypeEnemyChase>().SetSoundscape(soundscape);
             guardian.GetComponent<PrototypeEnemyChase>().SetSoundscape(soundscape);
+            CreatePhaseThirtyOneAmbience(build.transform, grove.transform, moonlitGlade.transform, bloomwell.transform);
         }
 
         private static void CreateLight()
@@ -486,6 +489,12 @@ namespace Wayroot.Core
             CreateVisualPrimitive("Guardian Arena Boundary West", PrimitiveType.Cube, grove.position + new Vector3(-2.25f, 0.06f, -0.35f), new Vector3(0.10f, 0.05f, 2.15f), new Color(0.68f, 0.92f, 0.26f)).transform.SetParent(arenaFocus, true);
             CreateVisualPrimitive("Guardian Arena Boundary East", PrimitiveType.Cube, grove.position + new Vector3(2.25f, 0.06f, -0.35f), new Vector3(0.10f, 0.05f, 2.15f), new Color(0.68f, 0.92f, 0.26f)).transform.SetParent(arenaFocus, true);
             CreateVisualPrimitive("Guardian Threat Focus", PrimitiveType.Cylinder, guardian.transform.position + new Vector3(0f, -0.92f, 0f), new Vector3(1.95f, 0.018f, 1.95f), new Color(0.34f, 0.72f, 0.22f)).transform.SetParent(arenaFocus, true);
+        }
+
+        private static void CreatePhaseThirtyOneAmbience(Transform shelter, Transform grove, Transform glade, Transform bloomwell)
+        {
+            EnvironmentalAmbiencePresentation ambience = new GameObject("Phase 31 Environmental Ambience").AddComponent<EnvironmentalAmbiencePresentation>();
+            ambience.Configure(shelter, grove, glade, bloomwell);
         }
 
         private static void CreatePhaseTwentyThreeSpritePresentation(PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeAttackController attack,
