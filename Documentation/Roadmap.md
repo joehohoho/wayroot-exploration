@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-**Phase 26 — Combat encounter polish is implemented and desktop-validated.**
+**Phase 28 — Bloomwell finale presentation pass is implemented and desktop-validated.**
 
 The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner play review; physical-iPhone evidence is an independent gate for the complete controlled slice.
 

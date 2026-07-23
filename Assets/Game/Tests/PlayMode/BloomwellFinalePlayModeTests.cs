@@ -53,6 +53,11 @@ namespace Wayroot.Tests.PlayMode
             Assert.That(GameObject.Find("Bloomwell Restored Finale Bloom").activeSelf, Is.True);
             Assert.That(GameObject.Find("Sunmeadow Bloomwell Finale Motif").activeSelf, Is.True);
             Assert.That(GameObject.Find("Friendly Mossling (hold E)").GetComponent<global::Wayroot.Creatures.PrototypeCreatureController>().IsCelebratingFinale, Is.True);
+            Assert.That(GameObject.Find("Bloomwell Restoration Climax Art"), Is.Not.Null);
+            Assert.That(GameObject.Find("Bloomwell Restoration Climax Art").transform.parent, Is.Null);
+            Assert.That(GameObject.Find("Bloomwell Finale Orbit Petal 1").GetComponent<Collider>(), Is.Null);
+            Assert.That(GameObject.Find("Bloomwell Finale Orbit Petal 1").GetComponent<Renderer>().sharedMaterial, Is.Not.Null);
+            Assert.That(GameObject.Find("Bloomwell Finale Presentation").GetComponent<BloomwellFinalePresentation>().IsClimaxPlaying, Is.True);
 
             yield return SceneManager.LoadSceneAsync("Bootstrap", LoadSceneMode.Single);
             yield return null;

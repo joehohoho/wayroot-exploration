@@ -109,8 +109,10 @@ namespace Wayroot.Audio
                 float normalizedTime = sample / (float)samples;
                 float envelope = Mathf.Sin(normalizedTime * Mathf.PI) * (1f - normalizedTime * 0.25f);
                 float time = sample / (float)SampleRate;
-                float tone = Mathf.Sin(time * Mathf.PI * 2f * profile.FrequencyHz);
-                if (profile.SecondFrequencyHz > 0f)
+                float tone = cue == SoundscapeCue.BloomwellRestore
+                    ? CreateBloomwellMotifTone(time, normalizedTime, profile)
+                    : Mathf.Sin(time * Mathf.PI * 2f * profile.FrequencyHz);
+                if (cue != SoundscapeCue.BloomwellRestore && profile.SecondFrequencyHz > 0f)
                 {
                     tone = tone * 0.72f + Mathf.Sin(time * Mathf.PI * 2f * profile.SecondFrequencyHz) * 0.28f;
                 }
@@ -121,6 +123,12 @@ namespace Wayroot.Audio
             AudioClip clip = AudioClip.Create($"Procedural {cue}", samples, 1, SampleRate, false);
             clip.SetData(data, 0);
             return clip;
+        }
+
+        private static float CreateBloomwellMotifTone(float time, float normalizedTime, SoundscapeProfile profile)
+        {
+            float frequency = normalizedTime < 0.33f ? profile.FrequencyHz : normalizedTime < 0.66f ? profile.SecondFrequencyHz : profile.SecondFrequencyHz * 1.25f;
+            return Mathf.Sin(time * Mathf.PI * 2f * frequency) * 0.78f + Mathf.Sin(time * Mathf.PI * 2f * frequency * 0.5f) * 0.22f;
         }
 
         private void OnDestroy()

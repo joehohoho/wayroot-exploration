@@ -66,10 +66,12 @@ namespace Wayroot.Exploration
             _restoredVisual.SetActive(restored);
             Status = restored ? BloomwellRestorationRules.CompleteStatus : "BLOOMWELL: gather its restoration.";
             _label.text = restored ? "BLOOMWELL  •  RESTORED" : "BLOOMWELL";
-            Material material = _dormantRenderer.material;
             Color color = restored ? new Color(0.52f, 0.92f, 0.84f) : new Color(0.30f, 0.25f, 0.52f);
-            if (material.HasProperty("_BaseColor")) material.SetColor("_BaseColor", color);
-            else material.color = color;
+            MaterialPropertyBlock properties = new();
+            _dormantRenderer.GetPropertyBlock(properties);
+            properties.SetColor("_BaseColor", color);
+            properties.SetColor("_Color", color);
+            _dormantRenderer.SetPropertyBlock(properties);
         }
     }
 }

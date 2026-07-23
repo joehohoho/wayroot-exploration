@@ -34,7 +34,7 @@ namespace Wayroot.Guidance
         {
             if (save.bloomwellRestored)
             {
-                return new JourneyGuidanceState(JourneyTarget.None, "JOURNEY  •  BLOOMWELL RESTORED — EXPLORE FREELY", false);
+                return new JourneyGuidanceState(JourneyTarget.None, Exploration.BloomwellFinalePresentationRules.CompletionJourneyStatus, false);
             }
 
             if (save.weaponLevel < 1)

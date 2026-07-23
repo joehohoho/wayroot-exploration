@@ -68,7 +68,7 @@ namespace Wayroot.Core
             CreatePhaseTwentySixCombatPresentation(player, attack, enemy, guardian, grove.transform);
             GameObject sunmeadowFinaleMotif = CreateSunmeadowFinaleMotif();
             BloomwellFinalePresentation finalePresentation = new GameObject("Bloomwell Finale Presentation").AddComponent<BloomwellFinalePresentation>();
-            finalePresentation.Configure(gathering, creature, bloomwell, bloomwellRestoredVisual, sunmeadowFinaleMotif, GameObject.Find("Sunmeadow Sun").GetComponent<Light>());
+            finalePresentation.Configure(gathering, creature, bloomwell, bloomwell.transform, bloomwellRestoredVisual, sunmeadowFinaleMotif, GameObject.Find("Sunmeadow Sun").GetComponent<Light>(), bloomwell.GetComponent<Light>(), bloomwellRestoredVisual.GetComponent<Light>());
             ActionFeedbackHud feedback = CreateRuntimeUi(input, player, playerHealth, enemy, grove, cameraController, pause, gathering, merchant, build, wayroot, creature, bloomwell, soundscape, sceneCamera, gathering.Nodes[0].transform, merchant.transform, build.transform, wayroot.transform, guardian.transform, bloomwell.transform);
             gathering.SetFeedback(feedback);
             gathering.SetSoundscape(soundscape);
