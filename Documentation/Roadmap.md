@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-**Phase 31 — Combat feel and environmental ambience pass is implemented and desktop-validated.**
+**Phase 32 — Accessibility and clarity pass is implemented and desktop-validated.**
 
 The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner play review; physical-iPhone evidence is an independent gate for the complete controlled slice.
 
@@ -42,6 +42,7 @@ The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner
 | 29 | First-session onboarding and pacing pass | **Implemented; desktop-validated** |
 | 30 | Mossling companion presence pass using existing guide state | **Implemented; desktop-validated** |
 | 31 | Combat feel and environmental ambience using original procedural audio, optional haptic seam, and runtime URP presentation | **Implemented; desktop-validated** |
+| 32 | Compact persistent reduced-flash/reduced-motion preferences and presentation clarity improvements | **Implemented; desktop-validated** |
 
 ## Phase 20 verification record
 
@@ -124,5 +125,5 @@ See `Documentation/Phase9ProductionReadiness.md` for scope, commands/results, re
 
 ## Next milestone gate
 
-1. Phase 30 is published for owner review. **Do not begin Phase 31 without explicit owner approval.**
+1. Phase 32 is published for owner review. **Do not begin Phase 33 without explicit owner approval.**
 2. Before a release-quality or mobile-ready claim, complete `Documentation/Phase9iPhoneBlockers.md` and the touch-only `Documentation/Phase9FullLoopPlaytest.md` on physical iPhone hardware.

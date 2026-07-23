@@ -53,6 +53,8 @@ namespace Wayroot.Core
             player.Configure(input, playerHealth);
             TopDownCameraController cameraController = CreateCamera(player.transform, input, out UnityEngine.Camera sceneCamera);
             PrototypeGatheringController gathering = CreateGathering(input, player, sceneCamera);
+            AccessibilityPreferences accessibilityPreferences = new GameObject("Accessibility Preferences").AddComponent<AccessibilityPreferences>();
+            accessibilityPreferences.Configure();
             PrototypeMerchantController merchant = CreateMerchant(input, player, gathering, sceneCamera);
             PrototypeBuildController build = CreateBuildPlot(input, player, playerHealth, gathering, sceneCamera);
             PrototypeWayrootController wayroot = CreateWayroot(input, player, gathering, sceneCamera);
@@ -63,13 +65,13 @@ namespace Wayroot.Core
             pause.Configure(player, cameraController);
             ProceduralSoundscape soundscape = new GameObject("Procedural Cozy Soundscape").AddComponent<ProceduralSoundscape>();
             soundscape.Configure(gathering);
-            CreatePhaseEighteenArtMotion(player, creature, enemy, grove, gathering);
+            CreatePhaseEighteenArtMotion(player, creature, enemy, grove, gathering, accessibilityPreferences);
             CreatePhaseTwentyThreeSpritePresentation(player, playerHealth, attack, gathering, enemy, guardian, sceneCamera);
-            CreatePhaseTwentySixCombatPresentation(player, attack, enemy, guardian, grove.transform);
+            CreatePhaseTwentySixCombatPresentation(player, attack, enemy, guardian, grove.transform, accessibilityPreferences);
             GameObject sunmeadowFinaleMotif = CreateSunmeadowFinaleMotif();
             BloomwellFinalePresentation finalePresentation = new GameObject("Bloomwell Finale Presentation").AddComponent<BloomwellFinalePresentation>();
             finalePresentation.Configure(gathering, creature, bloomwell, bloomwell.transform, bloomwellRestoredVisual, sunmeadowFinaleMotif, GameObject.Find("Sunmeadow Sun").GetComponent<Light>(), bloomwell.GetComponent<Light>(), bloomwellRestoredVisual.GetComponent<Light>());
-            ActionFeedbackHud feedback = CreateRuntimeUi(input, player, playerHealth, enemy, grove, cameraController, pause, gathering, merchant, build, wayroot, creature, bloomwell, soundscape, sceneCamera, gathering.Nodes[0].transform, gathering.Nodes[1].transform, gathering.Nodes[2].transform, enemy.transform, merchant.transform, build.transform, wayroot.transform, guardian.transform, bloomwell.transform);
+            ActionFeedbackHud feedback = CreateRuntimeUi(input, player, playerHealth, enemy, grove, cameraController, pause, gathering, merchant, build, wayroot, creature, bloomwell, soundscape, accessibilityPreferences, sceneCamera, gathering.Nodes[0].transform, gathering.Nodes[1].transform, gathering.Nodes[2].transform, enemy.transform, merchant.transform, build.transform, wayroot.transform, guardian.transform, bloomwell.transform);
             gathering.SetFeedback(feedback);
             gathering.SetSoundscape(soundscape);
             merchant.SetFeedback(feedback);
@@ -94,7 +96,7 @@ namespace Wayroot.Core
             creature.SetSoundscape(soundscape);
             enemy.GetComponent<PrototypeEnemyChase>().SetSoundscape(soundscape);
             guardian.GetComponent<PrototypeEnemyChase>().SetSoundscape(soundscape);
-            CreatePhaseThirtyOneAmbience(build.transform, grove.transform, moonlitGlade.transform, bloomwell.transform);
+            CreatePhaseThirtyOneAmbience(build.transform, grove.transform, moonlitGlade.transform, bloomwell.transform, accessibilityPreferences);
         }
 
         private static void CreateLight()
@@ -473,14 +475,14 @@ namespace Wayroot.Core
             CreateVisualPrimitive("Restored Grove Guardian Ring", PrimitiveType.Cylinder, grove.position + new Vector3(0f, 0.025f, -0.35f), new Vector3(1.78f, 0.025f, 1.78f), new Color(0.20f, 0.34f, 0.18f)).transform.SetParent(dressing, true);
         }
 
-        private static void CreatePhaseTwentySixCombatPresentation(PrototypePlayerController player, PrototypeAttackController attack, PrototypeEnemy slime, PrototypeEnemy guardian, Transform grove)
+        private static void CreatePhaseTwentySixCombatPresentation(PrototypePlayerController player, PrototypeAttackController attack, PrototypeEnemy slime, PrototypeEnemy guardian, Transform grove, AccessibilityPreferences accessibilityPreferences)
         {
             PlayerAttackPresentation playerPresentation = player.gameObject.AddComponent<PlayerAttackPresentation>();
-            playerPresentation.Configure();
+            playerPresentation.Configure(accessibilityPreferences);
             attack.SetPresentation(playerPresentation);
 
-            slime.gameObject.AddComponent<EnemyEncounterPresentation>().Configure(slime, slime.GetComponent<PrototypeEnemyChase>(), false);
-            guardian.gameObject.AddComponent<EnemyEncounterPresentation>().Configure(guardian, guardian.GetComponent<PrototypeEnemyChase>(), true);
+            slime.gameObject.AddComponent<EnemyEncounterPresentation>().Configure(slime, slime.GetComponent<PrototypeEnemyChase>(), false, accessibilityPreferences);
+            guardian.gameObject.AddComponent<EnemyEncounterPresentation>().Configure(guardian, guardian.GetComponent<PrototypeEnemyChase>(), true, accessibilityPreferences);
 
             Transform arenaFocus = new GameObject("Phase 26 Thorn Guardian Arena Focus").transform;
             arenaFocus.SetParent(grove, true);
@@ -491,10 +493,10 @@ namespace Wayroot.Core
             CreateVisualPrimitive("Guardian Threat Focus", PrimitiveType.Cylinder, guardian.transform.position + new Vector3(0f, -0.92f, 0f), new Vector3(1.95f, 0.018f, 1.95f), new Color(0.34f, 0.72f, 0.22f)).transform.SetParent(arenaFocus, true);
         }
 
-        private static void CreatePhaseThirtyOneAmbience(Transform shelter, Transform grove, Transform glade, Transform bloomwell)
+        private static void CreatePhaseThirtyOneAmbience(Transform shelter, Transform grove, Transform glade, Transform bloomwell, AccessibilityPreferences accessibilityPreferences)
         {
             EnvironmentalAmbiencePresentation ambience = new GameObject("Phase 31 Environmental Ambience").AddComponent<EnvironmentalAmbiencePresentation>();
-            ambience.Configure(shelter, grove, glade, bloomwell);
+            ambience.Configure(shelter, grove, glade, bloomwell, accessibilityPreferences);
         }
 
         private static void CreatePhaseTwentyThreeSpritePresentation(PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeAttackController attack,
@@ -518,56 +520,56 @@ namespace Wayroot.Core
             return rig.AddComponent<ActorSpritePresentation>();
         }
 
-        private static void CreatePhaseEighteenArtMotion(PrototypePlayerController player, PrototypeCreatureController mossling, PrototypeEnemy slime, RestoredGroveController grove, PrototypeGatheringController gathering)
+        private static void CreatePhaseEighteenArtMotion(PrototypePlayerController player, PrototypeCreatureController mossling, PrototypeEnemy slime, RestoredGroveController grove, PrototypeGatheringController gathering, AccessibilityPreferences accessibilityPreferences)
         {
             Transform playerRoot = player.transform;
             CreateVisualPrimitive("Player Warm Scarf", PrimitiveType.Sphere, playerRoot.position + new Vector3(0f, 0.28f, -0.34f), new Vector3(0.78f, 0.16f, 0.24f), new Color(0.94f, 0.34f, 0.22f)).transform.SetParent(playerRoot, true);
             CreateVisualPrimitive("Player Lantern Glow", PrimitiveType.Sphere, playerRoot.position + new Vector3(0.48f, 0.35f, 0.2f), Vector3.one * 0.32f, new Color(1f, 0.76f, 0.30f)).transform.SetParent(playerRoot, true);
             CreateVisualPrimitive("Player Dodge Trail", PrimitiveType.Sphere, playerRoot.position + new Vector3(0f, 0.18f, -0.54f), new Vector3(0.74f, 0.18f, 0.90f), new Color(0.58f, 0.84f, 1f)).transform.SetParent(playerRoot, true);
             CreateVisualPrimitive("Player Dodge Trail Glow", PrimitiveType.Sphere, playerRoot.position + new Vector3(0f, 0.28f, -0.82f), new Vector3(0.32f, 0.10f, 0.52f), new Color(0.96f, 0.80f, 0.38f)).transform.SetParent(playerRoot, true);
-            ConfigureMotion(playerRoot.gameObject, ProceduralStylizedAnimator.MotionStyle.Player, player, null, null, gathering,
+            ConfigureMotion(playerRoot.gameObject, ProceduralStylizedAnimator.MotionStyle.Player, player, null, null, gathering, accessibilityPreferences,
                 playerRoot.Find("Player Cloak"), playerRoot.Find("Player Lantern"), playerRoot.Find("Player Hair"), playerRoot.Find("Player Warm Scarf"), playerRoot.Find("Player Lantern Glow"), playerRoot.Find("Player Dodge Trail"), playerRoot.Find("Player Dodge Trail Glow"));
 
             Transform mosslingRoot = mossling.transform;
             CreateVisualPrimitive("Mossling Leaf Cap", PrimitiveType.Sphere, mosslingRoot.position + new Vector3(0f, 0.7f, 0f), new Vector3(0.8f, 0.18f, 0.7f), new Color(0.16f, 0.50f, 0.28f)).transform.SetParent(mosslingRoot, true);
             CreateVisualPrimitive("Mossling Glow Cheek", PrimitiveType.Sphere, mosslingRoot.position + new Vector3(0.28f, 0.17f, 0.64f), Vector3.one * 0.13f, new Color(1f, 0.78f, 0.32f)).transform.SetParent(mosslingRoot, true);
-            ConfigureMotion(mosslingRoot.gameObject, ProceduralStylizedAnimator.MotionStyle.Mossling, null, mossling, null, gathering,
+            ConfigureMotion(mosslingRoot.gameObject, ProceduralStylizedAnimator.MotionStyle.Mossling, null, mossling, null, gathering, accessibilityPreferences,
                 mosslingRoot.Find("Mossling Left Ear"), mosslingRoot.Find("Mossling Right Ear"), mosslingRoot.Find("Mossling Tail"), mosslingRoot.Find("Mossling Leaf Cap"), mosslingRoot.Find("Mossling Glow Cheek"));
 
-            CreateAnimatedEnemyShell(slime.transform, "Slime", new Color(0.96f, 0.32f, 0.38f), ProceduralStylizedAnimator.MotionStyle.Slime, slime, gathering);
+            CreateAnimatedEnemyShell(slime.transform, "Slime", new Color(0.96f, 0.32f, 0.38f), ProceduralStylizedAnimator.MotionStyle.Slime, slime, gathering, accessibilityPreferences);
             PrototypeEnemy guardian = grove.Guardian;
-            if (guardian != null) CreateAnimatedEnemyShell(guardian.transform, "Guardian", new Color(0.42f, 0.80f, 0.20f), ProceduralStylizedAnimator.MotionStyle.Guardian, guardian, gathering);
+            if (guardian != null) CreateAnimatedEnemyShell(guardian.transform, "Guardian", new Color(0.42f, 0.80f, 0.20f), ProceduralStylizedAnimator.MotionStyle.Guardian, guardian, gathering, accessibilityPreferences);
 
             GameObject creek = GameObject.Find("Sunmeadow Creek");
             if (creek != null)
             {
                 CreateVisualPrimitive("Creek Ripple A", PrimitiveType.Sphere, creek.transform.position + new Vector3(-0.35f, 0.08f, -3.2f), new Vector3(0.78f, 0.025f, 0.44f), new Color(0.42f, 0.82f, 0.92f)).transform.SetParent(creek.transform, true);
                 CreateVisualPrimitive("Creek Ripple B", PrimitiveType.Sphere, creek.transform.position + new Vector3(0.32f, 0.08f, 2.5f), new Vector3(0.65f, 0.025f, 0.38f), new Color(0.58f, 0.88f, 0.94f)).transform.SetParent(creek.transform, true);
-                ConfigureMotion(creek, ProceduralStylizedAnimator.MotionStyle.Water, null, null, null, gathering, creek.transform.Find("River Lily 1"), creek.transform.Find("River Lily 2"), creek.transform.Find("Creek Ripple A"), creek.transform.Find("Creek Ripple B"));
+                ConfigureMotion(creek, ProceduralStylizedAnimator.MotionStyle.Water, null, null, null, gathering, accessibilityPreferences, creek.transform.Find("River Lily 1"), creek.transform.Find("River Lily 2"), creek.transform.Find("Creek Ripple A"), creek.transform.Find("Creek Ripple B"));
             }
 
             foreach (Transform canopy in GameObject.FindObjectsByType<Transform>(FindObjectsInactive.Include, FindObjectsSortMode.None))
             {
                 if (canopy.name == "Tree Canopy Low" || canopy.name == "Tree Canopy High" || canopy.name == "Sunmeadow Flower")
                 {
-                    ConfigureMotion(canopy.gameObject, ProceduralStylizedAnimator.MotionStyle.Foliage, null, null, null, gathering, canopy);
+                    ConfigureMotion(canopy.gameObject, ProceduralStylizedAnimator.MotionStyle.Foliage, null, null, null, gathering, accessibilityPreferences, canopy);
                 }
             }
 
             GameObject wayroot = GameObject.Find("Dormant Wayroot (hold E)");
-            if (wayroot != null) ConfigureMotion(wayroot, ProceduralStylizedAnimator.MotionStyle.Landmark, null, null, null, gathering, wayroot.transform.Find("Wayroot Heart"), wayroot.transform.Find("Wayroot Petal Crown"));
+            if (wayroot != null) ConfigureMotion(wayroot, ProceduralStylizedAnimator.MotionStyle.Landmark, null, null, null, gathering, accessibilityPreferences, wayroot.transform.Find("Wayroot Heart"), wayroot.transform.Find("Wayroot Petal Crown"));
             GameObject bloomwell = GameObject.Find("Moonlit Bloomwell Discovery");
-            if (bloomwell != null) ConfigureMotion(bloomwell, ProceduralStylizedAnimator.MotionStyle.Landmark, null, null, null, gathering, bloomwell.transform.Find("Bloomwell Moon"), bloomwell.transform.Find("Bloomwell Mote One"), bloomwell.transform.Find("Bloomwell Mote Two"), bloomwell.transform.Find("Bloomwell Mote Three"));
+            if (bloomwell != null) ConfigureMotion(bloomwell, ProceduralStylizedAnimator.MotionStyle.Landmark, null, null, null, gathering, accessibilityPreferences, bloomwell.transform.Find("Bloomwell Moon"), bloomwell.transform.Find("Bloomwell Mote One"), bloomwell.transform.Find("Bloomwell Mote Two"), bloomwell.transform.Find("Bloomwell Mote Three"));
         }
 
-        private static void CreateAnimatedEnemyShell(Transform enemyRoot, string name, Color color, ProceduralStylizedAnimator.MotionStyle style, PrototypeEnemy enemy, PrototypeGatheringController gathering)
+        private static void CreateAnimatedEnemyShell(Transform enemyRoot, string name, Color color, ProceduralStylizedAnimator.MotionStyle style, PrototypeEnemy enemy, PrototypeGatheringController gathering, AccessibilityPreferences accessibilityPreferences)
         {
             CreateVisualPrimitive($"{name} Animated Shell", PrimitiveType.Sphere, enemyRoot.position + new Vector3(0f, -0.08f, -0.05f), new Vector3(1.12f, 0.84f, 1.12f), color).transform.SetParent(enemyRoot, true);
             CreateVisualPrimitive($"{name} Attack Pulse", PrimitiveType.Sphere, enemyRoot.position + new Vector3(0f, 0.22f, 0.66f), new Vector3(0.28f, 0.18f, 0.10f), new Color(1f, 0.76f, 0.32f)).transform.SetParent(enemyRoot, true);
-            ConfigureMotion(enemyRoot.gameObject, style, null, null, enemy, gathering, enemyRoot.Find($"{name} Animated Shell"), enemyRoot.Find($"{name} Attack Pulse"));
+            ConfigureMotion(enemyRoot.gameObject, style, null, null, enemy, gathering, accessibilityPreferences, enemyRoot.Find($"{name} Animated Shell"), enemyRoot.Find($"{name} Attack Pulse"));
         }
 
-        private static void ConfigureMotion(GameObject owner, ProceduralStylizedAnimator.MotionStyle style, PrototypePlayerController player, PrototypeCreatureController mossling, PrototypeEnemy enemy, PrototypeGatheringController gathering, params Transform[] candidates)
+        private static void ConfigureMotion(GameObject owner, ProceduralStylizedAnimator.MotionStyle style, PrototypePlayerController player, PrototypeCreatureController mossling, PrototypeEnemy enemy, PrototypeGatheringController gathering, AccessibilityPreferences accessibilityPreferences, params Transform[] candidates)
         {
             int count = 0;
             for (int index = 0; index < candidates.Length; index++) if (candidates[index] != null) count++;
@@ -575,7 +577,7 @@ namespace Wayroot.Core
             int write = 0;
             for (int index = 0; index < candidates.Length; index++) if (candidates[index] != null) parts[write++] = candidates[index];
             if (parts.Length == 0) return;
-            owner.AddComponent<ProceduralStylizedAnimator>().Configure(style, parts, player, mossling, enemy, gathering);
+            owner.AddComponent<ProceduralStylizedAnimator>().Configure(style, parts, player, mossling, enemy, gathering, accessibilityPreferences);
         }
 
         private static MoonlitGladeController CreateMoonlitGlade(Transform grove, PrototypeInputReader input, PrototypePlayerController player, PrototypeGatheringController gathering, PrototypeEnemy guardian, UnityEngine.Camera sceneCamera, out BloomwellController bloomwell, out GameObject bloomwellRestoredVisual)
@@ -729,7 +731,7 @@ namespace Wayroot.Core
             return motif;
         }
 
-        private static ActionFeedbackHud CreateRuntimeUi(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeEnemy enemy, RestoredGroveController grove, TopDownCameraController cameraController, PauseController pause, PrototypeGatheringController gathering, PrototypeMerchantController merchant, PrototypeBuildController build, PrototypeWayrootController wayroot, PrototypeCreatureController creature, BloomwellController bloomwell, ProceduralSoundscape soundscape, UnityEngine.Camera sceneCamera, Transform wildflowerTarget, Transform youngTreeTarget, Transform stoneOutcropTarget, Transform practiceSlimeTarget, Transform merchantTarget, Transform shelterTarget, Transform wayrootTarget, Transform guardianTarget, Transform bloomwellTarget)
+        private static ActionFeedbackHud CreateRuntimeUi(PrototypeInputReader input, PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeEnemy enemy, RestoredGroveController grove, TopDownCameraController cameraController, PauseController pause, PrototypeGatheringController gathering, PrototypeMerchantController merchant, PrototypeBuildController build, PrototypeWayrootController wayroot, PrototypeCreatureController creature, BloomwellController bloomwell, ProceduralSoundscape soundscape, AccessibilityPreferences accessibilityPreferences, UnityEngine.Camera sceneCamera, Transform wildflowerTarget, Transform youngTreeTarget, Transform stoneOutcropTarget, Transform practiceSlimeTarget, Transform merchantTarget, Transform shelterTarget, Transform wayrootTarget, Transform guardianTarget, Transform bloomwellTarget)
         {
             Canvas canvas = new GameObject("Prototype HUD").AddComponent<Canvas>();
             canvas.renderMode = RenderMode.ScreenSpaceOverlay;
@@ -774,12 +776,30 @@ namespace Wayroot.Core
             soundButton.gameObject.AddComponent<Button>();
             soundButton.gameObject.AddComponent<SoundToggleButton>().Configure(soundLabel, soundscape);
 
+            RectTransform flashButton = CreatePanel("Reduced Flash Toggle Button", safeArea, new Color(0.33f, 0.22f, 0.48f, 0.94f));
+            flashButton.sizeDelta = new Vector2(180f, 52f);
+            flashButton.anchorMin = flashButton.anchorMax = new Vector2(0f, 1f);
+            flashButton.pivot = new Vector2(0f, 1f);
+            flashButton.anchoredPosition = new Vector2(24f, -344f);
+            Text flashLabel = CreateText("Reduced Flash Toggle Label", flashButton, string.Empty, 16, TextAnchor.MiddleCenter);
+            flashButton.gameObject.AddComponent<Button>();
+            flashButton.gameObject.AddComponent<AccessibilityPreferenceButton>().Configure(flashLabel, accessibilityPreferences, AccessibilityPreferenceButton.PreferenceKind.ReducedFlash);
+
+            RectTransform motionButton = CreatePanel("Reduced Motion Toggle Button", safeArea, new Color(0.20f, 0.31f, 0.50f, 0.94f));
+            motionButton.sizeDelta = new Vector2(180f, 52f);
+            motionButton.anchorMin = motionButton.anchorMax = new Vector2(0f, 1f);
+            motionButton.pivot = new Vector2(0f, 1f);
+            motionButton.anchoredPosition = new Vector2(24f, -406f);
+            Text motionLabel = CreateText("Reduced Motion Toggle Label", motionButton, string.Empty, 16, TextAnchor.MiddleCenter);
+            motionButton.gameObject.AddComponent<Button>();
+            motionButton.gameObject.AddComponent<AccessibilityPreferenceButton>().Configure(motionLabel, accessibilityPreferences, AccessibilityPreferenceButton.PreferenceKind.ReducedMotion);
+
             RectTransform resetButton = CreatePanel("Reset Prototype Button", safeArea, new Color(0.42f, 0.18f, 0.18f, 0.9f));
             resetButton.sizeDelta = new Vector2(180f, 70f);
             resetButton.anchorMin = resetButton.anchorMax = new Vector2(1f, 1f);
             resetButton.pivot = new Vector2(1f, 1f);
             resetButton.anchoredPosition = new Vector2(-24f, -278f);
-            resetButton.gameObject.AddComponent<Button>().onClick.AddListener(() => { soundscape.Play(SoundscapeCue.Ui); gathering.ResetPrototype(); });
+            resetButton.gameObject.AddComponent<Button>().onClick.AddListener(() => { soundscape.Play(SoundscapeCue.Ui); accessibilityPreferences.ResetDefaults(); gathering.ResetPrototype(); });
             CreateText("Reset Label", resetButton, "RESET", 22, TextAnchor.MiddleCenter);
 
             RectTransform gatherButton = CreatePanel("Gather Button", safeArea, new Color(0.2f, 0.5f, 0.25f, 0.9f));
@@ -805,7 +825,7 @@ namespace Wayroot.Core
             dodgeButton.gameObject.AddComponent<DodgeCooldownHud>().Configure(dodgeLabel, player);
 
             // Three non-overlapping top cards reserve the center of the play field and omit development telemetry.
-            RectTransform combatCard = CreatePanel("Combat Status Card", safeArea, new Color(0.08f, 0.16f, 0.18f, 0.90f));
+            RectTransform combatCard = CreatePanel("Combat Status Card", safeArea, new Color(0.03f, 0.09f, 0.12f, 0.96f));
             combatCard.sizeDelta = new Vector2(310f, 86f);
             combatCard.anchorMin = combatCard.anchorMax = new Vector2(0f, 1f);
             combatCard.pivot = new Vector2(0f, 1f);
@@ -815,7 +835,7 @@ namespace Wayroot.Core
             combatText.rectTransform.offsetMax = new Vector2(-12f, 0f);
             combatText.gameObject.AddComponent<CombatHud>().Configure(combatText, playerHealth, enemy, grove);
 
-            RectTransform resourceCard = CreatePanel("Resource Progression Card", safeArea, new Color(0.10f, 0.16f, 0.13f, 0.90f));
+            RectTransform resourceCard = CreatePanel("Resource Progression Card", safeArea, new Color(0.04f, 0.12f, 0.08f, 0.96f));
             resourceCard.sizeDelta = new Vector2(330f, 110f);
             resourceCard.anchorMin = resourceCard.anchorMax = new Vector2(1f, 1f);
             resourceCard.pivot = new Vector2(1f, 1f);
@@ -825,7 +845,7 @@ namespace Wayroot.Core
             inventoryText.rectTransform.offsetMax = new Vector2(-12f, 0f);
             inventoryText.gameObject.AddComponent<GatheringHud>().Configure(inventoryText, gathering, merchant, build, wayroot, creature, bloomwell);
 
-            RectTransform journeyCard = CreatePanel("Journey Guidance Card", safeArea, new Color(0.10f, 0.19f, 0.28f, 0.91f));
+            RectTransform journeyCard = CreatePanel("Journey Guidance Card", safeArea, new Color(0.04f, 0.12f, 0.22f, 0.97f));
             journeyCard.sizeDelta = new Vector2(460f, 52f);
             journeyCard.anchorMin = journeyCard.anchorMax = new Vector2(0.5f, 1f);
             journeyCard.pivot = new Vector2(0.5f, 1f);
@@ -841,7 +861,7 @@ namespace Wayroot.Core
             landmarkEmphasis.Configure();
             journeyCard.gameObject.AddComponent<JourneyGuidanceController>().Configure(player, sceneCamera, journeyText, journeyPointer, landmarkEmphasis, wildflowerTarget, youngTreeTarget, stoneOutcropTarget, practiceSlimeTarget, merchantTarget, shelterTarget, wayrootTarget, guardianTarget, bloomwellTarget);
 
-            RectTransform promptCard = CreatePanel("Contextual Action Prompt", safeArea, new Color(0.05f, 0.11f, 0.13f, 0.90f));
+            RectTransform promptCard = CreatePanel("Contextual Action Prompt", safeArea, new Color(0.02f, 0.07f, 0.10f, 0.97f));
             promptCard.sizeDelta = new Vector2(460f, 54f);
             promptCard.anchorMin = promptCard.anchorMax = new Vector2(0.5f, 0f);
             promptCard.pivot = new Vector2(0.5f, 0f);
@@ -849,7 +869,7 @@ namespace Wayroot.Core
             Text promptText = CreateText("Contextual Prompt Text", promptCard, string.Empty, 17, TextAnchor.MiddleCenter);
             promptText.gameObject.AddComponent<ContextualPromptHud>().Configure(promptText, gathering, merchant, build, wayroot, creature, bloomwell);
 
-            RectTransform feedbackCard = CreatePanel("Action Feedback Card", safeArea, new Color(0.04f, 0.10f, 0.14f, 0.9f));
+            RectTransform feedbackCard = CreatePanel("Action Feedback Card", safeArea, new Color(0.02f, 0.07f, 0.11f, 0.97f));
             feedbackCard.sizeDelta = new Vector2(540f, 62f);
             feedbackCard.anchorMin = feedbackCard.anchorMax = new Vector2(0.5f, 0f);
             feedbackCard.pivot = new Vector2(0.5f, 0f);
@@ -892,6 +912,7 @@ namespace Wayroot.Core
             text.font = Resources.GetBuiltinResource<Font>("LegacyRuntime.ttf");
             text.text = value;
             text.fontSize = fontSize;
+            text.fontStyle = FontStyle.Bold;
             text.alignment = alignment;
             text.color = Color.white;
             RectTransform rectTransform = text.rectTransform;

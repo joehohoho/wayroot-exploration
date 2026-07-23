@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using Wayroot.UI;
 
 namespace Wayroot.Art
 {
@@ -17,15 +18,17 @@ namespace Wayroot.Art
         private Transform _grove = null!;
         private Transform _glade = null!;
         private Transform _bloomwell = null!;
+        private AccessibilityPreferences _preferences = null!;
 
         public int VisualCount => _waterRipples.Count + _foliage.Count + _motes.Count;
 
-        public void Configure(Transform shelter, Transform grove, Transform glade, Transform bloomwell)
+        public void Configure(Transform shelter, Transform grove, Transform glade, Transform bloomwell, AccessibilityPreferences preferences)
         {
             _shelter = shelter;
             _grove = grove;
             _glade = glade;
             _bloomwell = bloomwell;
+            _preferences = preferences;
             transform.localScale = Vector3.one;
             CreateSunmeadowAmbience();
             CreateLandmarkAmbience();
@@ -44,14 +47,14 @@ namespace Wayroot.Art
 
             for (int index = 0; index < _waterRipples.Count; index++)
             {
-                float pulse = 1f + 0.14f * Mathf.Sin(time * 1.8f + _phases[index]);
+                float pulse = 1f + AccessibilityRules.GetMotionAmplitude(0.14f, _preferences.ReducedMotion) * Mathf.Sin(time * 1.8f + _phases[index]);
                 _waterRipples[index].localScale = Vector3.Scale(_baseScales[index], new Vector3(pulse, 1f, pulse));
             }
 
             int foliageOffset = _waterRipples.Count;
             for (int index = 0; index < _foliage.Count; index++)
             {
-                _foliage[index].localRotation = Quaternion.Euler(0f, 0f, 6f * Mathf.Sin(time * 1.25f + _phases[foliageOffset + index]));
+                _foliage[index].localRotation = Quaternion.Euler(0f, 0f, AccessibilityRules.GetMotionAmplitude(6f, _preferences.ReducedMotion) * Mathf.Sin(time * 1.25f + _phases[foliageOffset + index]));
             }
 
             int moteOffset = foliageOffset + _foliage.Count;
@@ -60,7 +63,8 @@ namespace Wayroot.Art
                 Transform mote = _motes[index];
                 Vector3 basePosition = mote.parent!.position;
                 float phase = _phases[moteOffset + index];
-                mote.position = basePosition + new Vector3(Mathf.Sin(time * 0.75f + phase) * 0.18f, 0.16f + Mathf.Sin(time * 1.5f + phase) * 0.08f, Mathf.Cos(time * 0.65f + phase) * 0.12f);
+                float amplitude = AccessibilityRules.GetMotionAmplitude(1f, _preferences.ReducedMotion);
+                mote.position = basePosition + new Vector3(Mathf.Sin(time * 0.75f + phase) * 0.18f * amplitude, 0.16f + Mathf.Sin(time * 1.5f + phase) * 0.08f * amplitude, Mathf.Cos(time * 0.65f + phase) * 0.12f * amplitude);
                 mote.gameObject.SetActive(mote.parent!.gameObject.activeInHierarchy);
             }
         }

@@ -4,12 +4,13 @@ Read this file before resuming after a quota reset/session loss, then update it 
 
 ## 2026-07-23 status
 
-- **Phase 30 Mossling Companion Presence is complete and desktop-validated.** Do not begin Phase 31 without explicit owner approval.
+- **Phase 32 Accessibility and Clarity is complete and desktop-validated.** Do not begin Phase 33 without explicit owner approval.
 - **Repository:** `Wayroot Exploration` / `wayroot-exploration`, branch `main`; pinned Unity **6000.5.4f1**.
-- **Implementation:** `MosslingPresenceRules` selects idle/follow/guide/arrival/renewal visual states from existing Mossling guide state only. `MosslingPresencePresentation` adds visual-only unscaled, URP-safe accents and no colliders. Gameplay root, guidance target, follow behavior, controls, progression, persistence, and RESET remain unchanged.
-- **Validation:** compile passed; EditMode **78 passed, 0 failed**; PlayMode **33 passed, 0 failed**; Phase 30 Windows review build passed; 8-second smoke passed (expected timeout 124). Visible review player capture had no Unity magenta; manual friendly-state demonstration remains in `Documentation/Phase30ManualTest.md`.
+- **Implementation:** `AccessibilityPreferences` persists reduced flash/motion independently through PlayerPrefs so the existing versioned progression save schema remains unchanged. The compact upper-left HUD stack adds **FLASH LESS** and **MOTION LESS** beside SOUND. RESET restores both visual-comfort defaults (OFF). Reduced flash retains compact contact/enemy feedback with shorter/lower pulse; reduced motion attenuates ambient, idle, and landmark presentation without changing player input or required gameplay cues. HUD typography/cards received bounded contrast improvements.
+- **Validation:** compile passed; EditMode **82 passed, 0 failed**; PlayMode **35 passed, 0 failed**; Phase 32 Windows review build passed; 8-second headless smoke remained running (expected timeout 124) with no application exceptions. Focused Windows player capture `Logs/phase32-player-capture.png` confirms game/HUD visibility and non-overlapping visual-comfort buttons; capture is ignored.
+- **Known environment warnings:** successful Unity invocations report pre-existing LicenseClient handshake/access-token messages and `abort_threads` shutdown messages only.
 - **Do not stage:** Logs/, TestResults/, Builds/, screenshot captures, Library/, or Unity ProjectSettings formatting churn.
 
 ## Next phase
 
-When owner approves Phase 31: inspect status/diff/docs first, define a bounded plan, preserve original-art-only materials and unscaled visual roots, validate before publishing.
+Wait for explicit owner authorization before selecting Phase 33. Before any release-quality/mobile-ready claim, complete the existing physical-iPhone gates.

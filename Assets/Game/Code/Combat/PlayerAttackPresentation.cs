@@ -1,4 +1,5 @@
 using UnityEngine;
+using Wayroot.UI;
 
 namespace Wayroot.Combat
 {
@@ -8,13 +9,15 @@ namespace Wayroot.Combat
         private Transform _trail = null!;
         private Transform _impact = null!;
         private Transform _contactMarker = null!;
+        private AccessibilityPreferences _preferences = null!;
         private float _attackAt = float.NegativeInfinity;
         private Vector3 _attackDirection = Vector3.forward;
 
         public bool IsShowingTrail => CombatEncounterPolishRules.IsActive(Time.time - _attackAt, CombatEncounterPolishRules.PlayerTrailSeconds);
 
-        public void Configure()
+        public void Configure(AccessibilityPreferences preferences)
         {
+            _preferences = preferences;
             _trail = CreateVisual("Player Attack Swing Trail", PrimitiveType.Sphere, new Vector3(0f, 0.42f, 0.75f), new Vector3(0.72f, 0.12f, 0.38f), new Color(1f, 0.76f, 0.28f));
             _impact = CreateVisual("Player Attack Impact Flash", PrimitiveType.Sphere, Vector3.zero, Vector3.one * 0.42f, new Color(1f, 0.92f, 0.58f));
             _contactMarker = CreateVisual("Player Attack Contact Marker", PrimitiveType.Cylinder, Vector3.zero, new Vector3(0.32f, 0.025f, 0.32f), new Color(1f, 0.48f, 0.22f));
@@ -29,7 +32,8 @@ namespace Wayroot.Combat
             if (direction.sqrMagnitude > 0.001f) _attackDirection = direction.normalized;
             _impact.position = targetPosition + Vector3.up * 0.5f;
             _contactMarker.position = targetPosition + Vector3.up * 0.04f;
-            _impact.localScale = Vector3.one * (defeated ? 0.62f : 0.42f);
+            float impactSize = defeated ? 0.62f : 0.42f;
+            _impact.localScale = Vector3.one * AccessibilityRules.GetMotionAmplitude(impactSize, _preferences.ReducedFlash);
             SetVisible(true);
         }
 
@@ -38,7 +42,7 @@ namespace Wayroot.Combat
             if (_trail == null) return;
             float elapsed = Time.time - _attackAt;
             bool trail = CombatEncounterPolishRules.IsActive(elapsed, CombatEncounterPolishRules.PlayerTrailSeconds);
-            bool impact = CombatEncounterPolishRules.IsActive(elapsed, CombatEncounterPolishRules.PlayerImpactSeconds);
+            bool impact = CombatEncounterPolishRules.IsActive(elapsed, AccessibilityRules.GetFlashDuration(CombatEncounterPolishRules.PlayerImpactSeconds, _preferences.ReducedFlash));
             bool marker = CombatEncounterPolishRules.IsActive(elapsed, CombatEncounterPolishRules.PlayerContactMarkerSeconds);
             _trail.gameObject.SetActive(trail);
             _impact.gameObject.SetActive(impact);
