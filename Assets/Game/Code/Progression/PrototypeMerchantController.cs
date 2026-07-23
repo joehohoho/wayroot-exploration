@@ -18,6 +18,7 @@ namespace Wayroot.Progression
 
         public bool IsInRange { get; private set; }
         public string Status { get; private set; } = "IRON EDGE: 1 PETAL + 1 CORE -> ATK 2";
+        public event System.Action<MerchantPurchaseOutcome>? PurchaseAttempted;
         public void SetFeedback(ActionFeedbackHud feedback) => _feedback = feedback;
 
         public void Configure(PrototypeInputReader input, PrototypePlayerController player, PrototypeGatheringController progression)
@@ -34,8 +35,9 @@ namespace Wayroot.Progression
             bool interacting = IsInRange && _input.InteractHeld;
             if (interacting && !_wasInteracting)
             {
-                _progression.TryPurchaseWeaponUpgrade(out string status);
+                bool purchased = _progression.TryPurchaseWeaponUpgrade(out string status);
                 Status = status;
+                PurchaseAttempted?.Invoke(MerchantPresentationRules.GetOutcome(purchased, Status));
                 _feedback?.Show(Status);
             }
 

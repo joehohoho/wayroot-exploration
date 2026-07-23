@@ -65,6 +65,8 @@ namespace Wayroot.Core
             pause.Configure(player, cameraController);
             ProceduralSoundscape soundscape = new GameObject("Procedural Cozy Soundscape").AddComponent<ProceduralSoundscape>();
             soundscape.Configure(gathering);
+            MerchantPresentation merchantPresentation = new GameObject("Iron Edge Merchant Presentation").AddComponent<MerchantPresentation>();
+            merchantPresentation.Configure(merchant, gathering, soundscape, player.transform);
             CreatePhaseEighteenArtMotion(player, creature, enemy, grove, gathering, accessibilityPreferences);
             CreatePhaseTwentyThreeSpritePresentation(player, playerHealth, attack, gathering, enemy, guardian, sceneCamera);
             CreatePhaseTwentySixCombatPresentation(player, attack, enemy, guardian, grove.transform, accessibilityPreferences);

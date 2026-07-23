@@ -16,7 +16,9 @@ namespace Wayroot.Audio
         AttackContact,
         PlayerDamaged,
         PlayerRespawn,
-        EnemyRespawn
+        EnemyRespawn,
+        MerchantPurchase,
+        MerchantUnavailable
     }
 
     public readonly struct SoundscapeProfile
@@ -62,6 +64,8 @@ namespace Wayroot.Audio
                 SoundscapeCue.PlayerDamaged => new SoundscapeProfile(148f, 0.16f, 0.24f, 185f),
                 SoundscapeCue.PlayerRespawn => new SoundscapeProfile(392f, 0.32f, 0.22f, 523f),
                 SoundscapeCue.EnemyRespawn => new SoundscapeProfile(247f, 0.20f, 0.18f, 294f),
+                SoundscapeCue.MerchantPurchase => new SoundscapeProfile(659f, 0.30f, 0.24f, 880f),
+                SoundscapeCue.MerchantUnavailable => new SoundscapeProfile(196f, 0.20f, 0.18f, 165f),
                 _ => new SoundscapeProfile(392f, 0.10f, 0.16f)
             };
         }
