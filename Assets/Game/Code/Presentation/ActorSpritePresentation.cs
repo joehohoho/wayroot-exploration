@@ -77,7 +77,11 @@ namespace Wayroot.Presentation
         private void SetSprite(Sprite sprite)
         {
             _renderer.sprite = sprite;
+            // URP's transparent unlit pass samples _BaseMap, while SpriteRenderer's dynamic
+            // texture binding uses _MainTex. Set both explicitly so the generated transparent
+            // frame cannot fall back to the material's opaque placeholder in a Windows player.
             _spriteMaterial.SetTexture("_BaseMap", sprite.texture);
+            _spriteMaterial.SetTexture("_MainTex", sprite.texture);
             _spriteMaterial.SetColor("_BaseColor", Color.white);
         }
 

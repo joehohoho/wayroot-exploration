@@ -99,6 +99,8 @@ namespace Wayroot.Core
             enemy.GetComponent<PrototypeEnemyChase>().SetSoundscape(soundscape);
             guardian.GetComponent<PrototypeEnemyChase>().SetSoundscape(soundscape);
             CreatePhaseThirtyOneAmbience(build.transform, grove.transform, moonlitGlade.transform, bloomwell.transform, accessibilityPreferences);
+            PhaseThirtySixVisualFinish visualFinish = new GameObject("Phase 36 Public Playtest Visual Finish").AddComponent<PhaseThirtySixVisualFinish>();
+            visualFinish.Configure(accessibilityPreferences);
         }
 
         private static void CreateLight()
