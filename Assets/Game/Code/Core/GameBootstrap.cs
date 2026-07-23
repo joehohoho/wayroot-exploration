@@ -497,6 +497,7 @@ namespace Wayroot.Core
         {
             EnvironmentalAmbiencePresentation ambience = new GameObject("Phase 31 Environmental Ambience").AddComponent<EnvironmentalAmbiencePresentation>();
             ambience.Configure(shelter, grove, glade, bloomwell, accessibilityPreferences);
+            new GameObject("Mobile Presentation Safeguard").AddComponent<MobilePresentationSafeguard>().Configure(ambience);
         }
 
         private static void CreatePhaseTwentyThreeSpritePresentation(PrototypePlayerController player, PrototypePlayerHealth playerHealth, PrototypeAttackController attack,

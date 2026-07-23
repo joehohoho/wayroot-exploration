@@ -2,7 +2,7 @@
 
 ## Current milestone
 
-**Phase 32 — Accessibility and clarity pass is implemented and desktop-validated.**
+**Phase 33 — Mobile readiness and performance pass is implemented and desktop-validated; Mac/Xcode/signing/iPhone evidence remains pending.**
 
 The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner play review; physical-iPhone evidence is an independent gate for the complete controlled slice.
 
@@ -43,6 +43,7 @@ The project remains pinned to Unity **6000.5.4f1**. Phase 1 passed desktop owner
 | 30 | Mossling companion presence pass using existing guide state | **Implemented; desktop-validated** |
 | 31 | Combat feel and environmental ambience using original procedural audio, optional haptic seam, and runtime URP presentation | **Implemented; desktop-validated** |
 | 32 | Compact persistent reduced-flash/reduced-motion preferences and presentation clarity improvements | **Implemented; desktop-validated** |
+| 33 | Automatic optional-ambience safeguard and physical-device readiness checklist for the existing route | **Implemented; desktop-validated; Mac/Xcode/signing/iPhone pending** |
 
 ## Phase 20 verification record
 

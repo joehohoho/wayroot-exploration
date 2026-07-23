@@ -19,8 +19,10 @@ namespace Wayroot.Art
         private Transform _glade = null!;
         private Transform _bloomwell = null!;
         private AccessibilityPreferences _preferences = null!;
+        private bool _optionalEffectsEnabled = true;
 
         public int VisualCount => _waterRipples.Count + _foliage.Count + _motes.Count;
+        public bool OptionalEffectsEnabled => _optionalEffectsEnabled;
 
         public void Configure(Transform shelter, Transform grove, Transform glade, Transform bloomwell, AccessibilityPreferences preferences)
         {
@@ -32,6 +34,16 @@ namespace Wayroot.Art
             transform.localScale = Vector3.one;
             CreateSunmeadowAmbience();
             CreateLandmarkAmbience();
+            SetOptionalEffectsEnabled(true);
+        }
+
+        /// <summary>Disables decorative ripple, foliage, and mote renderers only; landmark/gameplay roots remain untouched.</summary>
+        public void SetOptionalEffectsEnabled(bool enabled)
+        {
+            _optionalEffectsEnabled = enabled;
+            SetVisualsActive(_waterRipples, enabled);
+            SetVisualsActive(_foliage, enabled);
+            SetVisualsActive(_motes, enabled);
         }
 
         private void Update()
@@ -65,7 +77,15 @@ namespace Wayroot.Art
                 float phase = _phases[moteOffset + index];
                 float amplitude = AccessibilityRules.GetMotionAmplitude(1f, _preferences.ReducedMotion);
                 mote.position = basePosition + new Vector3(Mathf.Sin(time * 0.75f + phase) * 0.18f * amplitude, 0.16f + Mathf.Sin(time * 1.5f + phase) * 0.08f * amplitude, Mathf.Cos(time * 0.65f + phase) * 0.12f * amplitude);
-                mote.gameObject.SetActive(mote.parent!.gameObject.activeInHierarchy);
+                mote.gameObject.SetActive(_optionalEffectsEnabled && mote.parent!.gameObject.activeInHierarchy);
+            }
+        }
+
+        private static void SetVisualsActive(List<Transform> visuals, bool active)
+        {
+            for (int index = 0; index < visuals.Count; index++)
+            {
+                visuals[index].gameObject.SetActive(active);
             }
         }
 
